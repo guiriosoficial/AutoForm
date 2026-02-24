@@ -1,0 +1,199 @@
+/*:root {*/
+/*  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;*/
+/*  line-height: 1.5;*/
+/*  font-weight: 400;*/
+
+/*  color-scheme: light dark;*/
+/*  color: rgba(255, 255, 255, 0.87);*/
+/*  background-color: #242424;*/
+
+/*  font-synthesis: none;*/
+/*  text-rendering: optimizeLegibility;*/
+/*  -webkit-font-smoothing: antialiased;*/
+/*  -moz-osx-font-smoothing: grayscale;*/
+/*}*/
+
+/*a {*/
+/*  font-weight: 500;*/
+/*  color: #646cff;*/
+/*  text-decoration: inherit;*/
+/*}*/
+/*a:hover {*/
+/*  color: #535bf2;*/
+/*}*/
+
+/*body {*/
+/*  margin: 0;*/
+/*  display: flex;*/
+/*  place-items: center;*/
+/*  min-width: 450px;*/
+/*  min-height: 100vh;*/
+/*}*/
+
+/*h1 {*/
+/*  font-size: 3.2em;*/
+/*  line-height: 1.1;*/
+/*}*/
+
+/*button {*/
+/*  border-radius: 8px;*/
+/*  border: 1px solid transparent;*/
+/*  padding: 0.6em 1.2em;*/
+/*  font-size: 1em;*/
+/*  font-weight: 500;*/
+/*  font-family: inherit;*/
+/*  background-color: #1a1a1a;*/
+/*  cursor: pointer;*/
+/*  transition: border-color 0.25s;*/
+/*}*/
+/*button:hover {*/
+/*  border-color: #646cff;*/
+/*}*/
+/*button:focus,*/
+/*button:focus-visible {*/
+/*  outline: 4px auto -webkit-focus-ring-color;*/
+/*}*/
+
+/*.card {*/
+/*  padding: 2em;*/
+/*}*/
+
+/*#app {*/
+/*  max-width: 1280px;*/
+/*  margin: 0 auto;*/
+/*  padding: 2rem;*/
+/*  text-align: center;*/
+/*}*/
+
+/*@media (prefers-color-scheme: light) {*/
+/*  :root {*/
+/*    color: #213547;*/
+/*    background-color: #ffffff;*/
+/*  }*/
+/*  a:hover {*/
+/*    color: #747bff;*/
+/*  }*/
+/*  button {*/
+/*    background-color: #f9f9f9;*/
+/*  }*/
+/*}*/
+
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 0 0% 98%;
+    --foreground: 225 15% 15%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 225 15% 15%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 225 15% 15%;
+
+    --primary: 145 65% 38%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 220 10% 93%;
+    --secondary-foreground: 225 15% 20%;
+
+    --muted: 220 10% 95%;
+    --muted-foreground: 220 10% 45%;
+
+    --accent: 200 75% 45%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 70% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 220 10% 87%;
+    --input: 0 0% 100%;
+    --ring: 145 65% 38%;
+
+    --radius: 0.5rem;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 225 15% 8%;
+
+    --sidebar-background: 0 0% 96%;
+    --sidebar-foreground: 225 15% 15%;
+    --sidebar-primary: 145 65% 38%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 220 10% 93%;
+    --sidebar-accent-foreground: 225 15% 15%;
+    --sidebar-border: 220 10% 87%;
+    --sidebar-ring: 145 65% 38%;
+  }
+
+  .dark {
+    --background: 225 15% 12%;
+    --foreground: 220 15% 90%;
+
+    --card: 225 15% 15%;
+    --card-foreground: 220 15% 90%;
+
+    --popover: 225 15% 17%;
+    --popover-foreground: 220 15% 90%;
+
+    --primary: 145 65% 48%;
+    --primary-foreground: 225 15% 8%;
+
+    --secondary: 225 12% 20%;
+    --secondary-foreground: 220 15% 85%;
+
+    --muted: 225 12% 18%;
+    --muted-foreground: 220 10% 55%;
+
+    --accent: 200 75% 55%;
+    --accent-foreground: 225 15% 8%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 225 12% 22%;
+    --input: 225 12% 20%;
+    --ring: 145 65% 48%;
+
+    --warning: 38 92% 50%;
+    --warning-foreground: 225 15% 8%;
+
+    --sidebar-background: 225 15% 10%;
+    --sidebar-foreground: 220 15% 90%;
+    --sidebar-primary: 145 65% 48%;
+    --sidebar-primary-foreground: 225 15% 8%;
+    --sidebar-accent: 225 12% 18%;
+    --sidebar-accent-foreground: 220 15% 90%;
+    --sidebar-border: 225 12% 22%;
+    --sidebar-ring: 145 65% 48%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+    font-family: 'Inter', sans-serif;
+  }
+
+  code, .font-mono {
+    font-family: 'JetBrains Mono', monospace;
+  }
+}
+
+/* JSON syntax highlighting */
+.json-key { color: hsl(200 75% 55%); }
+.json-string { color: hsl(145 65% 48%); }
+.json-number { color: hsl(30 90% 60%); }
+.json-bool { color: hsl(280 60% 65%); }
+
+.dark .json-key { color: hsl(200 75% 65%); }
+.dark .json-string { color: hsl(145 65% 58%); }
+.dark .json-number { color: hsl(30 90% 65%); }
+.dark .json-bool { color: hsl(280 60% 70%); }
