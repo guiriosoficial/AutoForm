@@ -95,7 +95,9 @@
     --popover: 0 0% 100%;
     --popover-foreground: 225 15% 15%;
 
-    --primary: 145 65% 38%;
+    /*--primary: 48 100% 50%;*/
+    /*--primary-foreground: 0 0% 100%;*/
+    --primary: 145 65% 48%;
     --primary-foreground: 0 0% 100%;
 
     --secondary: 220 10% 93%;

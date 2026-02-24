@@ -18,10 +18,10 @@ export default defineManifest({
     'sidePanel',
     'contentSettings',
   ],
-  content_scripts: [{
-    js: ['src/content/main.tsx'],
-    matches: ['https://*/*'],
-  }],
+  // content_scripts: [{
+  //   js: ['src/content/main.tsx'],
+  //   matches: ['https://*/*'],
+  // }],
   side_panel: {
     default_path: 'src/sidepanel/index.html',
   },

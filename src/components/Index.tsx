@@ -1,80 +1,18 @@
-import { useState } from "react";
 import { Plus, Zap, Copy, RotateCcw } from "lucide-react";
 import { FieldRow } from "@/components/FieldRow";
 import { PresetManager } from "@/components/PresetManager";
 import { usePresets } from "@/hooks/use-presets";
-import { generateFakerValue } from "@/lib/faker-generator";
-import type { FieldConfig } from "@/lib/faker-options";
-import { toast } from "sonner";
-
-const createField = (): FieldConfig => ({
-    id: crypto.randomUUID(),
-    selector: "",
-    fakerType: "",
-});
+import { useForm } from "@/hooks/use-form";
+import { Header } from "@/components/Header";
 
 const Index = () => {
-    const [fields, setFields] = useState<FieldConfig[]>([createField()]);
-    const [generatedValues, setGeneratedValues] = useState<Record<string, string>>({});
+    const { addField, removeField, updateField, generate, regenerate, copyValue, copyAllAsJSON, generatedValues, fields, setFields} = useForm()
     const { presets, addPreset, updatePreset, deletePreset, exportAll, importPresets } = usePresets();
-
-    const addField = () => setFields(prev => [...prev, createField()]);
-
-    const removeField = (id: string) => {
-        setFields(prev => prev.length > 1 ? prev.filter(f => f.id !== id) : prev);
-    };
-
-    const updateField = (id: string, updated: FieldConfig) => {
-        setFields(prev => prev.map(f => f.id === id ? updated : f));
-    };
-
-    const generate = () => {
-        const values: Record<string, string> = {};
-        fields.forEach(f => {
-            if (f.fakerType) {
-                values[f.id] = generateFakerValue(f.fakerType, f.config);
-            }
-        });
-        setGeneratedValues(values);
-        toast.success("Valores gerados com sucesso!");
-    };
-
-    const regenerate = (fieldId: string, fakerType: string) => {
-        if (fakerType) {
-            const field = fields.find(f => f.id === fieldId);
-            setGeneratedValues(prev => ({ ...prev, [fieldId]: generateFakerValue(fakerType, field?.config) }));
-        }
-    };
-
-    const copyValue = (value: string) => {
-        navigator.clipboard.writeText(value);
-        toast.success("Copiado!");
-    };
-
-    const copyAllAsJSON = () => {
-        const data: Record<string, string> = {};
-        fields.forEach(f => {
-            if (generatedValues[f.id]) {
-                data[f.selector || f.id] = generatedValues[f.id];
-            }
-        });
-        navigator.clipboard.writeText(JSON.stringify(data, null, 2));
-        toast.success("JSON copiado!");
-    };
 
     return (
         <div className="min-h-screen bg-background flex items-start justify-center p-4 pt-8">
             <div className="w-full max-w-xl space-y-4">
-                {/* Header */}
-                <div className="text-center space-y-1">
-                    <div className="flex items-center justify-center gap-2">
-                        <Zap className="text-primary" size={24} />
-                        <h1 className="text-xl font-bold text-foreground tracking-tight">Form Filler</h1>
-                    </div>
-                    <p className="text-sm text-muted-foreground">
-                        Preencha formulários automaticamente com dados aleatórios
-                    </p>
-                </div>
+                <Header />
 
                 {/* Presets */}
                 <div className="rounded-lg border border-border bg-card p-4">
