@@ -1,78 +1,113 @@
-import { useRef, useState } from "react";
-import { Plus, Zap, Copy, RotateCcw, Pencil, Check, X } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
+import { Plus, Zap, Copy, RotateCcw } from "lucide-react";
 import { FieldRow } from "@/components/FieldRow";
 import { PresetManager } from "@/components/PresetManager";
 import { usePresets } from "@/hooks/use-presets";
-import { useForm } from "@/hooks/use-form";
+import { useForm, createField } from "@/hooks/use-form";
 import { Header } from "@/components/Header";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
 import { Button } from "@/components/ui/button.tsx";
-import type { Preset, FieldConfig } from "@/lib/faker-options";
-import { Input } from "@/components/ui/input.tsx";
+import type { FieldConfig, Preset } from "@/lib/faker-options";
 
-const createEmptyField = (): FieldConfig => ({
+const createEmptyPreset = (): Preset => ({
     id: crypto.randomUUID(),
-    selector: "",
-    fakerType: "",
+    name: "Novo preset",
+    fields: [createField()],
+    createdAt: Date.now(),
 });
 
 const Index = () => {
-    const { addField, removeField, updateField, generate, regenerate, copyValue, copyAllAsJSON, generatedValues, fields, setFields } = useForm();
-    const { presets, addPreset, updatePreset, deletePreset, exportPresets, importPresets } = usePresets();
+    const {
+        presets,
+        addPreset,
+        updatePreset,
+        deletePreset,
+        exportPresets,
+        importPresets,
+        getPresetById,
+        persistNow
+    } = usePresets();
 
-    const [currentPreset, setCurrentPreset] = useState<Preset | null>(null);
+    const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
 
-    const [isEditingTitle, setIsEditingTitle] = useState(false);
-    const [draftTitle, setDraftTitle] = useState("");
-    const titleInputRef = useRef<HTMLInputElement>(null);
+    const currentPreset = useMemo(() => {
+        if (!currentPresetId) return null;
 
-    const beginTitleEdit = (name: string) => {
-        setDraftTitle(name);
-        setIsEditingTitle(true);
-        requestAnimationFrame(() => titleInputRef.current?.focus());
-        requestAnimationFrame(() => titleInputRef.current?.select());
-    };
+        return getPresetById(currentPresetId);
+    }, [currentPresetId, getPresetById]);
 
-    const cancelTitleEdit = () => {
-        setIsEditingTitle(false);
-        setDraftTitle("");
-    };
+    const setCurrentPreset = useCallback((preset: Preset | null) => {
+        if (!preset) return;
 
-    const confirmTitleEdit = () => {
-        if (!currentPreset) return;
-        const next = draftTitle.trim();
-        if (!next) return;
-        updatePreset(currentPreset.id, { name: next });
-        setIsEditingTitle(false);
-    };
+        setCurrentPresetId(preset.id);
+    }, [])
 
-    const saveCurrentPresetFields = () => {
-        if (!currentPreset) return;
-        updatePreset(currentPreset.id, { fields });
-    };
+    const fields = currentPreset?.fields ?? [];
 
-    const handleCreateNewPreset = () => {
-        const emptyFields = [createEmptyField()];
+    const setFields = useCallback((updater: (prev: FieldConfig[]) => FieldConfig[]) => {
+          if (!currentPresetId) return;
 
-        const newPreset: Preset = {
-            id: crypto.randomUUID(),
-            name: "Novo preset",
-            fields: emptyFields,
-            createdAt: Date.now(),
-        };
+          updatePreset(
+            currentPresetId,
+            { fields: updater(fields) }
+          );
+      },
+      [currentPresetId, updatePreset, fields]
+    );
 
-        addPreset(newPreset);
-        setCurrentPreset(newPreset);
-        setFields(emptyFields);
-
-        beginTitleEdit(newPreset.name);
-    };
+    const {
+        addField,
+        removeField,
+        updateField,
+        generateValues,
+        regenerateValue,
+        generatedValues,
+        copyValue,
+        copyValuesAsJSON
+    } = useForm({
+        fields,
+        setFields
+    });
 
 
-    const handleSetSelectedPreset = (preset: Preset | null) => {
-        setCurrentPreset(preset ?? null)
-        setFields(preset?.fields ?? [])
-    }
+
+
+
+
+
+
+    // Garante que sempre exista um preset selecionado (pra não ter tela "sem fonte de verdade")
+    useEffect(() => {
+        if (currentPresetId) return;
+
+        if (presets.length > 0) {
+            setCurrentPresetId(presets[0]!.id);
+            return;
+        }
+
+        const emptyPreset = createEmptyPreset();
+        addPreset(emptyPreset);
+        setCurrentPresetId(emptyPreset.id);
+    }, [addPreset, presets, currentPresetId]);
+
+
+
+    const handleCreateNewPreset = useCallback(() => {
+        const emptyPreset = createEmptyPreset();
+        addPreset(emptyPreset);
+        setCurrentPresetId(emptyPreset.id);
+        // TODO: Focus preset name input here
+    }, [addPreset]);
+
+    const handleDeletePreset = useCallback((preset: Preset) => {
+        deletePreset(preset.id);
+        if (preset.id === currentPresetId) setCurrentPresetId(null);
+        // TODO: Select next or previous preset
+    }, [deletePreset, currentPresetId]);
+
+    const handleAutoSaveOnBlur = useCallback(() => {
+        persistNow();
+    }, [persistNow]);
 
     return (
       <div className="min-h-screen w-[500px] bg-background flex items-start justify-center p-4 pt-8">
@@ -88,8 +123,9 @@ const Index = () => {
                       <PresetManager
                         presets={presets}
                         selectedPreset={currentPreset}
-                        onSelectPreset={handleSetSelectedPreset}
+                        onSelectPreset={setCurrentPreset}
                         onCreateNewPreset={handleCreateNewPreset}
+                        onDeletePreset={handleDeletePreset}
                         onExport={exportPresets}
                         onImport={importPresets}
                       />
@@ -99,70 +135,7 @@ const Index = () => {
               {/* Fields */}
               <Card>
                   <CardHeader>
-                      <div className="flex items-center justify-between gap-2">
-                          <CardTitle className="group flex items-center gap-2">
-                              {!currentPreset ? (
-                                <span>Campos</span>
-                              ) : isEditingTitle ? (
-                                <span className="flex items-center gap-2">
-                                        <Input
-                                          ref={titleInputRef}
-                                          value={draftTitle}
-                                          onChange={(e) => setDraftTitle(e.target.value)}
-                                          className="h-8 w-[260px]"
-                                          onKeyDown={(e) => {
-                                              if (e.key === "Enter") confirmTitleEdit();
-                                              if (e.key === "Escape") cancelTitleEdit();
-                                          }}
-                                        />
-                                        <Button
-                                          size="icon"
-                                          variant="outline"
-                                          className="h-8 w-8"
-                                          title="Confirmar"
-                                          onClick={confirmTitleEdit}
-                                        >
-                                            <Check size={16} />
-                                        </Button>
-                                        <Button
-                                          size="icon"
-                                          variant="outline"
-                                          className="h-8 w-8"
-                                          title="Cancelar"
-                                          onClick={cancelTitleEdit}
-                                        >
-                                            <X size={16} />
-                                        </Button>
-                                    </span>
-                              ) : (
-                                <button
-                                  type="button"
-                                  className="flex items-center gap-2 text-left"
-                                  onClick={() => beginTitleEdit(currentPreset.name)}
-                                  title="Editar nome do preset"
-                                >
-                                    <span className="truncate max-w-[320px]">{currentPreset.name}</span>
-                                    <Pencil
-                                      size={14}
-                                      className="opacity-0 group-hover:opacity-100 transition-opacity text-muted-foreground"
-                                    />
-                                </button>
-                              )}
-                          </CardTitle>
-
-                          {currentPreset && (
-                            <Button
-                              variant="outline"
-                              size="icon"
-                              className="shrink-0"
-                              onClick={() => {deletePreset(currentPreset.id);}}
-                              title="Excluir preset atual"
-                            >
-                                <X size={14} />
-                            </Button>
-                          )}
-                      </div>
-
+                      <CardTitle>{currentPreset?.name ?? "Campos"}</CardTitle>
                       <CardDescription>{fields.length} campo(s)</CardDescription>
                   </CardHeader>
 
@@ -173,21 +146,23 @@ const Index = () => {
                               field={field}
                               onChange={updated => updateField(field.id, updated)}
                               onRemove={() => removeField(field.id)}
-                              onBlur={saveCurrentPresetFields}
+                              onBlur={handleAutoSaveOnBlur}
                             />
 
                             {generatedValues[field.id] && (
                               <div className="flex items-center gap-2 ml-0 pl-3 border-l-2 border-primary/30 animate-fade-in">
-                                        <span className="text-xs font-mono text-primary truncate flex-1">
-                                            {generatedValues[field.id]}
-                                        </span>
+                                <span className="text-xs font-mono text-primary truncate flex-1">
+                                  {generatedValues[field.id]}
+                                </span>
+
                                   <button
-                                    onClick={() => regenerate(field.id, field.fakerType)}
+                                    onClick={() => regenerateValue(field.id, field.fakerType)}
                                     className="shrink-0 text-muted-foreground hover:text-accent transition-colors"
                                     title="Regerar"
                                   >
                                       <RotateCcw size={12} />
                                   </button>
+
                                   <button
                                     onClick={() => copyValue(generatedValues[field.id])}
                                     className="shrink-0 text-muted-foreground hover:text-accent transition-colors"
@@ -200,11 +175,7 @@ const Index = () => {
                         </div>
                       ))}
 
-                      <Button
-                        onClick={addField}
-                        variant="ghost"
-                        className="border border-dashed w-full"
-                      >
+                      <Button onClick={addField} variant="ghost" className="border border-dashed w-full">
                           <Plus size={14} />
                           Adicionar campo
                       </Button>
@@ -213,12 +184,13 @@ const Index = () => {
 
               {/* Actions */}
               <div className="flex gap-2">
-                  <Button onClick={generate} className="flex-1">
+                  <Button onClick={generateValues} className="flex-1">
                       <Zap size={16} />
                       Gerar Dados
                   </Button>
+
                   {Object.keys(generatedValues).length > 0 && (
-                    <Button onClick={copyAllAsJSON} variant="outline">
+                    <Button onClick={copyValuesAsJSON} variant="outline">
                         <Copy />
                         Copiar JSON
                     </Button>
