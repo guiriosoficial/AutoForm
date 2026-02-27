@@ -35,7 +35,7 @@ export function usePresets() {
         setPresets(prev => prev.filter(p => p.id !== id));
     }, []);
 
-    const exportAll = useCallback(() => {
+    const exportPresets = useCallback(() => {
         const blob = new Blob([JSON.stringify(presets, null, 2)], { type: "application/json" });
         const url = URL.createObjectURL(blob);
         const a = document.createElement("a");
@@ -56,5 +56,12 @@ export function usePresets() {
         return false;
     }, []);
 
-    return { presets, addPreset, updatePreset, deletePreset, exportAll, importPresets };
+    return {
+        presets,
+        addPreset,
+        updatePreset,
+        deletePreset,
+        exportPresets,
+        importPresets
+    };
 }
