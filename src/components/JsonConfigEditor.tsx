@@ -1,5 +1,9 @@
 import { useState, useRef, useCallback } from "react";
 import { Settings2 } from "lucide-react";
+import {Button} from "@/components/ui/button.tsx";
+import {cn} from "@/lib/utils.ts";
+import {Textarea} from "@/components/ui/textarea.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
 
 interface JsonConfigEditorProps {
     value: string;
@@ -71,63 +75,52 @@ export function JsonConfigEditor({ value, onChange }: JsonConfigEditorProps) {
     };
 
     return (
-        <div className="relative">
-            <button
-                onClick={handleToggle}
-                className={`shrink-0 h-9 w-9 flex items-center justify-center rounded-md transition-colors ${
-                    hasConfig
-                        ? "text-primary bg-primary/15 hover:bg-primary/25"
-                        : "text-muted-foreground hover:text-foreground hover:bg-secondary/50"
-                }`}
-                title="Configuração JSON"
-            >
-                <Settings2 size={15} />
-                {hasConfig && (
-                    <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-primary" />
-                )}
-            </button>
-
-            {open && (
-                <div className="absolute right-0 top-10 z-50 w-72 rounded-lg border border-border bg-popover shadow-lg animate-fade-in">
-                    <div className="flex items-center justify-between px-3 py-2 border-b border-border">
+        <Popover>
+            <PopoverTrigger asChild>
+                <Button
+                    variant="ghost"
+                    size="icon"
+                    className={cn(hasConfig && "text-primary bg-primary/15 hover:bg-primary/25")}
+                    title="Configuração JSON"
+                >
+                    <Settings2 size={16} />
+                    {hasConfig && <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-primary" />}
+                </Button>
+            </PopoverTrigger>
+            <PopoverContent>
+                    <div className="flex items-center justify-between pb-2 border-b border-border">
                         <span className="text-xs font-medium text-muted-foreground">Configuração (JSON)</span>
-                        <button
-                            onClick={() => {
-                                const formatted = tryFormat(localValue);
-                                setLocalValue(formatted);
-                                onChange(formatted);
-                            }}
-                            className="text-[10px] text-primary hover:underline"
+                        <Button
+                          variant="link"
+                          className="h-5 p-0"
+                          size="sm"
+                          onClick={() => {
+                              const formatted = tryFormat(localValue);
+                              setLocalValue(formatted);
+                              onChange(formatted);
+                          }}
                         >
                             Formatar
-                        </button>
+                        </Button>
                     </div>
-                    <div className="relative p-2">
-                        <div className="relative rounded-md border border-border bg-input overflow-hidden">
-                            {/* Highlighted layer */}
-                            <pre
-                                className="absolute inset-0 p-3 text-xs font-mono whitespace-pre-wrap break-words pointer-events-none overflow-hidden leading-relaxed"
-                                aria-hidden
-                                dangerouslySetInnerHTML={{ __html: highlightJson(localValue) + "\n" }}
-                            />
-                            {/* Editable textarea */}
-                            <textarea
-                                ref={textareaRef}
-                                value={localValue}
-                                onChange={handleChange}
-                                onBlur={handleBlur}
-                                onKeyDown={handleKeyDown}
-                                spellCheck={false}
-                                className="relative w-full min-h-[100px] p-3 text-xs font-mono bg-transparent text-transparent caret-foreground resize-y leading-relaxed focus:outline-none focus:ring-1 focus:ring-ring rounded-md"
-                                placeholder='{ "min": 1, "max": 100 }'
+                    <div className="mt-2">
+                        <div className="rounded-md border border-border bg-input overflow-hidden">
+                            <Textarea
+                              ref={textareaRef}
+                              value={localValue}
+                              onChange={handleChange}
+                              onBlur={handleBlur}
+                              onKeyDown={handleKeyDown}
+                              spellCheck={false}
+                              className="relative w-full min-h-[100px] p-3 text-xs font-mono bg-transparent text-transparent caret-foreground resize-y leading-relaxed focus:outline-none focus:ring-1 focus:ring-ring rounded-md"
+                              placeholder='{ "min": 1, "max": 100 }'
                             />
                         </div>
                         <p className="text-[10px] text-muted-foreground mt-1.5">
                             Parâmetros passados ao Faker.js. Ex: {"{"} "min": 1, "max": 100 {"}"}
                         </p>
                     </div>
-                </div>
-            )}
-        </div>
+            </PopoverContent>
+        </Popover>
     );
 }

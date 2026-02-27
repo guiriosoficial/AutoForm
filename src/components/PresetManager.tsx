@@ -1,6 +1,25 @@
 import { useState, useRef } from "react";
-import { Save, Trash2, Download, Upload, Pencil, Check, X } from "lucide-react";
+import {Save, Trash2, Download, Upload, Pencil, Check, X, EllipsisVertical, Plus} from "lucide-react";
 import type { Preset, FieldConfig } from "@/lib/faker-options";
+import {Button} from "@/components/ui/button.tsx";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger
+} from "@/components/ui/dropdown-menu.tsx";
+import {
+    Combobox,
+    ComboboxContent,
+    ComboboxEmpty,
+    ComboboxInput,
+    ComboboxItem,
+    ComboboxList
+} from "@/components/ui/combobox.tsx";
+import {Item, ItemContent, ItemDescription, ItemTitle} from "@/components/ui/item.tsx";
+import {Popover, PopoverContent, PopoverTrigger} from "@/components/ui/popover.tsx";
+import {Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList} from "@/components/ui/command.tsx";
+import {cn} from "@/lib/utils.ts";
 
 interface PresetManagerProps {
     presets: Preset[];
@@ -23,7 +42,7 @@ export function PresetManager({
                                   onExport,
                                   onImport,
                               }: PresetManagerProps) {
-    const [selectedId, setSelectedId] = useState("");
+    const [selectedId, setSelectedId] = useState<Preset>({} as Preset);
     const [saveName, setSaveName] = useState("");
     const [showSave, setShowSave] = useState(false);
     const [editingId, setEditingId] = useState<string | null>(null);
@@ -42,11 +61,10 @@ export function PresetManager({
         setShowSave(false);
     };
 
-    const handleLoad = (id: string) => {
-        const preset = presets.find(p => p.id === id);
+    const handleLoad = (preset: Preset | null) => {
         if (preset) {
             onLoad(preset.fields.map(f => ({ ...f, id: crypto.randomUUID() })));
-            setSelectedId(id);
+            setSelectedId(preset);
         }
     };
 
@@ -74,124 +92,66 @@ export function PresetManager({
     };
 
     return (
-        <div className="space-y-3">
-            {/* Preset selector + actions */}
-            <div className="flex items-center gap-2">
-                <select
-                    value={selectedId}
-                    onChange={e => handleLoad(e.target.value)}
-                    className="flex-1 h-9 rounded-md border border-border bg-input px-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring cursor-pointer"
-                >
-                    <option value="">Carregar preset...</option>
-                    {presets.map(p => (
-                        <option key={p.id} value={p.id}>{p.name}</option>
-                    ))}
-                </select>
+        <div className="flex items-center gap-2">
+            <Combobox
+                items={presets}
+                value={selectedId}
+                onValueChange={handleLoad}
+                itemToStringLabel={(preset: (typeof presets)[number]) => preset.name}
+                itemToStringValue={(preset: (typeof presets)[number]) => preset.id}
+            >
+                <ComboboxInput className="flex-1" placeholder="Trocar preset... "/>
+                <ComboboxContent>
+                    <ComboboxEmpty>Nenhum preset salvo</ComboboxEmpty>
+                    <ComboboxList>
+                        {(preset) => (
+                          <ComboboxItem key={preset.id} value={preset}>
+                              <Item size="sm" className="p-0">
+                                  <ItemContent>
+                                      <ItemTitle>
+                                          {preset.name}
+                                      </ItemTitle>
+                                      <ItemDescription>
+                                          {preset.fields.length} Campos
+                                      </ItemDescription>
+                                  </ItemContent>
+                              </Item>
+                          </ComboboxItem>
+                        )}
+                    </ComboboxList>
+                </ComboboxContent>
+            </Combobox>
 
-                <button
-                    onClick={() => setShowSave(!showSave)}
-                    className="shrink-0 h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
-                    title="Salvar preset"
-                >
-                    <Save size={14} />
-                    Salvar
-                </button>
+            <Button
+              onClick={() => setShowSave(!showSave)}
+              className="shrink-0 h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors flex items-center gap-1.5"
+              title="Salvar preset"
+            >
+                <Plus />
+                Novo
+            </Button>
 
-                <button
-                    onClick={onExport}
-                    className="shrink-0 h-9 w-9 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                    title="Exportar todos"
-                >
-                    <Download size={14} />
-                </button>
-
-                <button
-                    onClick={() => fileRef.current?.click()}
-                    className="shrink-0 h-9 w-9 flex items-center justify-center rounded-md border border-border text-muted-foreground hover:text-foreground hover:bg-secondary transition-colors"
-                    title="Importar presets"
-                >
-                    <Upload size={14} />
-                </button>
-                <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImportFile} />
-            </div>
-
-            {/* Save input */}
-            {showSave && (
-                <div className="flex items-center gap-2 animate-fade-in">
-                    <input
-                        type="text"
-                        value={saveName}
-                        onChange={e => setSaveName(e.target.value)}
-                        onKeyDown={e => e.key === "Enter" && handleSave()}
-                        placeholder="Nome do preset..."
-                        className="flex-1 h-9 rounded-md border border-border bg-input px-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                        autoFocus
-                    />
-                    <button
-                        onClick={handleSave}
-                        className="h-9 px-3 rounded-md bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors"
+            <DropdownMenu>
+                <DropdownMenuTrigger>
+                    <Button
+                      variant="outline"
+                      size="icon"
                     >
-                        Confirmar
-                    </button>
-                </div>
-            )}
-
-            {/* Preset list */}
-            {presets.length > 0 && (
-                <div className="space-y-1 max-h-40 overflow-y-auto">
-                    {presets.map(p => (
-                        <div key={p.id} className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-secondary/50 transition-colors group">
-                            {editingId === p.id ? (
-                                <>
-                                    <input
-                                        type="text"
-                                        value={editName}
-                                        onChange={e => setEditName(e.target.value)}
-                                        onKeyDown={e => e.key === "Enter" && confirmEdit()}
-                                        className="flex-1 h-7 rounded border border-border bg-input px-2 text-sm text-foreground focus:outline-none focus:ring-1 focus:ring-ring"
-                                        autoFocus
-                                    />
-                                    <button onClick={confirmEdit} className="text-primary hover:text-primary/80"><Check size={14} /></button>
-                                    <button onClick={() => setEditingId(null)} className="text-muted-foreground hover:text-foreground"><X size={14} /></button>
-                                </>
-                            ) : (
-                                <>
-                  <span
-                      className="flex-1 text-sm text-secondary-foreground truncate cursor-pointer hover:text-foreground"
-                      onClick={() => handleLoad(p.id)}
-                  >
-                    {p.name}
-                  </span>
-                                    <span className="text-xs text-muted-foreground">{p.fields.length} campos</span>
-                                    <button
-                                        onClick={() => startEdit(p)}
-                                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-accent transition-all"
-                                        title="Renomear"
-                                    >
-                                        <Pencil size={13} />
-                                    </button>
-                                    <button
-                                        onClick={() => {
-                                            onUpdate(p.id, { fields: currentFields });
-                                        }}
-                                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-primary transition-all"
-                                        title="Atualizar com campos atuais"
-                                    >
-                                        <Save size={13} />
-                                    </button>
-                                    <button
-                                        onClick={() => onDelete(p.id)}
-                                        className="opacity-0 group-hover:opacity-100 text-muted-foreground hover:text-destructive transition-all"
-                                        title="Excluir"
-                                    >
-                                        <Trash2 size={13} />
-                                    </button>
-                                </>
-                            )}
-                        </div>
-                    ))}
-                </div>
-            )}
+                        <EllipsisVertical />
+                    </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent>
+                    <DropdownMenuItem onClick={onExport}>
+                        <Download />
+                        Exportar
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => fileRef.current?.click()}>
+                        <Upload />
+                        Importar
+                    </DropdownMenuItem>
+                </DropdownMenuContent>
+            </DropdownMenu>
+            <input ref={fileRef} type="file" accept=".json" className="hidden" onChange={handleImportFile} />
         </div>
     );
 }
