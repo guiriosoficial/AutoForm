@@ -1,7 +1,11 @@
-import { useRef } from "react";
-import { Download, Upload, Plus, EllipsisVertical } from "lucide-react";
-import type { Preset } from "@/lib/faker-options";
-import { Button } from "@/components/ui/button";
+import { type ChangeEvent, useRef } from "react";
+import type { Preset } from "@/types/Presets";
+import {
+  Download,
+  Upload,
+  Plus,
+  EllipsisVertical
+} from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,37 +26,39 @@ import {
   ItemDescription,
   ItemTitle
 } from "@/components/ui/item";
+import { Button } from "@/components/ui/button";
 
 interface PresetManagerProps {
   presets: Preset[];
   selectedPreset: Preset | null;
   onSelectPreset: (preset: Preset | null) => void;
   onDeletePreset: (preset: Preset) => void;
-  onCreateNewPreset: () => void;
+  onCreatePreset: () => void;
   onExport: () => void;
   onImport: (json: string) => boolean;
 }
 
+// TODO:
+// - Implementar Delete (No Menu Dropdown ou no Item do Combobox)
+// - Ajustar tamanho do ComboList
+// - Permitir modificar nome de Preset
 export function PresetManager({
   presets,
   selectedPreset,
   onSelectPreset,
-  onCreateNewPreset,
+  onCreatePreset,
   onExport,
   onImport,
 }: PresetManagerProps) {
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const handleImportFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImportFile = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
 
     if (!file) return;
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      onImport(reader.result as string);
-    };
-    reader.readAsText(file);
+    onImport(await file.text());
+
     e.target.value = "";
   };
 
@@ -66,22 +72,31 @@ export function PresetManager({
         items={presets}
         value={selectedPreset}
         onValueChange={onSelectPreset}
-        itemToStringLabel={(preset: (typeof presets)[number]) => preset.name}
-        itemToStringValue={(preset: (typeof presets)[number]) => preset.id}
+        itemToStringLabel={preset => preset.name}
+        itemToStringValue={preset => preset.id}
       >
         <ComboboxInput
           className="flex-1"
           placeholder="Trocar preset... "
         />
         <ComboboxContent>
-          <ComboboxEmpty>Nenhum preset salvo</ComboboxEmpty>
+          <ComboboxEmpty>
+            Nenhum preset salvo
+          </ComboboxEmpty>
           <ComboboxList>
-            {(preset) => (
-              <ComboboxItem key={preset.id} value={preset}>
+            {(preset: Preset) => (
+              <ComboboxItem
+                key={preset.id}
+                value={preset}
+              >
                 <Item size="sm" className="p-0">
                   <ItemContent>
-                    <ItemTitle>{preset.name}</ItemTitle>
-                    <ItemDescription>{preset.fields.length} Campos</ItemDescription>
+                    <ItemTitle>
+                      {preset.name}
+                    </ItemTitle>
+                    <ItemDescription>
+                      {preset.fields.length} Campos
+                    </ItemDescription>
                   </ItemContent>
                 </Item>
               </ComboboxItem>
@@ -91,7 +106,7 @@ export function PresetManager({
       </Combobox>
 
       <Button
-        onClick={onCreateNewPreset}
+        onClick={onCreatePreset}
         title="Criar novo preset"
       >
         <Plus />

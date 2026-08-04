@@ -4,11 +4,11 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import Index from "@/components/Index";
 
 const App = () => (
-    <TooltipProvider>
-        <Toaster />
-        <Sonner />
-        <Index />
-    </TooltipProvider>
+  <TooltipProvider>
+    <Toaster />
+    <Sonner />
+    <Index />
+  </TooltipProvider>
 );
 
 export default App;
