@@ -50,3 +50,13 @@ npm run build
 - The CRXJS plugin automatically handles manifest generation
 - Content scripts should be placed in `src/content/`
 - Popup UI should be placed in `src/popup/`
+
+## TODOs
+- Ajustar cor Hover de ComboList e Popover
+- Adjust scroll and width of ComboLists
+- Implements search filters in ComboLists
+- Create custom generator functions (like cpf, cnpj...)
+- Implements "New Presets" counter
+- Colorir Sonner
+- Separar createField e createPreset functions em lib
+- Adicionar novos geradores

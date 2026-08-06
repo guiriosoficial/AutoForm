@@ -1,5 +1,4 @@
-import { type ChangeEvent, useRef } from "react";
-import type { Preset } from "@/types/Presets";
+import { useRef, type ChangeEvent } from "react";
 import {
   Download,
   Upload,
@@ -27,6 +26,8 @@ import {
   ItemTitle
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
+import { EXPORT_FILE_EXTENSION } from "@/configs";
+import type { Preset } from "@/lib/presets";
 
 interface PresetManagerProps {
   presets: Preset[];
@@ -35,13 +36,13 @@ interface PresetManagerProps {
   onDeletePreset: (preset: Preset) => void;
   onCreatePreset: () => void;
   onExport: () => void;
-  onImport: (json: string) => boolean;
+  onImport: (json: string) => void;
 }
 
 // TODO:
 // - Implementar Delete (No Menu Dropdown ou no Item do Combobox)
+// - Implementar edição de nome do Preset
 // - Ajustar tamanho do ComboList
-// - Permitir modificar nome de Preset
 export function PresetManager({
   presets,
   selectedPreset,
@@ -137,7 +138,7 @@ export function PresetManager({
       <input
         ref={fileRef}
         type="file"
-        accept=".json"
+        accept={EXPORT_FILE_EXTENSION}
         className="hidden"
         onChange={handleImportFile}
       />

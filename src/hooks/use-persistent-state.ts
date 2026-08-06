@@ -1,9 +1,13 @@
 import { useEffect, useState } from 'react';
-import type { LocalStorageKeys } from '@/configs';
+import {
+  STORAGE_PERSISTENCE_DELAY_MS,
+  STORAGE_EVENT_NAME,
+  type LocalStorageKeys
+} from '@/configs';
 
 function getInitialState<T>(
   key: LocalStorageKeys,
-  initialState: T
+  initialState: T,
 ) {
   const item = localStorage.getItem(key);
 
@@ -21,7 +25,8 @@ function getInitialState<T>(
 
 export function usePersistentState<T>(
   key: LocalStorageKeys,
-  initialState: T
+  initialState: T,
+  persistenceDelay = STORAGE_PERSISTENCE_DELAY_MS
 ) {
   const [state, setState] = useState<T>(() =>
     getInitialState<T>(key, initialState)
@@ -35,10 +40,10 @@ export function usePersistentState<T>(
   useEffect(() => {
     const timer = setTimeout(() => {
       localStorage.setItem(key, JSON.stringify(state));
-    }, 800);
+    }, persistenceDelay);
 
     return () => clearTimeout(timer);
-  }, [key, state]);
+  }, [key, state, persistenceDelay]);
 
   useEffect(() => {
     function onStorage(event: StorageEvent) {
@@ -54,9 +59,9 @@ export function usePersistentState<T>(
       } catch {}
     }
 
-    window.addEventListener('storage', onStorage);
+    window.addEventListener(STORAGE_EVENT_NAME, onStorage);
 
-    return () => window.removeEventListener('storage', onStorage);
+    return () => window.removeEventListener(STORAGE_EVENT_NAME, onStorage);
   }, [key, initialState]);
 
   return [

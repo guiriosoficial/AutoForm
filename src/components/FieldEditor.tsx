@@ -1,7 +1,4 @@
 import { X } from "lucide-react";
-import {CATALOG, Catalog, CATALOG_METHODS_BY_VALUE, CatalogMethod} from "@/lib/faker-options";
-import { JsonConfigEditor } from "@/components/JsonConfigEditor";
-import { Input } from "@/components/ui/input.tsx";
 import {
   Combobox,
   ComboboxCollection,
@@ -14,27 +11,35 @@ import {
   ComboboxList,
   ComboboxSeparator,
 } from "@/components/ui/combobox"
-import { Button } from "@/components/ui/button.tsx";
-import type { FieldConfig } from "@/types/FieldConfig.ts";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { JsonConfigEditor } from "@/components/JsonConfigEditor";
+import {
+  FakerCatalog,
+  CATALOG_METHODS_BY_VALUE,
+  type Catalog,
+  type CatalogMethod
+} from "@/lib/faker-catalog.ts";
+import type { FieldConfig } from "@/lib/fieldsConfig";
 
 interface FieldRowProps {
   field: FieldConfig;
-  onChange: (updated: FieldConfig) => void;
   onRemove: () => void;
+  onUpdate: (updated: FieldConfig) => void;
 }
 
-export function FieldRow({
+export function FieldEditor({
   field,
-  onChange,
   onRemove,
+  onUpdate,
 }: FieldRowProps) {
-  const localValue = CATALOG_METHODS_BY_VALUE[field.methodType];
+  const selectedMethod = CATALOG_METHODS_BY_VALUE[field.methodType];
 
-  const handleChangeField = (
+  const updateField = (
     key: keyof FieldConfig,
     value: string
   ) => {
-    onChange({
+    onUpdate({
       ...field,
       [key]: value
     })
@@ -45,16 +50,17 @@ export function FieldRow({
       <Input
         type="text"
         value={field.selectorString}
-        onChange={(e) => handleChangeField('selectorString', e.target.value)}
+        onChange={(e) => updateField('selectorString', e.target.value)}
         placeholder=".classe / #id / [data-test]"
       />
 
       {/* TODO: Adicionar Filtro*/}
       {/* TODO: Ajustar Scroll*/}
+      {/* TODO: Ajustar Hoover*/}
       <Combobox
-        items={CATALOG}
-        value={localValue}
-        onValueChange={(value) => handleChangeField('methodType', value!.value)}
+        items={FakerCatalog}
+        value={selectedMethod}
+        onValueChange={(value) => updateField('methodType', value!.value)}
         itemToStringLabel={(item) => item.label}
         itemToStringValue={(item) => item.value}
       >
@@ -69,7 +75,9 @@ export function FieldRow({
                 key={group.category}
                 items={group.methods}
               >
-                <ComboboxLabel>{group.category}</ComboboxLabel>
+                <ComboboxLabel>
+                  {group.category}
+                </ComboboxLabel>
                 <ComboboxCollection>
                   {(item: CatalogMethod) => (
                     <ComboboxItem
@@ -80,7 +88,7 @@ export function FieldRow({
                     </ComboboxItem>
                   )}
                 </ComboboxCollection>
-                {index < CATALOG.length - 1 && <ComboboxSeparator />}
+                {index < FakerCatalog.length - 1 && <ComboboxSeparator />}
               </ComboboxGroup>
             )}
           </ComboboxList>
@@ -89,7 +97,7 @@ export function FieldRow({
 
       <JsonConfigEditor
         value={field.config}
-        onChange={(value) => handleChangeField('config', value)}
+        onChange={(value) => updateField('config', value)}
       />
 
       <Button

@@ -1,12 +1,10 @@
-import { Toaster } from "@/components/ui/toaster";
-import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import Index from "@/components/Index";
+import { Toaster } from "@/components/ui/sonner";
+import { Index } from "@/components/Index";
 
 const App = () => (
   <TooltipProvider>
-    <Toaster />
-    <Sonner />
+    <Toaster position="top-center" />
     <Index />
   </TooltipProvider>
 );

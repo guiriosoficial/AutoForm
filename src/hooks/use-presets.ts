@@ -1,71 +1,115 @@
-import { useCallback, useMemo } from "react";
-import { usePersistentState } from "@/hooks/use-persistent-state.ts";
-import { LocalStorageKeys } from "@/configs";
-import type { Preset } from "@/types/Presets";
+import { useCallback, useMemo, useState } from "react";
+import { toast } from "sonner";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+import {
+  LocalStorageKeys,
+  EXPORT_JSON_INDENT_SPACES,
+  EXPORT_FILE_TYPE,
+  EXPORT_FILE_NAME
+} from "@/configs";
+import {
+  createEmptyPreset,
+  getLastNewPresetNumber,
+  getNextOrPreviousPreset,
+  isValidPresetArray,
+  type Preset
+} from "@/lib/presets";
 
 export function usePresets() {
   const [presets, setPresets] = usePersistentState<Preset[]>(LocalStorageKeys.PRESETS, []);
+  const [currentPresetId, setCurrentPresetId] = useState<string>("");
 
-  const setPresetsAndTrack = useCallback((
-    updater: (prev: Preset[]) => Preset[]
-  ) => {
-    setPresets(prev =>  updater(prev));
-  }, []);
+  const presetsById = useMemo(() => {
+    return Object.fromEntries(
+      presets.map(p => [p.id, p])
+    )
+  }, [presets]);
 
-  const addPreset = useCallback((preset: Preset) => {
-    setPresetsAndTrack(
-      prev => [...prev, preset]
+  const currentPreset = useMemo(() => {
+    return presetsById[currentPresetId] ?? null
+  }, [presetsById, currentPresetId]);
+
+  const setCurrentPreset = useCallback((preset: Preset | null) => {
+    if (!preset) return
+
+    setCurrentPresetId(preset.id);
+  }, [setCurrentPresetId]);
+
+  const createPreset = useCallback(() => {
+    const nextPresetNumber = getLastNewPresetNumber(presets) + 1;
+    const emptyPreset = createEmptyPreset(nextPresetNumber);
+
+    setPresets((prev) =>
+      [...prev, emptyPreset]
     );
-  }, [setPresetsAndTrack]);
+    setCurrentPreset(emptyPreset);
+  }, [setPresets, presets]);
+
+  const deletePreset = useCallback((preset: Preset) => {
+    if (preset.id === currentPreset?.id) {
+      const presetToSet = getNextOrPreviousPreset(presets, preset)
+      setCurrentPreset(presetToSet);
+    }
+
+    setPresets((prev) =>
+      prev.filter(p => p.id !== preset.id)
+    );
+  }, [setPresets, presets, currentPreset]);
 
   const updatePreset = useCallback((id: string, updated: Partial<Preset>) => {
-    setPresetsAndTrack(
-      prev => prev.map(p => (p.id === id ? { ...p, ...updated } : p))
+    setPresets((prev) =>
+      prev.map(p => (p.id === id ? { ...p, ...updated } : p))
     );
-  }, [setPresetsAndTrack]);
-
-  const deletePreset = useCallback((id: string,) => {
-    setPresetsAndTrack(
-      prev => prev.filter(p => p.id !== id)
-    );
-  }, [setPresetsAndTrack]);
+  }, [setPresets]);
 
   const exportPresets = useCallback(() => {
-    const blob = new Blob([JSON.stringify(presets, null, 2)], { type: "application/json" });
+    const data = JSON.stringify(presets, null, EXPORT_JSON_INDENT_SPACES);
+    const blob = new Blob([data], { type: EXPORT_FILE_TYPE });
     const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = "auto-form-presets.json";
-    a.click();
-    a.remove()
-    URL.revokeObjectURL(url)
+
+    try {
+      const a = document.createElement("a");
+      a.download = EXPORT_FILE_NAME;
+      a.href = url;
+      a.click();
+      a.remove()
+    } catch {
+      toast.error("Erro ao exportar presets");
+    } finally {
+      URL.revokeObjectURL(url)
+    }
   }, [presets]);
 
   const importPresets = useCallback((json: string) => {
     try {
       const imported: Preset[] = JSON.parse(json);
 
-      if (!Array.isArray(imported)) return false
+      if (!isValidPresetArray(imported)) {
+        throw new Error("Invalid presets");
+      }
 
-      setPresetsAndTrack(prev => [...prev, ...imported]);
-      return true;
-    } catch {}
-    return false;
-  }, [setPresetsAndTrack]);
+      setPresets(prev => {
+        const map = new Map(prev.map(p => [p.id, p]));
 
-  const getPresetById = useCallback((id: string) => {
-    return presets.find(p => p.id === id) ?? null;
-  }, [presets]);
+        for (const preset of imported) {
+          map.set(preset.id, preset);
+        }
 
-  return useMemo(() => ({
-      presets,
-      addPreset,
-      updatePreset,
-      deletePreset,
-      exportPresets,
-      importPresets,
-      getPresetById
-    }),
-    [presets, addPreset, updatePreset, deletePreset, exportPresets, importPresets, getPresetById]
-  );
+        return [...map.values()];
+      });
+    } catch {
+      toast.error("Erro ao importar presets");
+    }
+  }, [setPresets]);
+
+  return {
+    presets,
+    currentPreset,
+    setCurrentPreset,
+    createPreset,
+    updatePreset,
+    deletePreset,
+    exportPresets,
+    importPresets,
+  };
 }

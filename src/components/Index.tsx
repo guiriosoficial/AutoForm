@@ -1,58 +1,44 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect } from "react";
 import { Zap, Copy } from "lucide-react";
-import { PresetManager } from "@/components/PresetManager";
-import { usePresets } from "@/hooks/use-presets";
-import { useForm, createField } from "@/hooks/use-form";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle
+} from "@/components/ui/card";
 import { Header } from "@/components/Header";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card.tsx";
-import { Button } from "@/components/ui/button.tsx";
-import {FormManager} from "@/components/FormManager.tsx";
-import {Preset} from "@/types/Presets.ts";
-import {FieldConfig} from "@/types/FieldConfig.ts";
+import { PresetManager } from "@/components/PresetManager";
+import { FormManager } from "@/components/FormManager";
+import { usePresets } from "@/hooks/use-presets";
+import { useForm } from "@/hooks/use-form";
+import type { FieldConfig } from "@/lib/fieldsConfig";
+import {InlineEditableInput} from "@/components/InlineEditableInput.tsx";
 
-const createEmptyPreset = (): Preset => ({
-  id: crypto.randomUUID(),
-  name: "Novo preset",
-  fields: [createField()],
-  createdAt: Date.now(),
-});
-
-const Index = () => {
+export function Index(){
   const {
     presets,
-    addPreset,
+    currentPreset,
+    setCurrentPreset,
+    createPreset,
     updatePreset,
     deletePreset,
     exportPresets,
-    importPresets,
-    getPresetById
+    importPresets
   } = usePresets();
-
-  const [currentPresetId, setCurrentPresetId] = useState<string | null>(null);
-
-  const currentPreset = useMemo(() => {
-    if (!currentPresetId) return null;
-
-    return getPresetById(currentPresetId);
-  }, [currentPresetId, getPresetById]);
-
-  const setCurrentPreset = useCallback((preset: Preset | null) => {
-    if (!preset) return;
-
-    setCurrentPresetId(preset.id);
-  }, [])
 
   const fields = currentPreset?.fields ?? [];
 
   const setFields = useCallback((updater: (prev: FieldConfig[]) => FieldConfig[]) => {
-      if (!currentPresetId) return;
+      if (!currentPreset) return;
 
       updatePreset(
-        currentPresetId,
+        currentPreset.id,
         { fields: updater(fields) }
       );
     },
-    [currentPresetId, updatePreset, fields]
+    [fields, currentPreset, updatePreset]
   );
 
   const {
@@ -61,53 +47,33 @@ const Index = () => {
     updateField,
     generateValues,
     regenerateValue,
-    generatedValues,
     copyValue,
-    copyFormAsJSON
+    copyFormAsJSON,
+    generatedValues,
   } = useForm({
     fields,
     setFields
   });
 
+  const handleChangePresetName = (newName: string) => {
+    if (!currentPreset) return;
 
+    updatePreset(
+      currentPreset.id,
+      { name: newName }
+    )
+  }
 
-
-
-
-
-
-  // Garante que sempre exista um preset selecionado (pra não ter tela "sem fonte de verdade")
   useEffect(() => {
-    if (currentPresetId) return;
+    if (currentPreset) return;
 
     if (presets?.length > 0) {
-      setCurrentPresetId(presets[0]!.id);
+      setCurrentPreset(presets[0]);
       return;
     }
 
-    const emptyPreset = createEmptyPreset();
-    addPreset(emptyPreset);
-    setCurrentPresetId(emptyPreset.id);
-  }, [addPreset, presets, currentPresetId]);
-
-
-
-
-
-
-
-  const handleCreateNewPreset = useCallback(() => {
-    const emptyPreset = createEmptyPreset();
-    addPreset(emptyPreset);
-    setCurrentPresetId(emptyPreset.id);
-    // TODO: Focus preset name input here
-  }, [addPreset]);
-
-  const handleDeletePreset = useCallback((preset: Preset) => {
-    deletePreset(preset.id);
-    if (preset.id === currentPresetId) setCurrentPresetId(null);
-    // TODO: Select next or previous preset
-  }, [deletePreset, currentPresetId]);
+    createPreset()
+  }, [presets, currentPreset]);
 
   return (
     <div className="min-h-screen w-[500px] bg-background flex items-start justify-center p-4 pt-8">
@@ -124,8 +90,8 @@ const Index = () => {
               presets={presets}
               selectedPreset={currentPreset}
               onSelectPreset={setCurrentPreset}
-              onCreatePreset={handleCreateNewPreset}
-              onDeletePreset={handleDeletePreset}
+              onCreatePreset={createPreset}
+              onDeletePreset={deletePreset}
               onExport={exportPresets}
               onImport={importPresets}
             />
@@ -135,7 +101,13 @@ const Index = () => {
         {/* Fields */}
         <Card>
           <CardHeader>
-            <CardTitle>{currentPreset?.name ?? "Campos"}</CardTitle>
+            <CardTitle>
+              <InlineEditableInput
+                value={currentPreset?.name}
+                onSave={handleChangePresetName}
+                placeholder="Campos"
+              />
+            </CardTitle>
             <CardDescription>{fields.length} campo(s)</CardDescription>
           </CardHeader>
 
@@ -154,13 +126,19 @@ const Index = () => {
 
         {/* Actions */}
         <div className="flex gap-2">
-          <Button onClick={generateValues} className="flex-1">
+          <Button
+            onClick={generateValues}
+            className="flex-1"
+          >
             <Zap size={16} />
             Gerar Dados
           </Button>
 
           {Object.keys(generatedValues).length > 0 && (
-            <Button onClick={copyFormAsJSON} variant="outline">
+            <Button
+              onClick={copyFormAsJSON}
+              variant="outline"
+            >
               <Copy />
               Copiar JSON
             </Button>
@@ -170,5 +148,3 @@ const Index = () => {
     </div>
   );
 };
-
-export default Index;

@@ -1,13 +1,11 @@
-import { useCallback, useMemo, useState } from "react";
-import type { FieldConfig } from "@/types/FieldConfig";
-import { generateFakerValue } from "@/lib/faker-generator.ts";
+import {
+  useCallback,
+  useMemo,
+  useState
+} from "react";
 import { toast } from "sonner";
-
-export const createField = (): FieldConfig => ({
-  id: crypto.randomUUID(),
-  selectorString: "",
-  methodType: "",
-});
+import { generateFakerValue } from "@/lib/faker-generator";
+import { createField, type FieldConfig } from "@/lib/fieldsConfig";
 
 type UseFormArgs = {
   fields: FieldConfig[];
@@ -20,16 +18,20 @@ export function useForm({
 }: UseFormArgs) {
   const [generatedValues, setGeneratedValues] = useState<Record<string, string>>({});
 
+  const fieldsById = useMemo(() => {
+    return Object.fromEntries(fields.map(f => [f.id, f]));
+  }, [fields])
+
   const addField = useCallback(() => {
-    setFields(prev => [...prev, createField()]);
+    setFields((prev) => [...prev, createField()]);
   }, [setFields]);
 
   const removeField = useCallback((id: string) => {
-    setFields(prev => prev.filter(f => f.id !== id));
+    setFields((prev) => prev.filter(f => f.id !== id));
   }, [setFields]);
 
   const updateField = useCallback((id: string, updated: FieldConfig) => {
-    setFields(prev => prev.map(f => (f.id === id ? updated : f)));
+    setFields((prev) => prev.map(f => (f.id === id ? updated : f)));
   }, [setFields]);
 
   // TODO: Review faker generator
@@ -47,13 +49,12 @@ export function useForm({
 
   // TODO: Review faker generator
   // TODO: Implement auto set on html fields
-  const regenerateValue = useCallback((fieldId: string, fakerType: string) => {
-    if (!fakerType) return;
+  const regenerateValue = useCallback((fieldId: string, methodType: string) => {
+    if (!methodType) return;
 
-    const field = fields.find(f => f.id === fieldId);
     setGeneratedValues(prev => ({
       ...prev,
-      [fieldId]: generateFakerValue(fakerType, field?.config),
+      [fieldId]: generateFakerValue(methodType, fieldsById[fieldId]?.config),
     }));
   }, [fields]);
 
@@ -74,27 +75,14 @@ export function useForm({
     toast.success("JSON copiado!");
   }, [fields, generatedValues]);
 
-  return useMemo(
-    () => ({
-      generatedValues,
-      setGeneratedValues,
-      addField,
-      removeField,
-      updateField,
-      generateValues,
-      regenerateValue,
-      copyValue,
-      copyFormAsJSON,
-    }),
-    [
-      generatedValues,
-      addField,
-      removeField,
-      updateField,
-      generateValues,
-      regenerateValue,
-      copyValue,
-      copyFormAsJSON,
-    ]
-  );
+  return {
+    generatedValues,
+    addField,
+    removeField,
+    updateField,
+    generateValues,
+    regenerateValue,
+    copyValue,
+    copyFormAsJSON,
+  };
 }
