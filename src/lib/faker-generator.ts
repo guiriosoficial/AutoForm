@@ -1,11 +1,7 @@
 import {faker} from "@faker-js/faker";
 
-export function generateFakerValue(type: string, configStr?: string): string {
-    let opts: Record<string, any> = {};
-    if (configStr) {
-        try { opts = JSON.parse(configStr); } catch { /* ignore invalid json */ }
-    }
+export function generateFakerValue(type: string, configStr?: Record<string, unknown>): string {
 
     const path = type.split(".");
-    return faker[path[0]][path[1]](opts);
+    return faker[path[0]][path[1]](configStr);
 }

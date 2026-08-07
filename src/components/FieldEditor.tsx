@@ -33,7 +33,7 @@ export function FieldEditor({
   onRemove,
   onUpdate,
 }: FieldRowProps) {
-  const selectedMethod = CATALOG_METHODS_BY_VALUE[field.methodType];
+  const selectedMethod = CATALOG_METHODS_BY_VALUE[field.generator];
 
   const updateField = (
     key: keyof FieldConfig,
@@ -49,18 +49,16 @@ export function FieldEditor({
     <div className="grid items-center grid-cols-[1fr_1fr_auto_auto] gap-2 animate-fade-in">
       <Input
         type="text"
-        value={field.selectorString}
-        onChange={(e) => updateField('selectorString', e.target.value)}
+        value={field.selector}
+        onChange={(e) => updateField('selector', e.target.value)}
         placeholder=".classe / #id / [data-test]"
       />
 
       {/* TODO: Adicionar Filtro*/}
-      {/* TODO: Ajustar Scroll*/}
-      {/* TODO: Ajustar Hoover*/}
       <Combobox
         items={FakerCatalog}
         value={selectedMethod}
-        onValueChange={(value) => updateField('methodType', value!.value)}
+        onValueChange={(value) => updateField('generator', value?.value ?? '')}
         itemToStringLabel={(item) => item.label}
         itemToStringValue={(item) => item.value}
       >
@@ -96,8 +94,8 @@ export function FieldEditor({
       </Combobox>
 
       <JsonConfigEditor
-        value={field.config}
-        onChange={(value) => updateField('config', value)}
+        value={field.options}
+        onChange={(value) => updateField('options', value)}
       />
 
       <Button

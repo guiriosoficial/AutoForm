@@ -33,7 +33,7 @@ export function getLastNewPresetNumber(presets: Preset[]) {
   }, 0);
 }
 
-export function getNextOrPreviousPreset(presets: Preset[], current: Preset) {
+export function getAdjacentPreset(presets: Preset[], current: Preset) {
   const presetIndex = presets.findIndex(p => p.id === current.id)
 
   if (presetIndex === -1) return null;

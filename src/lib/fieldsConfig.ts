@@ -2,15 +2,15 @@ import {isObject} from "@/lib/utils.ts";
 
 export interface FieldConfig {
   id: string;
-  selectorString: string;
-  methodType: string;
-  config?: string;
+  selector: string;
+  generator: string;
+  options?: Record<string, unknown>;
 }
 
 export const createField = (): FieldConfig => ({
   id: crypto.randomUUID(),
-  selectorString: "",
-  methodType: "",
+  selector: "",
+  generator: "",
 });
 
 
@@ -19,8 +19,8 @@ export function isValidField(value: unknown): value is FieldConfig {
 
   return (
     typeof value.id === "string" &&
-    typeof value.selectorString === "string" &&
-    typeof value.methodType === "string" &&
+    typeof value.selector === "string" &&
+    typeof value.generator === "string" &&
     (
       value.config === undefined ||
       typeof value.config === "string"

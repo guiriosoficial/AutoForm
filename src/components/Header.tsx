@@ -2,10 +2,11 @@ import { Zap } from "lucide-react";
 
 export function Header() {
   return (
-    <div className="text-center space-y-1">
+    <header className="text-center space-y-1">
       <div className="flex items-center justify-center gap-2">
         <Zap
           className="text-primary"
+          aria-hidden
           size={24}
         />
         <h1 className="text-xl font-bold text-foreground tracking-tight">
@@ -15,6 +16,6 @@ export function Header() {
       <p className="text-sm text-muted-foreground">
         Preencha formulários automaticamente com dados aleatórios
       </p>
-    </div>
+    </header>
   )
 }

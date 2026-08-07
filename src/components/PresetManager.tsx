@@ -41,8 +41,6 @@ interface PresetManagerProps {
 
 // TODO:
 // - Implementar Delete (No Menu Dropdown ou no Item do Combobox)
-// - Implementar edição de nome do Preset
-// - Ajustar tamanho do ComboList
 export function PresetManager({
   presets,
   selectedPreset,
@@ -90,7 +88,10 @@ export function PresetManager({
                 key={preset.id}
                 value={preset}
               >
-                <Item size="sm" className="p-0">
+                <Item
+                  size="sm"
+                  className="p-0"
+                >
                   <ItemContent>
                     <ItemTitle>
                       {preset.name}
