@@ -2,7 +2,7 @@ import { useCallback, useEffect } from "react";
 import { Zap, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
-  Card,
+  Card, CardAction,
   CardContent,
   CardDescription,
   CardHeader,
@@ -76,7 +76,7 @@ export function Index(){
   }, [presets, currentPreset]);
 
   return (
-    <div className="min-h-screen w-[500px] bg-background flex items-start justify-center p-4 pt-8">
+    <div className="min-h-screen w-125 bg-background flex items-start justify-center p-4 pt-8">
       <div className="w-full max-w-xl space-y-4">
         <Header />
 
@@ -108,9 +108,12 @@ export function Index(){
                 placeholder="Campos"
               />
             </CardTitle>
-            <CardDescription>{fields.length} campo(s)</CardDescription>
+            <CardAction>
+              <CardDescription>
+                {fields.length} campo(s)
+              </CardDescription>
+            </CardAction>
           </CardHeader>
-
           <CardContent className="space-y-2">
             <FormManager
               fields={fields}
@@ -147,4 +150,4 @@ export function Index(){
       </div>
     </div>
   );
-};
+}

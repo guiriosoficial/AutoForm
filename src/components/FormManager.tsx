@@ -37,7 +37,7 @@ export function FormManager({
 
         <FieldResult
           value={values[field.id]}
-          onRegenerateValue={() => onRegenerateValue(field.id, field.methodType)}
+          onRegenerateValue={() => onRegenerateValue(field.id, field.generator)}
           onCopyValue={() => onCopyValue(values[field.id])}
         />
       </div>
@@ -45,7 +45,7 @@ export function FormManager({
 
     <Button
       variant="ghost"
-      className="border border-dashed w-full"
+      className="border-border border-dashed"
       onClick={onAddField}
     >
       <Plus size={14} />

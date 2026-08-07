@@ -1,12 +1,11 @@
-import { TooltipProvider } from "@/components/ui/tooltip";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster } from "@/components/ui/toast";
 import { Index } from "@/components/Index";
 
 const App = () => (
-  <TooltipProvider>
-    <Toaster position="top-center" />
+  <>
+    <Toaster />
     <Index />
-  </TooltipProvider>
+  </>
 );
 
 export default App;

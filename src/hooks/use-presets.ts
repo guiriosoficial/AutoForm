@@ -1,5 +1,5 @@
 import { useCallback, useMemo, useState } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
   LocalStorageKeys,
@@ -10,7 +10,7 @@ import {
 import {
   createEmptyPreset,
   getLastNewPresetNumber,
-  getNextOrPreviousPreset,
+  getAdjacentPreset,
   isValidPresetArray,
   type Preset
 } from "@/lib/presets";
@@ -47,7 +47,7 @@ export function usePresets() {
 
   const deletePreset = useCallback((preset: Preset) => {
     if (preset.id === currentPreset?.id) {
-      const presetToSet = getNextOrPreviousPreset(presets, preset)
+      const presetToSet = getAdjacentPreset(presets, preset)
       setCurrentPreset(presetToSet);
     }
 

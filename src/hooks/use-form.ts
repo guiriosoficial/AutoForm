@@ -3,7 +3,7 @@ import {
   useMemo,
   useState
 } from "react";
-import { toast } from "sonner";
+import { toast } from "@/lib/toast"
 import { generateFakerValue } from "@/lib/faker-generator";
 import { createField, type FieldConfig } from "@/lib/fieldsConfig";
 
@@ -40,7 +40,7 @@ export function useForm({
     const values: Record<string, string> = {};
 
     fields.forEach(f => {
-      if (f.methodType) values[f.id] = generateFakerValue(f.methodType, f.config);
+      if (f.generator) values[f.id] = generateFakerValue(f.generator, f.options);
     });
 
     setGeneratedValues(values);
@@ -49,30 +49,43 @@ export function useForm({
 
   // TODO: Review faker generator
   // TODO: Implement auto set on html fields
-  const regenerateValue = useCallback((fieldId: string, methodType: string) => {
-    if (!methodType) return;
+  const regenerateValue = useCallback((fieldId: string) => {
+    const field = fieldsById[fieldId];
+
+    if (!field.generator) return;
 
     setGeneratedValues(prev => ({
       ...prev,
-      [fieldId]: generateFakerValue(methodType, fieldsById[fieldId]?.config),
+      [fieldId]: generateFakerValue(
+        field.generator,
+        field.options
+      ),
     }));
   }, [fields]);
 
   const copyValue = useCallback(async (value: string) => {
-    await navigator.clipboard.writeText(value);
-    toast.success("Copiado!");
+    try {
+      await navigator.clipboard.writeText(value);
+      toast.success("Copiado!");
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
   }, []);
 
   const copyFormAsJSON = useCallback(async () => {
-    const data: Record<string, string> = {};
+    try {
+      const data: Record<string, string> = {};
 
-    fields.forEach(f => {
-      if (generatedValues[f.id]) data[f.selectorString || f.id] = generatedValues[f.id];
-    });
+      fields.forEach(f => {
+        if (generatedValues[f.id]) data[f.selector || f.id] = generatedValues[f.id];
+      });
 
-    const value = JSON.stringify(data, null, 2)
-    await navigator.clipboard.writeText(value);
-    toast.success("JSON copiado!");
+      const value = JSON.stringify(data, null, 2)
+      await navigator.clipboard.writeText(value);
+      toast.success("JSON copiado!");
+    } catch {
+      toast.error("Não foi possível copiar");
+    }
   }, [fields, generatedValues]);
 
   return {

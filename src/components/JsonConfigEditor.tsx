@@ -12,7 +12,7 @@ import {
 import { cn } from "@/lib/utils";
 
 interface JsonConfigEditorProps {
-  value: string | undefined;
+  value: Record<string, unknown> | undefined;
   onChange: (value: string) => void;
 }
 
@@ -67,7 +67,7 @@ export function JsonConfigEditor({
       open={open}
       onOpenChange={handlePopoverOpenChange}
     >
-      <PopoverTrigger asChild>
+      <PopoverTrigger>
         <Button
           variant="ghost"
           size="icon"
