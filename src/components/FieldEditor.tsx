@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { X } from "lucide-react";
 import {
   Combobox,
@@ -15,12 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { JsonConfigEditor } from "@/components/JsonConfigEditor";
 import {
-  FakerCatalog,
   CATALOG_METHODS_BY_VALUE,
-  type Catalog,
+  AutoFormCatalog,
+  type CatalogModule,
   type CatalogMethod
-} from "@/lib/faker-catalog.ts";
-import type { FieldConfig } from "@/lib/fieldsConfig";
+} from "@/lib/main-catalog";
+import { preventDefaultEscape } from "@/lib/utils";
+import type { FieldConfig } from "@/lib/fields-config";
 
 interface FieldRowProps {
   field: FieldConfig;
@@ -33,12 +35,16 @@ export function FieldEditor({
   onRemove,
   onUpdate,
 }: FieldRowProps) {
+  const { t } = useTranslation();
+
   const selectedMethod = CATALOG_METHODS_BY_VALUE[field.generator];
 
   const updateField = (
     key: keyof FieldConfig,
-    value: string
+    value: string | undefined
   ) => {
+    if (value === undefined) return;
+
     onUpdate({
       ...field,
       [key]: value
@@ -46,35 +52,36 @@ export function FieldEditor({
   }
 
   return (
-    <div className="grid items-center grid-cols-[1fr_1fr_auto_auto] gap-2 animate-fade-in">
+    <div className="grid items-center grid-cols-[1fr_1fr_auto_auto] gap-2">
       <Input
-        type="text"
         value={field.selector}
-        onChange={(e) => updateField('selector', e.target.value)}
-        placeholder=".classe / #id / [data-test]"
+        placeholder={t("input_field_selector_placeholder")}
+        onChange={(e) => updateField("selector", e.target.value)}
       />
 
-      {/* TODO: Adicionar Filtro*/}
       <Combobox
-        items={FakerCatalog}
+        items={AutoFormCatalog}
         value={selectedMethod}
-        onValueChange={(value) => updateField('generator', value?.value ?? '')}
+        onValueChange={(value) => updateField("generator", value?.value)}
         itemToStringLabel={(item) => item.label}
         itemToStringValue={(item) => item.value}
       >
-        <ComboboxInput placeholder="Select a type" />
+        <ComboboxInput
+          placeholder={t("select_field_generator_placeholder")}
+          onKeyDown={preventDefaultEscape}
+        />
         <ComboboxContent>
           <ComboboxEmpty>
-            No method found.
+            {t("select_generator_empty")}
           </ComboboxEmpty>
           <ComboboxList>
-            {(group: Catalog, index) => (
+            {(group: CatalogModule, index) => (
               <ComboboxGroup
-                key={group.category}
-                items={group.methods}
+                key={group.value}
+                items={group.items}
               >
                 <ComboboxLabel>
-                  {group.category}
+                  {group.value}
                 </ComboboxLabel>
                 <ComboboxCollection>
                   {(item: CatalogMethod) => (
@@ -82,11 +89,13 @@ export function FieldEditor({
                       key={item.value}
                       value={item}
                     >
-                      {item.label}
+                      <span className="block truncate">
+                        {item.label}
+                      </span>
                     </ComboboxItem>
                   )}
                 </ComboboxCollection>
-                {index < FakerCatalog.length - 1 && <ComboboxSeparator />}
+                {index < AutoFormCatalog.length - 1 && <ComboboxSeparator />}
               </ComboboxGroup>
             )}
           </ComboboxList>
@@ -95,14 +104,14 @@ export function FieldEditor({
 
       <JsonConfigEditor
         value={field.options}
-        onChange={(value) => updateField('options', value)}
+        docUrl={selectedMethod?.docs}
+        onChange={(value) => updateField("options", value)}
       />
 
       <Button
         variant="ghost"
         size="icon"
-        title="Remover campo"
-        className="hover:bg-destructive/15 hover:text-destructive"
+        className="hover:bg-destructive/10! hover:text-destructive"
         onClick={onRemove}
       >
         <X size={16} />

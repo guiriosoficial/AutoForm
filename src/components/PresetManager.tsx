@@ -1,8 +1,15 @@
-import { useRef, type ChangeEvent } from "react";
+import { useTranslation } from "react-i18next";
+import {
+  useState,
+  useRef,
+  type MouseEvent,
+  type ChangeEvent
+} from "react";
 import {
   Download,
   Upload,
   Plus,
+  Trash,
   EllipsisVertical
 } from "lucide-react";
 import {
@@ -23,64 +30,96 @@ import {
   Item,
   ItemContent,
   ItemDescription,
-  ItemTitle
+  ItemTitle,
+  ItemActions
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import { EXPORT_FILE_EXTENSION } from "@/configs";
+import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import { ImportPresetDialog } from "@/components/ImportPresetDialog";
+import { preventDefaultEscape } from "@/lib/utils";
+import { IMPORT_FILE_TYPE, ImportStrategy } from "@/configs";
+import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
 
 interface PresetManagerProps {
   presets: Preset[];
   selectedPreset: Preset | null;
   onSelectPreset: (preset: Preset | null) => void;
-  onDeletePreset: (preset: Preset) => void;
+  onDeletePreset: (presetId: string) => void;
   onCreatePreset: () => void;
-  onExport: () => void;
-  onImport: (json: string) => void;
+  onExportPresets: () => void;
+  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
+  onLoadFile: (json: string) => ParsePresetsResult | null;
 }
 
-// TODO:
-// - Implementar Delete (No Menu Dropdown ou no Item do Combobox)
 export function PresetManager({
   presets,
   selectedPreset,
   onSelectPreset,
   onCreatePreset,
-  onExport,
-  onImport,
+  onDeletePreset,
+  onExportPresets,
+  onImportPresets,
+  onLoadFile
 }: PresetManagerProps) {
-  const fileRef = useRef<HTMLInputElement>(null);
+  const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
+  const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
+  const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
-  const handleImportFile = async (e: ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
+  const importInputRef = useRef<HTMLInputElement>(null);
+
+  const { t } = useTranslation();
+
+  const handleConfirmDeletePreset = (presetId: string) => {
+    onDeletePreset(presetId);
+    setPresetToDelete(null);
+  }
+
+  const handleStartDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
+    event.stopPropagation();
+
+    setIsPresetSelectorOpen(false);
+    setPresetToDelete(preset)
+  }
+
+  const handleLoadFile = async (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
 
     if (!file) return;
 
-    onImport(await file.text());
+    const json = await file.text();
 
-    e.target.value = "";
-  };
+    const loaded = onLoadFile(json);
 
-  const handleImportClick = () => {
-    fileRef.current?.click()
+    if (loaded && !presets.length) {
+      onImportPresets(loaded.parsed);
+      return
+    }
+
+    setPresetsToImport(loaded)
   }
+
+  const deleteButtonClasses = "absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
 
   return (
     <div className="flex items-center gap-2">
       <Combobox
-        items={presets}
+        open={isPresetSelectorOpen}
         value={selectedPreset}
-        onValueChange={onSelectPreset}
+        items={presets}
         itemToStringLabel={preset => preset.name}
         itemToStringValue={preset => preset.id}
+        onOpenChange={setIsPresetSelectorOpen}
+        onValueChange={onSelectPreset}
       >
         <ComboboxInput
           className="flex-1"
-          placeholder="Trocar preset... "
+          placeholder={t("select_preset_placeholder")}
+          onKeyDown={preventDefaultEscape}
         />
         <ComboboxContent>
           <ComboboxEmpty>
-            Nenhum preset salvo
+            {t("select_preset_empty")}
           </ComboboxEmpty>
           <ComboboxList>
             {(preset: Preset) => (
@@ -97,9 +136,17 @@ export function PresetManager({
                       {preset.name}
                     </ItemTitle>
                     <ItemDescription>
-                      {preset.fields.length} Campos
+                      {t("fields", { count: preset.fields.length })}
                     </ItemDescription>
                   </ItemContent>
+                  <ItemActions>
+                    <button
+                      className={deleteButtonClasses}
+                      onClick={(event) => handleStartDeletePreset(event, preset)}
+                    >
+                      <Trash />
+                    </button>
+                  </ItemActions>
                 </Item>
               </ComboboxItem>
             )}
@@ -107,41 +154,57 @@ export function PresetManager({
         </ComboboxContent>
       </Combobox>
 
-      <Button
-        onClick={onCreatePreset}
-        title="Criar novo preset"
-      >
+      <Button onClick={onCreatePreset}>
         <Plus />
-        Novo
+        {t("button_new_preset")}
       </Button>
 
       <DropdownMenu>
-        <DropdownMenuTrigger>
+        <DropdownMenuTrigger render={
           <Button
             variant="outline"
             size="icon"
           >
             <EllipsisVertical />
           </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem onClick={onExport}>
+        }/>
+        <DropdownMenuContent onKeyDown={preventDefaultEscape}>
+          <DropdownMenuItem onClick={onExportPresets}>
             <Download />
-            Exportar
+            {t("button_export_presets")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={handleImportClick}>
+          <DropdownMenuItem onClick={() => importInputRef.current?.click()}>
             <Upload />
-            Importar
+            {t("button_import_presets")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
 
+      {presetToDelete && (
+        <ConfirmationDialog
+          destructive
+          open={!!presetToDelete}
+          description={t("delete_preset_alert_description", { presetToDelete })}
+          onConfirm={() => handleConfirmDeletePreset(presetToDelete.id)}
+          onCancel={() => setPresetToDelete(null)}
+        />
+      )}
+
+      {presetsToImport && (
+        <ImportPresetDialog
+          open={!!presetsToImport}
+          presetsToImport={presetsToImport}
+          onImport={onImportPresets}
+          onOpenChange={() => setPresetsToImport(null)}
+        />
+      )}
+
       <input
-        ref={fileRef}
-        type="file"
-        accept={EXPORT_FILE_EXTENSION}
+        ref={importInputRef}
         className="hidden"
-        onChange={handleImportFile}
+        type="file"
+        accept={IMPORT_FILE_TYPE}
+        onChange={handleLoadFile}
       />
     </div>
   );

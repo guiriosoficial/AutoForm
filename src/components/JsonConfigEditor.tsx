@@ -1,148 +1,194 @@
-import { useCallback, useMemo, useState } from "react";
-import { javascript } from "@codemirror/lang-javascript";
-import { keymap } from "@codemirror/view";
+import { useTranslation } from "react-i18next";
+import { useEffect, useState } from "react";
+import { json5 } from "codemirror-json5"
+import { Settings2, ExternalLink } from "lucide-react";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { Settings2 } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import {
+  Button,
+  buttonVariants
+} from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
-  PopoverTrigger,
+  PopoverDescription,
+  PopoverHeader,
+  PopoverTitle,
+  PopoverTrigger
 } from "@/components/ui/popover";
-import { cn } from "@/lib/utils";
+import {
+  EDITOR_KEYMAP,
+  EDITOR_LINT,
+  EDITOR_LINT_DELAY_MS,
+  EDITOR_INDENT_SPACES,
+  EDITOR_SETUP,
+  EDITOR_THEME,
+} from "@/configs";
+import {
+  cn,
+  debounce,
+  preventDefaultEscape
+} from "@/lib/utils";
+import JSON5 from "@/lib/json5";
 
 interface JsonConfigEditorProps {
-  value: Record<string, unknown> | undefined;
+  value: string | undefined;
+  docUrl?: string;
   onChange: (value: string) => void;
 }
 
-// TODO:
-// - Implementar auto Format
-// - Implementar validaçao de json
-// - Criar tema personalizado
 export function JsonConfigEditor({
-   value,
-   onChange,
+  value,
+  docUrl,
+  onChange,
 }: JsonConfigEditorProps) {
   const [open, setOpen] = useState(false);
+  const [error, setError] = useState("");
 
-  const hasConfig = value && value.trim() !== "" && value.trim() !== "{}";
-  const error = ""
+  const { t } = useTranslation();
 
-  const isValid = hasConfig;
-  const isInvalid = hasConfig && false;
+  const formatConfig = async () => {
+    if (!value) return;
 
-  const formatConfig = useCallback(() => {
-    // TODO:
-    // Quando adicionarmos o Prettier, a formatação acontecerá aqui.
-  }, []);
+    const parsedValue = await parseConfig(value);
 
-  const extensions = useMemo(
-    () => [
-      javascript(),
+    const formattedValue = JSON5.stringify(
+      parsedValue,
+      { space: EDITOR_INDENT_SPACES }
+    );
 
-      keymap.of([
-        {
-          key: "Mod-Shift-f",
-          run: () => {
-            formatConfig();
-            return true;
-          },
-        },
-      ]),
-    ],
-    [formatConfig]
-  );
+    onChange(formattedValue)
+  };
 
-  const handlePopoverOpenChange = useCallback((isOpening: boolean) => {
-    if (!isOpening) {
-      formatConfig();
+  const handlePopoverOpenChange = async (isOpening: boolean) => {
+    await formatConfig();
+    setOpen(isOpening);
+  };
+
+  const parseConfig = (value: string) => {
+    if (!hasConfig) {
+      setError("");
+      return;
     }
 
-    setOpen(isOpening);
-  }, [formatConfig])
+    try {
+      const parsedValue = JSON5.parse(value);
+      setError("");
+      return parsedValue;
+    } catch (err: Error | unknown) {
+      if (!(err instanceof Error)) return
+      setError(err.message);
+    }
+  };
+
+  const debouncedParseConfig = debounce((value: string) => {
+    parseConfig(value);
+  }, EDITOR_LINT_DELAY_MS)
+
+
+  const handleConfigChange = (value: string) => {
+    onChange(value);
+
+    debouncedParseConfig(value)
+  };
+
+  useEffect(() => {
+    if (!value) return;
+
+    parseConfig(value);
+
+    return debouncedParseConfig.cancel();
+  }, [])
+
+  const trimmedValue = value?.trim();
+
+  const hasConfig = !!trimmedValue &&
+    !/^\{\s*}$/.test(trimmedValue) &&
+    !/^(['"]) *\1$/.test(trimmedValue);
+
+  const editorExtension = [
+    json5(),
+    EDITOR_LINT(hasConfig),
+    EDITOR_KEYMAP(formatConfig),
+  ];
+
+  const triggerButtonClasses = cn(
+    "relative",
+    hasConfig && "bg-primary/5 hover:bg-primary/15! aria-expanded:bg-primary/15 text-primary hover:text-primary aria-expanded:text-primary",
+    error && "bg-destructive/5 hover:bg-destructive/15! aria-expanded:bg-destructive/15 text-destructive hover:text-destructive aria-expanded:text-destructive"
+  );
+  const triggerBadgeClasses = cn(
+    "absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full",
+    error ? "bg-destructive": "bg-primary"
+  );
+  const editorClasses = cn(
+    "border-border border rounded-md *:outline-none! *:h-48 *:p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent",
+    error && "border-destructive"
+  )
+  const descriptionClasses = cn(
+    "text-xs text-muted-foreground flex items-start justify-between gap-1",
+    error && "text-destructive"
+  )
+  const descriptionText = error !== "" ? error : t("description_field_options")
 
   return (
     <Popover
       open={open}
       onOpenChange={handlePopoverOpenChange}
     >
-      <PopoverTrigger>
+      <PopoverTrigger render={
         <Button
           variant="ghost"
           size="icon"
-          title="Settings"
-          className={cn(
-            "relative",
-            isValid &&
-              "bg-primary/15 text-primary hover:bg-primary/25",
-            isInvalid &&
-              "bg-destructive/15 text-destructive hover:bg-destructive/25"
-          )}
+          className={triggerButtonClasses}
         >
           <Settings2 size={16} />
           {hasConfig && (
-            <span
-              className={cn(
-                "absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full",
-                isValid ? "bg-primary" : "bg-destructive"
-              )}
-            />
+            <span className={triggerBadgeClasses} />
           )}
         </Button>
-      </PopoverTrigger>
+      } />
 
-      <PopoverContent className="space-y-2">
-        <div className="flex items-center justify-between">
-          <span className="text-xs font-medium text-muted-foreground">
-            Configuração (JSON)
-          </span>
-
+      <PopoverContent
+        side="left"
+        onKeyDown={preventDefaultEscape}
+      >
+        <PopoverHeader className="flex-row items-center justify-between">
+          <PopoverTitle>
+            {t("title_field_options")}
+          </PopoverTitle>
           <Button
-            variant="link"
+            variant="secondary"
             size="sm"
             onClick={formatConfig}
           >
-            Formatar
+            {t("button_format_field_options")}
           </Button>
-        </div>
+        </PopoverHeader>
 
-          <ReactCodeMirror
-            value={value}
-            onChange={onChange}
-            extensions={extensions}
-            basicSetup={{
-              lineNumbers: false,
-              foldGutter: false,
-              highlightActiveLine: false,
-              highlightActiveLineGutter: false,
-              drawSelection: true,
-              dropCursor: false,
-              allowMultipleSelections: false,
-              indentOnInput: true,
-              bracketMatching: true,
-              closeBrackets: true,
-              autocompletion: false,
-              searchKeymap: false,
-              lintKeymap: false,
-            }}
-            className="border-border border p-3 rounded-md"
-          />
+        <ReactCodeMirror
+          value={value}
+          className={editorClasses}
+          extensions={editorExtension}
+          theme={EDITOR_THEME}
+          basicSetup={EDITOR_SETUP}
+          onChange={handleConfigChange}
+        />
 
-        <div className="flex items-center justify-between text-xs">
-          {(hasConfig && error) ? (
-            <span
-              className="text-destructive"
-              title={error}
+        <PopoverDescription className={descriptionClasses}>
+          {descriptionText}
+
+          {docUrl && (
+            <a
+              href={docUrl}
+              target="_blank"
+              rel="noreferrer"
+              className={buttonVariants({ variant: "link", size: "xs" })}
             >
-              {error}
-            </span>
-          ) : (
-            <span className="text-muted-foreground">
-              Configuração passadas ao Faker.js.
-            </span>
+              {t("link_doc_field_options")}
+              <ExternalLink />
+            </a>
           )}
-        </div>
+        </PopoverDescription>
       </PopoverContent>
     </Popover>
   );

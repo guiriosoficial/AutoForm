@@ -1,37 +1,37 @@
 import {
-  KeyboardEvent, MouseEventHandler, useCallback,
   useEffect,
   useRef,
   useState,
+  type KeyboardEvent,
+  type MouseEvent,
+  type FocusEvent, useImperativeHandle, forwardRef, ForwardedRef
 } from "react";
-import { PenLine, X, Check } from "lucide-react";
-import { InlineButton } from "@/components/InlineButton.tsx";
+import { X, Check, PenLine } from "lucide-react";
+import { InlineButton } from "@/components/InlineButton";
+import {preventDefaultEscape} from "@/lib/utils.ts";
 
 interface InlineEditableInputProps {
   value: string;
-  onSave: (value: string) => void;
   placeholder?: string;
+  onSave: (value: string) => void;
 }
 
-export function InlineEditableInput({
-  value,
-  onSave,
-  placeholder,
-}: InlineEditableInputProps) {
+export interface InlineEditableInputRef {
+  startEditing: () => void;
+}
+
+export const InlineEditableInput = forwardRef((
+  {
+    value,
+    placeholder,
+    onSave,
+  }: InlineEditableInputProps,
+  ref: ForwardedRef<InlineEditableInputRef>
+) => {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const handleCancelEditing = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-    cancelEditing();
-  }, [])
-
-  const handleConfirmEditing = useCallback((e: MouseEvent) => {
-    e.preventDefault();
-    confirmEditing();
-  }, [])
 
   useEffect(() => {
     setDraft(value);
@@ -40,11 +40,33 @@ export function InlineEditableInput({
   useEffect(() => {
     if (!isEditing) return;
 
-    inputRef.current?.focus();
-    inputRef.current?.select();
+    const input = inputRef.current;
+
+    input?.focus();
+
+    const frame = requestAnimationFrame(() => {
+      input?.select();
+    });
+
+    return () => cancelAnimationFrame(frame);
   }, [isEditing]);
 
-  const confirmEditing = () => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    preventDefaultEscape(event)
+
+    switch (event.key) {
+      case "Enter":
+        confirmEditing();
+        break;
+      case "Escape":
+        cancelEditing();
+        break;
+    }
+  }
+
+  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
+    event?.preventDefault();
+
     const nextValue = draft.trim();
 
     setIsEditing(false);
@@ -57,51 +79,45 @@ export function InlineEditableInput({
     onSave(nextValue);
   }
 
-  const cancelEditing = () => {
+  const cancelEditing = (event?: MouseEvent) => {
+    event?.preventDefault();
+
     setDraft(value);
     setIsEditing(false);
   }
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    switch (event.key) {
-      case "Enter":
-        confirmEditing();
-        break;
-      case "Escape":
-        cancelEditing();
-        break;
-    }
-  }
+  const startEditing = () => {
+    setIsEditing(true);
+  };
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const nextValue = event.target.value;
-    setDraft(nextValue);
-  }
+  useImperativeHandle(ref, () => ({
+    startEditing
+  }))
 
   if (isEditing) {
     return (
-      <div className="flex gap-2">
+      <div className="flex gap-1">
         <input
           ref={inputRef}
           value={draft}
-          className="flex-1 bg-transparent outline-none"
           placeholder={placeholder}
-          onChange={handleChange}
-          onBlur={confirmEditing}
+          className="flex-1 pr-1 outline-none"
           onKeyDown={handleKeyDown}
+          onBlur={confirmEditing}
+          onChange={(e) => setDraft(e.target.value)}
         />
         <InlineButton
           icon={Check}
           size={14}
           persistent
-          onClick={handleConfirmEditing}
+          onClick={confirmEditing}
         />
         <InlineButton
           icon={X}
           size={14}
           persistent
           className="hover:text-destructive"
-          onClick={handleCancelEditing}
+          onClick={cancelEditing}
         />
       </div>
     );
@@ -109,21 +125,21 @@ export function InlineEditableInput({
 
   const words = value?.split(" ");
   const lastWord = words?.pop();
+  const restantWords = words?.join(" ");
 
   return (
     <p
       className="group"
-      onClick={() => setIsEditing(true)}
+      onClick={startEditing}
     >
-      {words?.join(" ")}{" "}
+      {restantWords}{" "}
       <span className="whitespace-nowrap">
       {lastWord}{" "}
         <InlineButton
           className="inline-flex translate-y-0.5 ml-1"
           icon={PenLine}
-          size={14}
         />
-    </span>
+      </span>
     </p>
   );
-}
+});

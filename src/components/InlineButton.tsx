@@ -1,30 +1,32 @@
-import type { LucideIcon } from "lucide-react";
 import { cn } from "@/lib/utils";
-import {MouseEventHandler} from "react";
+import type { LucideIcon } from "lucide-react";
+import type { MouseEventHandler } from "react";
 
 interface InlineButtonProps {
   icon: LucideIcon
   size?: number
-  title?: string
   persistent?: boolean
   className?: string
-  onClick?: () => MouseEventHandler<HTMLButtonElement>
+  onClick?: MouseEventHandler<HTMLButtonElement>
 }
 
 export function InlineButton({
   icon: Icon,
-  size = 12,
-  title,
+  size = 14,
   persistent,
   className,
   onClick,
 }: InlineButtonProps) {
+  const buttonClasses = cn(
+    "text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all",
+    persistent && "opacity-100",
+    className
+  );
+
   return (
     <button
+      className={buttonClasses}
       onClick={onClick}
-      title={title}
-      type="button"
-      className={cn("shrink-0 text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all", persistent && "opacity-100", className)}
     >
       <Icon size={size} />
     </button>

@@ -1,16 +1,17 @@
+import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldEditor } from "@/components/FieldEditor";
 import { FieldResult } from "@/components/FieldResult";
-import type { FieldConfig }  from "@/lib/fieldsConfig";
+import type { FieldConfig }  from "@/lib/fields-config";
 
 interface FormManagerProps {
   fields: FieldConfig[];
   values: Record<string, string>;
   onAddField: () => void,
-  onRemoveField: (id: string) => void,
-  onUpdateField: (id: string, updated: FieldConfig) => void,
-  onRegenerateValue: (id: string, type: string) => void,
+  onRemoveField: (fieldId: string) => void,
+  onUpdateField: (fieldId: string, updated: FieldConfig) => void,
+  onRegenerateValue: (fieldId: string) => void,
   onCopyValue: (value: string) => void,
 }
 
@@ -23,6 +24,8 @@ export function FormManager({
   onRegenerateValue,
   onCopyValue
 }: FormManagerProps) {
+  const { t } = useTranslation();
+
   return <>
     {fields.map(field => (
       <div
@@ -35,21 +38,23 @@ export function FormManager({
           onUpdate={(updated) => onUpdateField(field.id, updated)}
         />
 
+        {/*TODO: Implements error handling for field generation*/}
         <FieldResult
           value={values[field.id]}
-          onRegenerateValue={() => onRegenerateValue(field.id, field.generator)}
+          error={undefined}
+          onRegenerateValue={() => onRegenerateValue(field.id)}
           onCopyValue={() => onCopyValue(values[field.id])}
         />
       </div>
     ))}
 
     <Button
-      variant="ghost"
-      className="border-border border-dashed"
+      variant="outline"
+      className="border-dashed"
       onClick={onAddField}
     >
       <Plus size={14} />
-      Adicionar campo
+      {t("button_add_field")}
     </Button>
   </>
 

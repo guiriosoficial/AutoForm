@@ -1,38 +1,44 @@
 import { Copy, RotateCcw } from "lucide-react";
 import { InlineButton } from "@/components/InlineButton";
+import { cn } from "@/lib/utils";
 
 interface FieldResultProps {
   value: string | undefined;
+  error: string | undefined;
   onCopyValue: () => void;
   onRegenerateValue: () => void;
 }
 
 export function FieldResult({
   value,
+  error,
   onCopyValue,
   onRegenerateValue
 }: FieldResultProps) {
-  if (value === undefined) return null;
+  if (value === undefined && error === undefined) return null;
 
   const stringValue = String(value);
+  const text = error ?? stringValue;
+  const resultClasses = cn(
+    "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group",
+    error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary"
+  );
 
   return (
-    <div className="flex items-center gap-2 ml-0 pl-3 border-l-2 border-primary/30 animate-fade-in group">
-      <span className="text-xs font-mono text-primary truncate">
-        {stringValue}
+    <div className={resultClasses}>
+      <span className="truncate">
+        {text}
       </span>
-
       <InlineButton
-        title="Regerar"
         icon={RotateCcw}
         onClick={onRegenerateValue}
       />
-
-      <InlineButton
-        title="Copiar"
-        icon={Copy}
-        onClick={onCopyValue}
-      />
+      {!error && (
+        <InlineButton
+          icon={Copy}
+          onClick={onCopyValue}
+        />
+      )}
     </div>
   )
 }
