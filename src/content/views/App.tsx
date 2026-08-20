@@ -1,10 +1,13 @@
 import { Toaster } from "@/components/ui/toast";
 import { Index } from "@/components/Index";
+import { ThemeProvider } from "@/providers/theme-provider.tsx";
 
 const App = () => (
   <>
-    <Toaster />
-    <Index />
+    <ThemeProvider>
+      <Toaster />
+      <Index />
+    </ThemeProvider>
   </>
 );
 
