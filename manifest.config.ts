@@ -15,6 +15,7 @@ export default defineManifest({
     default_popup: 'src/popup/index.html',
   },
   permissions: [
+    'storage',
     'sidePanel',
     'contentSettings',
   ],
