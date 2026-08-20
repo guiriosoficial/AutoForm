@@ -1,74 +1,125 @@
-import {
-  useCallback,
-  useMemo,
-  useState
-} from "react";
+import { useTranslation } from "react-i18next";
+import { useCallback, useMemo } from "react";
 import { toast } from "@/lib/toast"
-import { generateFakerValue } from "@/lib/faker-generator";
-import { createField, type FieldConfig } from "@/lib/fieldsConfig";
+import { generateValue, fillInputElement } from "@/lib/data-generator";
+import { createField, type FieldConfig } from "@/lib/fields-config";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+import { StorageKeys } from "@/configs";
 
-type UseFormArgs = {
+interface UseFormArgs {
+  presetId: string;
   fields: FieldConfig[];
-  setFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
-};
+  updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
+}
+
+// type GeneratedValue = {
+//   isError: true;
+//   errorMessage: string;
+//   errorType: string
+// } | {
+//   isError: false;
+//   value: string;
+// }
+
+type ValuesByPresetId = Record<string, Record<string, string>>
 
 export function useForm({
+  presetId,
   fields,
-  setFields
+  updateFields
 }: UseFormArgs) {
-  const [generatedValues, setGeneratedValues] = useState<Record<string, string>>({});
+  const { t } = useTranslation();
+
+  const [generatedValuesByPresetId, setGeneratedValuesByPresetId] = usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
+
+  const generatedValues = useMemo(() => {
+    return generatedValuesByPresetId[presetId] ?? {};
+  }, [generatedValuesByPresetId, presetId])
+
+  const setGeneratedValues = useCallback((
+    valuesOrUpdater:
+      | Record<string, string>
+      | ((prev: Record<string, string>) => Record<string, string>)
+  ) => {
+    setGeneratedValuesByPresetId(prev => {
+      const currentValues = prev[presetId] ?? {};
+
+      const values =
+        typeof valuesOrUpdater === "function"
+          ? valuesOrUpdater(currentValues)
+          : valuesOrUpdater;
+
+      return {
+        ...prev,
+        [presetId]: values,
+      };
+    });
+  }, [presetId, setGeneratedValuesByPresetId]);
 
   const fieldsById = useMemo(() => {
-    return Object.fromEntries(fields.map(f => [f.id, f]));
+    return Object.fromEntries(
+      fields.map(f => [f.id, f])
+    );
   }, [fields])
 
   const addField = useCallback(() => {
-    setFields((prev) => [...prev, createField()]);
-  }, [setFields]);
+    updateFields((prev) =>
+      [...prev, createField()])
+    ;
+  }, [updateFields]);
 
   const removeField = useCallback((id: string) => {
-    setFields((prev) => prev.filter(f => f.id !== id));
-  }, [setFields]);
+    updateFields((prev) =>
+      prev.filter(f => f.id !== id)
+    );
+  }, [updateFields]);
 
   const updateField = useCallback((id: string, updated: FieldConfig) => {
-    setFields((prev) => prev.map(f => (f.id === id ? updated : f)));
-  }, [setFields]);
+    updateFields((prev) =>
+      prev.map(f => (f.id === id ? updated : f))
+    );
+  }, [updateFields]);
 
-  // TODO: Review faker generator
-  // TODO: Implement auto set on html fields
   const generateValues = useCallback(() => {
     const values: Record<string, string> = {};
 
     fields.forEach(f => {
-      if (f.generator) values[f.id] = generateFakerValue(f.generator, f.options);
+      if (!f.generator) return;
+
+      const newValue = generateValue(f.generator, f.options)
+
+      if (!newValue) return;
+
+      values[f.id] = newValue;
+      fillInputElement(f.selector, newValue)
     });
 
     setGeneratedValues(values);
-    toast.success("Valores gerados com sucesso!");
+    toast.success(t("message_values_generated_success"));
   }, [fields]);
 
-  // TODO: Review faker generator
-  // TODO: Implement auto set on html fields
   const regenerateValue = useCallback((fieldId: string) => {
     const field = fieldsById[fieldId];
 
     if (!field.generator) return;
 
+    const newValue = generateValue(field.generator, field.options)
+
+    if (!newValue) return;
+
     setGeneratedValues(prev => ({
       ...prev,
-      [fieldId]: generateFakerValue(
-        field.generator,
-        field.options
-      ),
+      [fieldId]: newValue,
     }));
+    fillInputElement(field.selector, newValue)
   }, [fields]);
 
   const copyValue = useCallback(async (value: string) => {
     try {
       await navigator.clipboard.writeText(value);
-      toast.success("Copiado!");
+      toast.success(t("message_value_copied_success"));
     } catch {
-      toast.error("Não foi possível copiar");
+      toast.error(t("message_value_copied_error"));
     }
   }, []);
 
@@ -82,9 +133,9 @@ export function useForm({
 
       const value = JSON.stringify(data, null, 2)
       await navigator.clipboard.writeText(value);
-      toast.success("JSON copiado!");
+      toast.success(t("message_values_copied_success"));
     } catch {
-      toast.error("Não foi possível copiar");
+      toast.error(t("message_value_copied_error"));
     }
   }, [fields, generatedValues]);
 

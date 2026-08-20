@@ -1,23 +1,41 @@
-import { useCallback, useMemo, useState } from "react";
-import { toast } from "@/lib/toast"
+import { useTranslation } from "react-i18next";
+import { useCallback, useEffect, useMemo, useState, type RefObject } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
-  LocalStorageKeys,
+  StorageKeys,
   EXPORT_JSON_INDENT_SPACES,
   EXPORT_FILE_TYPE,
   EXPORT_FILE_NAME
 } from "@/configs";
 import {
   createEmptyPreset,
-  getLastNewPresetNumber,
+  getNewPresetNumber,
   getAdjacentPreset,
   isValidPresetArray,
   type Preset
 } from "@/lib/presets";
+import { toast } from "@/lib/toast"
+import { ImportStrategy } from "@/configs"
+import type { FieldConfig } from "@/lib/fields-config";
+import type { InlineEditableInputRef } from "@/components/InlineEditableInput.tsx";
 
-export function usePresets() {
-  const [presets, setPresets] = usePersistentState<Preset[]>(LocalStorageKeys.PRESETS, []);
+interface UsePresetsArgs {
+  presetNameEditorRef: RefObject<InlineEditableInputRef | null>;
+}
+
+export interface ParsePresetsResult {
+  parsed: Preset[];
+  duplicated: Preset[];
+}
+
+export function usePresets({
+  presetNameEditorRef
+}: UsePresetsArgs) {
+  const { t } = useTranslation();
+
   const [currentPresetId, setCurrentPresetId] = useState<string>("");
+  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] = usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "")
+  const [presets, setPresets, , hydratedPresets] = usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
   const presetsById = useMemo(() => {
     return Object.fromEntries(
@@ -30,37 +48,99 @@ export function usePresets() {
   }, [presetsById, currentPresetId]);
 
   const setCurrentPreset = useCallback((preset: Preset | null) => {
-    if (!preset) return
+    if (!preset) return;
 
     setCurrentPresetId(preset.id);
-  }, [setCurrentPresetId]);
+    setLastPresetId(preset.id);
+  }, [setCurrentPresetId, setLastPresetId, presetsById]);
 
   const createPreset = useCallback(() => {
-    const nextPresetNumber = getLastNewPresetNumber(presets) + 1;
+    const nextPresetNumber = getNewPresetNumber(presets) + 1;
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
     setPresets((prev) =>
       [...prev, emptyPreset]
     );
     setCurrentPreset(emptyPreset);
-  }, [setPresets, presets]);
 
-  const deletePreset = useCallback((preset: Preset) => {
-    if (preset.id === currentPreset?.id) {
-      const presetToSet = getAdjacentPreset(presets, preset)
+    presetNameEditorRef.current?.startEditing()
+  }, [setPresets, presets, presetNameEditorRef]);
+
+  const deletePreset = useCallback((presetId: string) => {
+    setPresets((prev) =>
+      prev.filter(p => p.id !== presetId)
+    );
+
+    const isCurrent = presetId === currentPresetId;
+
+    if (isCurrent) {
+      const presetToSet = getAdjacentPreset(presets, presetId)
       setCurrentPreset(presetToSet);
     }
+  }, [setPresets, setCurrentPreset, presets, currentPreset]);
 
-    setPresets((prev) =>
-      prev.filter(p => p.id !== preset.id)
-    );
-  }, [setPresets, presets, currentPreset]);
+  const updatePreset = useCallback((
+    presetId: string,
+    updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)
+  ) => {
+    setPresets(prev =>
+      prev.map(preset => {
+        if (preset.id !== presetId) return preset;
 
-  const updatePreset = useCallback((id: string, updated: Partial<Preset>) => {
-    setPresets((prev) =>
-      prev.map(p => (p.id === id ? { ...p, ...updated } : p))
+        const updated =
+          typeof updater === "function"
+            ? updater(preset)
+            : updater;
+
+        return {
+          ...preset,
+          ...updated,
+        };
+      })
     );
   }, [setPresets]);
+
+  const updateCurrentPreset = useCallback((
+    updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)
+  ) => {
+    if (!currentPreset) return;
+
+    updatePreset(currentPreset.id, updater);
+  }, [currentPreset, updatePreset]);
+
+  const updateCurrentPresetFields = useCallback((updater: (fields: FieldConfig[]) => FieldConfig[]) => {
+    updateCurrentPreset(preset => ({
+      fields: updater(preset.fields),
+    }));
+  }, [updateCurrentPreset]);
+
+  const updateCurrentPresetName = useCallback((name: string) => {
+    updateCurrentPreset(() => ({
+      name,
+    }));
+  }, [updateCurrentPreset]);
+
+  useEffect(() => {
+    if (
+      !hydratedLastPresetId ||
+      !hydratedPresets ||
+      currentPreset
+    ) return;
+
+    const lastPreset = presetsById[lasPresetId];
+
+    if (lastPreset) {
+      setCurrentPreset(lastPreset);
+      return;
+    }
+
+    if (presets?.length > 0) {
+      setCurrentPreset(presets[0]);
+      return;
+    }
+
+    createPreset()
+  }, [presets, currentPreset, lasPresetId, setCurrentPreset, createPreset]);
 
   const exportPresets = useCallback(() => {
     const data = JSON.stringify(presets, null, EXPORT_JSON_INDENT_SPACES);
@@ -74,32 +154,61 @@ export function usePresets() {
       a.click();
       a.remove()
     } catch {
-      toast.error("Erro ao exportar presets");
+      toast.error(t("message_export_preset_error"));
     } finally {
       URL.revokeObjectURL(url)
     }
   }, [presets]);
 
-  const importPresets = useCallback((json: string) => {
+  const parsePresets = useCallback((json: string) => {
     try {
       const imported: Preset[] = JSON.parse(json);
 
       if (!isValidPresetArray(imported)) {
-        throw new Error("Invalid presets");
+        throw new Error(t("message_import_invalid_preset_error"));
       }
 
-      setPresets(prev => {
-        const map = new Map(prev.map(p => [p.id, p]));
+      const existingIds = new Set(presets.map(preset => preset.id));
 
-        for (const preset of imported) {
-          map.set(preset.id, preset);
-        }
+      const duplicated = imported.filter(preset =>
+        existingIds.has(preset.id)
+      );
 
-        return [...map.values()];
-      });
-    } catch {
-      toast.error("Erro ao importar presets");
+      return {
+        parsed: imported,
+        duplicated,
+      };
+    } catch (error: Error | any) {
+      const errorMessage = error.message ?? t("message_import_preset_error");
+
+      toast.error(errorMessage);
+      return null;
     }
+  }, [presets]);
+
+  const importPresets = useCallback((
+    imported: Preset[],
+    strategy: ImportStrategy = ImportStrategy.REPLACE
+  ) => {
+    if (strategy === ImportStrategy.REPLACE_ALL) {
+      setPresets(imported);
+      return;
+    }
+
+    setPresets(prev => {
+      const map = new Map(prev.map(p => [p.id, p]));
+
+      for (const preset of imported) {
+        if (
+          strategy === ImportStrategy.MERGE &&
+          map.has(preset.id)
+        ) continue;
+
+        map.set(preset.id, preset);
+      }
+
+      return [...map.values()];
+    });
   }, [setPresets]);
 
   return {
@@ -107,9 +216,12 @@ export function usePresets() {
     currentPreset,
     setCurrentPreset,
     createPreset,
-    updatePreset,
+    updateCurrentPreset,
+    updateCurrentPresetName,
+    updateCurrentPresetFields,
     deletePreset,
     exportPresets,
     importPresets,
+    parsePresets,
   };
 }

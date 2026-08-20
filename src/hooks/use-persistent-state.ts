@@ -1,72 +1,99 @@
-import { useEffect, useState } from 'react';
-import {
-  STORAGE_PERSISTENCE_DELAY_MS,
-  STORAGE_EVENT_NAME,
-  type LocalStorageKeys
-} from '@/configs';
+import {useEffect, useMemo, useState} from "react";
+import browser from "webextension-polyfill";
+import { STORAGE_PERSISTENCE_DELAY_MS } from "@/configs";
+import type { StorageKeys } from "@/configs";
+import {debounce} from "@/lib/utils.ts";
 
-function getInitialState<T>(
-  key: LocalStorageKeys,
-  initialState: T,
-) {
-  const item = localStorage.getItem(key);
-
-  if (!item) {
-    return initialState;
-  }
-
-  try {
-    return JSON.parse(item) as T;
-  } catch {
-    localStorage.removeItem(key);
-    return initialState;
-  }
-}
+const AreaName = {
+  LOCAL: "local",
+  SYNC: "sync",
+  MANAGED: "managed",
+  SESSION: "session",
+} as const
 
 export function usePersistentState<T>(
-  key: LocalStorageKeys,
+  key: StorageKeys,
   initialState: T,
-  persistenceDelay = STORAGE_PERSISTENCE_DELAY_MS
+  persistenceDelay = STORAGE_PERSISTENCE_DELAY_MS,
 ) {
-  const [state, setState] = useState<T>(() =>
-    getInitialState<T>(key, initialState)
-  );
+  const [state, setState] = useState<T>(initialState);
+  const [hydrated, setHydrated] = useState(false);
 
-  function remove() {
-    localStorage.removeItem(key);
-    setState(initialState);
-  }
-
+  // Hydrate
   useEffect(() => {
-    const timer = setTimeout(() => {
-      localStorage.setItem(key, JSON.stringify(state));
-    }, persistenceDelay);
+    let cancelled = false;
 
-    return () => clearTimeout(timer);
-  }, [key, state, persistenceDelay]);
+    browser.storage.local.get(key)
+      .then((result) => {
+        if (cancelled) return;
 
-  useEffect(() => {
-    function onStorage(event: StorageEvent) {
-      if (event.key !== key) return;
+        const value = result[key] as T | undefined;
 
-      if (event.newValue == null) {
+        setState(value ?? initialState);
+        setHydrated(true);
+      })
+      .catch(() => {
+        if (cancelled) return;
+
         setState(initialState);
-        return;
-      }
+        setHydrated(true);
+      });
 
-      try {
-        setState(JSON.parse(event.newValue));
-      } catch {}
-    }
+    return () => {
+      cancelled = true;
+    };
+  }, [key]);
 
-    window.addEventListener(STORAGE_EVENT_NAME, onStorage);
+  // Persist
+  const persist = useMemo(() => {
+    return debounce((state: T) => {
+      browser.storage?.local.set({
+        [key]: state,
+      });
+    }, persistenceDelay)
+  }, [persistenceDelay, key, debounce])
 
-    return () => window.removeEventListener(STORAGE_EVENT_NAME, onStorage);
+  useEffect(() => {
+    if (!hydrated) return;
+
+    persist(state);
+
+    return () => persist.cancel();
+  }, [key, state, persistenceDelay, hydrated]);
+
+  // Sync
+  useEffect(() => {
+    const handleStorageChange = (
+      changes: Record<string, browser.Storage.StorageChange>,
+      areaName: string,
+    ) => {
+      if (areaName !== AreaName.LOCAL) return;
+
+      const change = changes[key];
+
+      if (!change) return;
+
+      const newValue = change.newValue as T | undefined;
+
+      setState(newValue ?? initialState);
+    };
+
+    browser.storage?.onChanged.addListener(handleStorageChange);
+
+    return () => {
+      browser.storage?.onChanged.removeListener(handleStorageChange);
+    };
   }, [key, initialState]);
+
+  const remove = async () => {
+    await browser.storage?.local.remove(key);
+    setState(initialState);
+  };
 
   return [
     state,
     setState,
     remove,
+    hydrated,
   ] as const;
 }
