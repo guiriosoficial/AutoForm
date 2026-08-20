@@ -12,26 +12,27 @@ const isFakerMethod= (key: string, value: unknown) =>
 const createDocsUrl = (category: string, method: string) =>
   `https://fakerjs.dev/api/${category}.html#${method}`;
 
-const createCatalogMethodObject = (category: string, method: string) => ({
+const createCatalogMethodObject = (category: string, method: string, methodValue: unknown) => ({
     label: method,
     value: `${category}.${method}`,
     docs: createDocsUrl(category, method),
+    invoke: methodValue
 })
 
-export const FakerCatalog = Object.entries(faker)
+export const AutoFormCatalog = Object.entries(faker)
     .filter(([, value]) => isFakerModule(value))
     .map(([moduleKey, moduleValue]) => ({
-        category: moduleKey,
-        methods: Object.entries(moduleValue)
+        value: moduleKey,
+        items: Object.entries(moduleValue)
             .filter(([methodKey, methodValue]) => isFakerMethod(methodKey, methodValue))
-            .map(([methodKey]) => createCatalogMethodObject(moduleKey, methodKey)),
+            .map(([methodKey, methodValue]) => createCatalogMethodObject(moduleKey, methodKey, methodValue)),
     }));
 
-export type Catalog = typeof FakerCatalog[number];
-export type CatalogMethod = Catalog["methods"][number];
-export type CatalogCategory = Catalog["category"];
+export type CatalogModule = typeof AutoFormCatalog[number];
+export type CatalogMethod = CatalogModule["items"][number];
+export type MainCatalog = CatalogModule["value"];
 
-export const CATALOG_METHODS = FakerCatalog.flatMap(group => group.methods);
+export const CATALOG_METHODS = AutoFormCatalog.flatMap(group => group.items);
 export const CATALOG_METHODS_BY_VALUE = Object.fromEntries(
   CATALOG_METHODS.map(method => [method.value, method])
 );

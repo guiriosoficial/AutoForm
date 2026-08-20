@@ -1,4 +1,5 @@
 import { toast as baseToast } from "@/components/ui/toast";
+
 export const ToastPriority = {
   LOW: "low",
   HIGH: "high",
@@ -44,7 +45,4 @@ export const toast = {
   info: createToast(ToastTypes.INFO),
   warning: createToast(ToastTypes.WARNING),
   loading: createToast(ToastTypes.LOADING),
-  show: (options: ToastOptions & { type: ToastTypes }) => {
-    return baseToast.add(options);
-  }
 };

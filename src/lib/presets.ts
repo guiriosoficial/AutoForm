@@ -1,13 +1,6 @@
-import {
-  createField,
-  isValidFieldArray,
-  type FieldConfig
-} from "./fieldsConfig";
-import { isObject } from "./utils";
-import {
-  PRESET_DEFAULT_NAME,
-  PRESET_DEFAULT_NAME_REGEX
-} from "@/configs";
+import { createField, isValidFieldArray, type FieldConfig } from "@/lib/fields-config";
+import { isObject } from "@/lib/utils";
+import { PRESET_DEFAULT_NAME } from "@/configs";
 
 export interface Preset {
   id: string;
@@ -16,6 +9,8 @@ export interface Preset {
   createdAt: number;
 }
 
+export const presetDefaultNameRegex = new RegExp(`^${PRESET_DEFAULT_NAME} (\\d+)$`)
+
 export const createEmptyPreset = (number: number): Preset => ({
   id: crypto.randomUUID(),
   name: `${PRESET_DEFAULT_NAME} ${number}`,
@@ -23,9 +18,9 @@ export const createEmptyPreset = (number: number): Preset => ({
   createdAt: Date.now(),
 });
 
-export function getLastNewPresetNumber(presets: Preset[]) {
+export function getNewPresetNumber(presets: Preset[]) {
   return presets.reduce((max, preset) => {
-    const match = preset.name.match(PRESET_DEFAULT_NAME_REGEX);
+    const match = preset.name.match(presetDefaultNameRegex);
 
     if (!match) return max;
 
@@ -33,16 +28,15 @@ export function getLastNewPresetNumber(presets: Preset[]) {
   }, 0);
 }
 
-export function getAdjacentPreset(presets: Preset[], current: Preset) {
-  const presetIndex = presets.findIndex(p => p.id === current.id)
+export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
+  const presetIndex = presets.findIndex(p => p.id === currentPresetId)
 
   if (presetIndex === -1) return null;
 
-  return (
-    presets[presetIndex + 1] ??
-    presets[presetIndex - 1] ??
-    null
-  )
+  const next = presets[presetIndex + 1];
+  const previous = presets[presetIndex - 1];
+
+  return next ?? previous ?? null;
 }
 
 export function isValidPreset(value: unknown): value is Preset {

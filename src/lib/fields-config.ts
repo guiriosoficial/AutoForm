@@ -1,10 +1,10 @@
-import {isObject} from "@/lib/utils.ts";
+import { isObject } from "@/lib/utils";
 
 export interface FieldConfig {
   id: string;
   selector: string;
   generator: string;
-  options?: Record<string, unknown>;
+  options?: string;
 }
 
 export const createField = (): FieldConfig => ({
