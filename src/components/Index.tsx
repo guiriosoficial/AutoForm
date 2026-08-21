@@ -57,7 +57,7 @@ export function Index(){
   });
 
   return (
-    <div className="w-125 bg-background flex flex-col gap-4 p-4 pt-8">
+    <div className="w-xl bg-background flex flex-col gap-4 p-4 pt-8">
       <Header />
 
       {/* Presets */}
