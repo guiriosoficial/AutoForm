@@ -52,8 +52,8 @@ interface PresetManagerProps {
   onDeletePreset: (presetId: string) => void;
   onCreatePreset: () => void;
   onExportPresets: () => void;
-  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
-  onLoadFile: (json: string) => ParsePresetsResult | null;
+  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => Promise<void>;
+  onLoadFile: (json: string) => Promise<ParsePresetsResult | null>;
 }
 
 export function PresetManager({
@@ -93,14 +93,20 @@ export function PresetManager({
 
     const json = await file.text();
 
-    const loaded = onLoadFile(json);
+    const loaded = await onLoadFile(json);
 
-    if (loaded && !presets.length) {
+    if (loaded && presets.length <= IMPORT_REPLACE_ALL_THRESHOLD) {
       onImportPresets(loaded.parsed);
       return
     }
 
     setPresetsToImport(loaded)
+  }
+
+  const handleImportPreset = async (presets: Preset[], strategy: ImportStrategy) => {
+    await onImportPresets(presets, strategy)
+
+    setPresetsToImport(null)
   }
 
   const deleteButtonClasses = "absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
@@ -201,7 +207,7 @@ export function PresetManager({
         <ImportPresetDialog
           open={!!presetsToImport}
           presetsToImport={presetsToImport}
-          onImport={onImportPresets}
+          onImport={handleImportPreset}
           onOpenChange={() => setPresetsToImport(null)}
         />
       )}

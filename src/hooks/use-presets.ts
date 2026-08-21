@@ -160,7 +160,7 @@ export function usePresets({
     }
   }, [presets]);
 
-  const parsePresets = useCallback((json: string) => {
+  const parsePresets = useCallback(async (json: string) => {
     try {
       const imported: Preset[] = JSON.parse(json);
 
@@ -186,9 +186,9 @@ export function usePresets({
     }
   }, [presets]);
 
-  const importPresets = useCallback((
+  const importPresets = useCallback(async (
     imported: Preset[],
-    strategy: ImportStrategy = ImportStrategy.REPLACE
+    strategy: ImportStrategy = ImportStrategy.OVERWRITE
   ) => {
     if (strategy === ImportStrategy.REPLACE_ALL) {
       setPresets(imported);
@@ -200,7 +200,7 @@ export function usePresets({
 
       for (const preset of imported) {
         if (
-          strategy === ImportStrategy.MERGE &&
+          strategy === ImportStrategy.APPEND &&
           map.has(preset.id)
         ) continue;
 
