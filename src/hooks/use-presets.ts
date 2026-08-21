@@ -154,7 +154,7 @@ export function usePresets({
       a.click();
       a.remove()
     } catch {
-      toast.error(t("message_export_preset_error"));
+      toast.error(t("presetsManager.messages.exportPreset.failed"));
     } finally {
       URL.revokeObjectURL(url)
     }
@@ -165,7 +165,7 @@ export function usePresets({
       const imported: Preset[] = JSON.parse(json);
 
       if (!isValidPresetArray(imported)) {
-        throw new Error(t("message_import_invalid_preset_error"));
+        throw new Error(t("presetsManager.messages.importPreset.invalid"));
       }
 
       const existingIds = new Set(presets.map(preset => preset.id));
@@ -179,7 +179,7 @@ export function usePresets({
         duplicated,
       };
     } catch (error: Error | any) {
-      const errorMessage = error.message ?? t("message_import_preset_error");
+      const errorMessage = error.message ?? t("presetsManager.messages.importPreset.failed");
 
       toast.error(errorMessage);
       return null;

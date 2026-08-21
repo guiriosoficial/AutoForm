@@ -114,12 +114,12 @@ export function PresetManager({
       >
         <ComboboxInput
           className="flex-1"
-          placeholder={t("select_preset_placeholder")}
+          placeholder={t("presetsManager.form.presetSelect.placeholder")}
           onKeyDown={preventDefaultEscape}
         />
         <ComboboxContent>
           <ComboboxEmpty>
-            {t("select_preset_empty")}
+            {t("presetsManager.form.presetSelect.empty")}
           </ComboboxEmpty>
           <ComboboxList>
             {(preset: Preset) => (
@@ -136,7 +136,7 @@ export function PresetManager({
                       {preset.name}
                     </ItemTitle>
                     <ItemDescription>
-                      {t("fields", { count: preset.fields.length })}
+                      {t("globals.fields", { count: preset.fields.length })}
                     </ItemDescription>
                   </ItemContent>
                   <ItemActions>
@@ -156,7 +156,7 @@ export function PresetManager({
 
       <Button onClick={onCreatePreset}>
         <Plus />
-        {t("button_new_preset")}
+        {t("presetsManager.buttons.new")}
       </Button>
 
       <DropdownMenu>
@@ -171,11 +171,11 @@ export function PresetManager({
         <DropdownMenuContent onKeyDown={preventDefaultEscape}>
           <DropdownMenuItem onClick={onExportPresets}>
             <Download />
-            {t("button_export_presets")}
+            {t("presetsManager.buttons.export")}
           </DropdownMenuItem>
           <DropdownMenuItem onClick={() => importInputRef.current?.click()}>
             <Upload />
-            {t("button_import_presets")}
+            {t("presetsManager.buttons.import")}
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -184,7 +184,7 @@ export function PresetManager({
         <ConfirmationDialog
           destructive
           open={!!presetToDelete}
-          description={t("delete_preset_alert_description", { presetToDelete })}
+          description={t("presetsManager.alerts.deletePreset.description", { presetToDelete })}
           onConfirm={() => handleConfirmDeletePreset(presetToDelete.id)}
           onCancel={() => setPresetToDelete(null)}
         />

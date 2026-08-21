@@ -38,10 +38,10 @@ export function ConfirmationDialog({
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
-  const translatedTitle = title ?? t("default_alert_title");
-  const translatedDescription = description ?? t("default_alert_description");
-  const translatedConfirmButtonText = confirmButtonText ?? t("default_alert_confirm_button_text");
-  const translatedCancelButtonText = cancelButtonText ?? t("default_alert_cancel_button_text");
+  const translatedTitle = title ?? t("defaults.alert.title");
+  const translatedDescription = description ?? t("defaults.alert.description");
+  const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
+  const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 
   const variant = destructive ? 'destructive' : 'default';
 

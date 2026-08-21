@@ -45,7 +45,7 @@ export function ImportPresetDialog({
 
   const { parsed, duplicated } = presetsToImport
 
-  const descriptionText = t("dialog_import_description", {
+  const descriptionText = t("presetsManager.dialogs.importPreset.description", {
     count: duplicated.length,
     total: parsed.length
   })
@@ -61,7 +61,7 @@ export function ImportPresetDialog({
       >
         <DialogHeader>
           <DialogTitle>
-            {t("dialog_import_title")}
+            {t("presetsManager.dialogs.importPreset.title")}
           </DialogTitle>
           <DialogDescription>
             {descriptionText}
@@ -141,15 +141,12 @@ export function ImportPresetDialog({
           <DialogClose
             render={
               <Button variant="outline">
-                {t("dialog_import_cancel_button_text")}
+                {t("presetsManager.dialogs.importPreset.cancelButton")}
               </Button>
             }
           />
-          <Button
-            type="submit"
-            onClick={() => onImport(presetsToImport?.parsed, strategy)}
-          >
-            {t("dialog_import_confirm_button_text")}
+          <Button onClick={() => onImport(presetsToImport.parsed, strategy[0])}>
+            {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>
       </DialogContent>

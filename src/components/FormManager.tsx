@@ -54,7 +54,7 @@ export function FormManager({
       onClick={onAddField}
     >
       <Plus size={14} />
-      {t("button_add_field")}
+      {t("fieldsManager.buttons.add")}
     </Button>
   </>
 

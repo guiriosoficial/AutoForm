@@ -12,11 +12,11 @@ export function Header() {
           size={24}
         />
         <h1 className="text-xl font-bold text-foreground">
-          {t("app_name")}
+          {t("header.title")}
         </h1>
       </div>
       <p className="text-sm text-muted-foreground">
-        {t("app_description")}
+        {t("header.description")}
       </p>
     </header>
   )

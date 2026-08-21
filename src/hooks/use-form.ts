@@ -95,7 +95,6 @@ export function useForm({
     });
 
     setGeneratedValues(values);
-    toast.success(t("message_values_generated_success"));
   }, [fields]);
 
   const regenerateValue = useCallback((fieldId: string) => {
@@ -117,9 +116,9 @@ export function useForm({
   const copyValue = useCallback(async (value: string) => {
     try {
       await navigator.clipboard.writeText(value);
-      toast.success(t("message_value_copied_success"));
+      toast.success(t("fieldsManager.messages.copyValue.success"));
     } catch {
-      toast.error(t("message_value_copied_error"));
+      toast.error(t("fieldsManager.messages.copyValue.failed"));
     }
   }, []);
 
@@ -133,9 +132,9 @@ export function useForm({
 
       const value = JSON.stringify(data, null, 2)
       await navigator.clipboard.writeText(value);
-      toast.success(t("message_values_copied_success"));
+      toast.success(t("footer.messages.copyJson.success"));
     } catch {
-      toast.error(t("message_value_copied_error"));
+      toast.error(t("footer.messages.copyJson.failed"));
     }
   }, [fields, generatedValues]);
 

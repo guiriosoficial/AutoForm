@@ -18,20 +18,21 @@ export function Footer({
   return (
     <div className="flex gap-2">
       <Button
-        onClick={generateValues}
         className="flex-1"
+        onClick={generateValues}
       >
         <Zap />
-        {t("button_generate_data")}
+        {t("footer.buttons.generateData")}
       </Button>
 
       {showCopyButton && (
         <Button
-          onClick={copyFormAsJSON}
           variant="outline"
+          className="px-6"
+          onClick={copyFormAsJSON}
         >
           <Copy />
-          {t("button_copy_as_json")}
+          {t("footer.buttons.copyAsJson")}
         </Button>
       )}
     </div>

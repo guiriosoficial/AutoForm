@@ -55,7 +55,7 @@ export function FieldEditor({
     <div className="grid items-center grid-cols-[1fr_1fr_auto_auto] gap-2">
       <Input
         value={field.selector}
-        placeholder={t("input_field_selector_placeholder")}
+        placeholder={t("fieldsManager.form.selectorInput.placeholder")}
         onChange={(e) => updateField("selector", e.target.value)}
       />
 
@@ -67,12 +67,12 @@ export function FieldEditor({
         itemToStringValue={(item) => item.value}
       >
         <ComboboxInput
-          placeholder={t("select_field_generator_placeholder")}
+          placeholder={t("fieldsManager.form.generatorSelect.placeholder")}
           onKeyDown={preventDefaultEscape}
         />
         <ComboboxContent>
           <ComboboxEmpty>
-            {t("select_generator_empty")}
+            {t("fieldsManager.form.generatorSelect.empty")}
           </ComboboxEmpty>
           <ComboboxList>
             {(group: CatalogModule, index) => (

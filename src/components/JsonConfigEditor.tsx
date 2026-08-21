@@ -128,7 +128,7 @@ export function JsonConfigEditor({
     "text-xs text-muted-foreground flex items-start justify-between gap-1",
     error && "text-destructive"
   )
-  const descriptionText = error !== "" ? error : t("description_field_options")
+  const descriptionText = error !== "" ? error : t("fieldsManager.popovers.fieldSettings.caption")
 
   return (
     <Popover
@@ -154,14 +154,14 @@ export function JsonConfigEditor({
       >
         <PopoverHeader className="flex-row items-center justify-between">
           <PopoverTitle>
-            {t("title_field_options")}
+            {t("fieldsManager.popovers.fieldSettings.title")}
           </PopoverTitle>
           <Button
             variant="secondary"
             size="sm"
             onClick={formatConfig}
           >
-            {t("button_format_field_options")}
+            {t("fieldsManager.popovers.fieldSettings.formatButton")}
           </Button>
         </PopoverHeader>
 
@@ -184,7 +184,7 @@ export function JsonConfigEditor({
               rel="noreferrer"
               className={buttonVariants({ variant: "link", size: "xs" })}
             >
-              {t("link_doc_field_options")}
+              {t("fieldsManager.popovers.fieldSettings.docUrl")}
               <ExternalLink />
             </a>
           )}

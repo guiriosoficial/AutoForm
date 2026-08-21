@@ -64,7 +64,7 @@ export function Index(){
       <Card>
         <CardHeader>
           <CardTitle>
-            {t("presets")}
+            {t("presetsManager.title")}
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -88,13 +88,13 @@ export function Index(){
             <InlineEditableInput
               ref={presetNameEditorRef}
               value={currentPreset?.name}
-              placeholder={t("input_preset_name_placeholder")}
+              placeholder={t("fieldsManager.form.presetNameInput.placeholder")}
               onSave={updateCurrentPresetName}
             />
           </CardTitle>
           <CardAction>
             <CardDescription>
-              {t("fields", { count: fields.length })}
+              {t("fieldsManager.description", { count: fields.length })}
             </CardDescription>
           </CardAction>
         </CardHeader>
