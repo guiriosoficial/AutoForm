@@ -37,7 +37,11 @@ import { Button } from "@/components/ui/button";
 import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
 import { preventDefaultEscape } from "@/lib/utils";
-import { IMPORT_FILE_TYPE, ImportStrategy } from "@/configs";
+import {
+  IMPORT_FILE_TYPE,
+  IMPORT_REPLACE_ALL_THRESHOLD,
+  type ImportStrategy
+} from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
 

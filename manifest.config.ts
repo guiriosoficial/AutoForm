@@ -1,10 +1,10 @@
 import { defineManifest } from '@crxjs/vite-plugin'
-import pkg from './package.json'
+import { APP_NAME, APP_VERSION } from "./src/configs";
 
 export default defineManifest({
   manifest_version: 3,
-  name: pkg.name,
-  version: pkg.version,
+  name: APP_NAME,
+  version: APP_VERSION,
   icons: {
     48: 'public/logo.png',
   },

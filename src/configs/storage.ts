@@ -1,4 +1,4 @@
-import { APP_ID } from "@/configs";
+import { APP_ID } from "./app";
 
 export const STORAGE_PERSISTENCE_DELAY_MS = 500;
 
