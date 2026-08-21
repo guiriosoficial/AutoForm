@@ -158,7 +158,10 @@ export function PresetManager({
         </ComboboxContent>
       </Combobox>
 
-      <Button onClick={onCreatePreset}>
+      <Button
+        className="pr-4 pl-3"
+        onClick={onCreatePreset}
+      >
         <Plus />
         {t("presetsManager.buttons.new")}
       </Button>

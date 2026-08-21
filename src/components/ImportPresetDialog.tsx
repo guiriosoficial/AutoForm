@@ -12,15 +12,20 @@ import {
 } from "@/components/ui/dialog"
 import {
   Field,
-  FieldContent,
-  // FieldDescription,
+  FieldDescription,
   FieldLabel,
-  FieldTitle,
 } from "@/components/ui/field"
 import {
-  RadioGroup,
-  RadioGroupItem
-} from "@/components/ui/radio-group"
+  Item,
+  ItemContent,
+  ItemDescription,
+  ItemTitle
+} from "@/components/ui/item.tsx";
+import {
+  ToggleGroup,
+  ToggleGroupItem
+} from "@/components/ui/toggle-group";
+import { ButtonGroup } from "@/components/ui/button-group";
 import { ImportStrategy } from "@/configs";
 import { preventDefaultEscape } from "@/lib/utils";
 import type { Preset } from "@/lib/presets";
@@ -39,9 +44,15 @@ export function ImportPresetDialog({
   onOpenChange,
   onImport
 }: ImportPresetDialogProps) {
-  const [strategy, setStrategy] = useState<ImportStrategy>(ImportStrategy.MERGE);
+  const [strategy, setStrategy] = useState<ImportStrategy[]>([ImportStrategy.APPEND]);
 
   const { t } = useTranslation()
+
+  const handleChangeImportStrategy = (strategy: string[]) => {
+    if (strategy.length === 0) return
+
+    setStrategy(strategy as ImportStrategy[])
+  }
 
   const { parsed, duplicated } = presetsToImport
 
@@ -68,74 +79,46 @@ export function ImportPresetDialog({
           </DialogDescription>
         </DialogHeader>
 
-        <ul className="space-y-2 list-disc marker:text-muted-foreground ml-6">
+        <div className="space-y-2 ml-4">
           {duplicated.map((preset) => (
-            <li>
-              <span className="text-destructive font-semibold">
-                {preset.name}
-              </span>
-                {" "}
-                <span className="text-muted-foreground text-xs">
-                {preset.fields.length} Campos
-              </span>
-            </li>
-            // <Item className="p-0 text-destructive" size="xs">
-            //   <ItemContent className="flex-row gap-4">
-            //     <ItemTitle>{preset.name}</ItemTitle>
-            //     <ItemDescription>{preset.fields.length} Campos</ItemDescription>
-            //   </ItemContent>
-            // </Item>
+            <Item
+              key={preset.id}
+              size="xs"
+              className="p-0 text-destructive list-item marker:text-muted-foreground"
+            >
+              <ItemContent>
+                <ItemTitle className="text-balance" >{preset.name}</ItemTitle>
+                <ItemDescription>{preset.fields.length} Campos</ItemDescription>
+              </ItemContent>
+            </Item>
           ))}
-        </ul>
+        </div>
 
-        <RadioGroup
-          value={strategy}
-          onValueChange={setStrategy}
-          className=""
-        >
-          <FieldLabel htmlFor="plus-plan">
-            <Field orientation="horizontal">
-              <FieldContent>
-                <FieldTitle>Merge</FieldTitle>
-                {/*<FieldDescription>*/}
-                {/*  MAntera os presets ja existentes e adicionara os novos N±ao duplicados*/}
-                {/*</FieldDescription>*/}
-              </FieldContent>
-              <RadioGroupItem
-                value={ImportStrategy.MERGE}
-                id="plus-plan"
-              />
-            </Field>
+        <Field>
+          <FieldLabel>
+            {t("presetsManager.dialogs.importPreset.form.strategyToggle.label")}
           </FieldLabel>
-          {presetsToImport?.duplicated.length && (
-            <FieldLabel htmlFor="pro-plan">
-              <Field orientation="horizontal">
-                <FieldContent>
-                  <FieldTitle>Replace</FieldTitle>
-                  {/*<FieldDescription>Presets duplicados ser±ao substituidos pelos novos presets importados</FieldDescription>*/}
-                </FieldContent>
-                <RadioGroupItem
-                  value={ImportStrategy.REPLACE}
-                  id="pro-plan"
-                />
-              </Field>
-            </FieldLabel>
-          )}
-          <FieldLabel htmlFor="enterprise-plan">
-            <Field orientation="horizontal">
-              <FieldContent>
-                <FieldTitle>Substituir tudo</FieldTitle>
-                {/*<FieldDescription>*/}
-                {/*  Removera todos os preset atuais e importara os novos*/}
-                {/*</FieldDescription>*/}
-              </FieldContent>
-              <RadioGroupItem
-                value={ImportStrategy.REPLACE_ALL}
-                id="enterprise-plan"
-              />
-            </Field>
-          </FieldLabel>
-        </RadioGroup>
+          <ToggleGroup
+            value={strategy}
+            variant="outline"
+
+            onValueChange={handleChangeImportStrategy}
+          >
+            <ButtonGroup>
+              {Object.values(ImportStrategy).map((value) => (
+                <ToggleGroupItem
+                  key={value}
+                  value={value}
+                >
+                  {t(`configs.importStrategy.${value}.title`)}
+                </ToggleGroupItem>
+              ))}
+            </ButtonGroup>
+          </ToggleGroup>
+          <FieldDescription>
+            {t(`configs.importStrategy.${strategy}.description`)}
+          </FieldDescription>
+        </Field>
 
         <DialogFooter>
           <DialogClose
