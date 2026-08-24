@@ -100,8 +100,8 @@ export const EDITOR_KEYMAP = (onFormat: () => void) => keymap.of([
   },
 ]);
 
-export const EDITOR_LINT = (hasConfig: boolean) => linter((view) => {
-    if (!hasConfig) return [];
+export const EDITOR_LINT = (enabled: boolean) => linter((view) => {
+    if (!enabled) return [];
 
     return json5Linter(view);
   }, {

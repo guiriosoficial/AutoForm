@@ -14,7 +14,3 @@ export function stringifyJson5(json: object, options: StringifyOptions) {
   return JSON5.stringify(json, options)
 }
 
-export default {
-  parse: parseJson5,
-  stringify: stringifyJson5
-}

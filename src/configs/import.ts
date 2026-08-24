@@ -1,15 +1,13 @@
 export const IMPORT_CONFIG = {
   FILE_TYPE: "application/json",
   REPLACE_ALL_THRESHOLD: 1,
-} as const
+} as const;
 
 export const ImportStrategy = {
   APPEND: "append",
   OVERWRITE: "overwrite",
   REPLACE_ALL: "replaceAll",
+  ALWAYS_ASK: "alwaysAsk",
 } as const;
 
-export type ImportStrategy = typeof ImportStrategy[keyof typeof ImportStrategy];
-
-export const IMPORT_FILE_TYPE= "application/json";
-export const IMPORT_REPLACE_ALL_THRESHOLD = 1
+export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy];

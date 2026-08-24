@@ -13,7 +13,6 @@ export const createField = (): FieldConfig => ({
   generator: "",
 });
 
-
 export function isValidField(value: unknown): value is FieldConfig {
   if (!isObject(value)) return false;
 

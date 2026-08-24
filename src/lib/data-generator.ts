@@ -1,10 +1,10 @@
 import { CATALOG_METHODS_BY_VALUE } from "@/lib/main-catalog";
-import JSON5 from "@/lib/json5";
+import { parseJson5 } from "@/lib/json5";
 
 export function generateValue(type: keyof typeof CATALOG_METHODS_BY_VALUE, configStr?: string): string {
   let options
   try {
-    options = JSON5.parse(configStr ?? "");
+    options = parseJson5(configStr ?? "");
   } catch {}
 
   return CATALOG_METHODS_BY_VALUE[type].invoke(options);

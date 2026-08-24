@@ -26,7 +26,10 @@ import {
   debounce,
   preventDefaultEscape
 } from "@/lib/utils";
-import JSON5 from "@/lib/json5";
+import {
+  parseJson5,
+  stringifyJson5
+} from "@/lib/json5";
 
 interface JsonConfigEditorProps {
   value: string | undefined;
@@ -49,7 +52,7 @@ export function JsonConfigEditor({
 
     const parsedValue = await parseConfig(value);
 
-    const formattedValue = JSON5.stringify(
+    const formattedValue = stringifyJson5(
       parsedValue,
       { space: EDITOR_CONFIG.INDENT_SPACES }
     );
@@ -69,7 +72,7 @@ export function JsonConfigEditor({
     }
 
     try {
-      const parsedValue = JSON5.parse(value);
+      const parsedValue = parseJson5(value);
       setError("");
       return parsedValue;
     } catch (err: Error | unknown) {

@@ -1,10 +1,8 @@
 import { APP_ID } from "./app";
 
-export const STORAGE_PERSISTENCE_DELAY_MS = 500;
-
 export const STORAGE_CONFIG = {
   PERSISTENCE_DELAY_MS: 500,
-} as const
+} as const;
 
 export const StorageKeys = {
   LAST_GENERATED_VALUES: `${APP_ID}:last-generated-values`,
@@ -12,7 +10,8 @@ export const StorageKeys = {
   PRESETS: `${APP_ID}:presets`,
   THEME: `${APP_ID}:theme`,
   LOCALE: `${APP_ID}:locale`,
-  LANGUAGE: `${APP_ID}:locale`,
+  LANGUAGE: `${APP_ID}:language`,
+  IMPORT_STRATEGY: `${APP_ID}:import-strategy`,
 } as const;
 
-export type StorageKeys = typeof StorageKeys[keyof typeof StorageKeys];
+export type StorageKeys = (typeof StorageKeys)[keyof typeof StorageKeys];

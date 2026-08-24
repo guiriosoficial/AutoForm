@@ -18,6 +18,24 @@ export const createEmptyPreset = (number: number): Preset => ({
   createdAt: Date.now(),
 });
 
+export function isValidPreset(value: unknown): value is Preset {
+  if (!isObject(value)) return false;
+
+  return (
+    typeof value.id === "string" &&
+    typeof value.name === "string" &&
+    typeof value.createdAt === "number" &&
+    isValidFieldArray(value.fields)
+  );
+}
+
+export function isValidPresetArray(value: unknown): value is Preset[] {
+  return (
+    Array.isArray(value) &&
+    value.every(isValidPreset)
+  );
+}
+
 export function getNewPresetNumber(presets: Preset[]) {
   return presets.reduce((max, preset) => {
     const match = preset.name.match(presetDefaultNameRegex);
@@ -37,22 +55,4 @@ export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
   const previous = presets[presetIndex - 1];
 
   return next ?? previous ?? null;
-}
-
-export function isValidPreset(value: unknown): value is Preset {
-  if (!isObject(value)) return false;
-
-  return (
-    typeof value.id === "string" &&
-    typeof value.name === "string" &&
-    typeof value.createdAt === "number" &&
-    isValidFieldArray(value.fields)
-  );
-}
-
-export function isValidPresetArray(value: unknown): value is Preset[] {
-  return (
-    Array.isArray(value) &&
-    value.every(isValidPreset)
-  );
 }

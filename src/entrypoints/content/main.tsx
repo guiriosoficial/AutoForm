@@ -1,6 +1,6 @@
 import { StrictMode } from "react"
 import { createRoot } from "react-dom/client"
-import App from "@/views/app/App.tsx"
+import App from "@/views/app/App"
 import { APP_ID } from "@/configs"
 
 const container = document.createElement("div");
