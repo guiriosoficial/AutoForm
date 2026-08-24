@@ -34,7 +34,7 @@ import {
   ItemActions
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import { ConfirmationDialog } from "@/components/ConfirmationDialog";
+import { ConfirmationAlertDialog } from "@/components/ConfirmationAlertDialog.tsx";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
 import { preventDefaultEscape } from "@/lib/utils";
 import {
@@ -193,7 +193,7 @@ export function PresetManager({
       </DropdownMenu>
 
       {presetToDelete && (
-        <ConfirmationDialog
+        <ConfirmationAlertDialog
           destructive
           open={!!presetToDelete}
           description={t("presetsManager.alerts.deletePreset.description", { presetToDelete })}

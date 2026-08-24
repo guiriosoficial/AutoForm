@@ -5,7 +5,7 @@ import { LOCALE_LANGUAGE_DEFAULT, LocaleLanguage } from "@/configs";
 import {
   enTranslations,
   ptBrTranslations
-} from '@/locales'
+} from '@/i18n/locales'
 
 i18n
   .use(detector)

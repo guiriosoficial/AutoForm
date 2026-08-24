@@ -1,5 +1,5 @@
-import { Toaster } from "@/components/ui/toast";
-import { Index } from "@/components/Index";
+import { Toaster } from "@/components/ui/toast.tsx";
+import { Index } from "@/components";
 import { ThemeProvider } from "@/providers/theme-provider.tsx";
 
 const App = () => (

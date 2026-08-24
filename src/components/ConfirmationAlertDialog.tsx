@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/alert-dialog"
 import { preventDefaultEscape } from "@/lib/utils";
 
-interface AlertDialogProps {
+interface ConfirmationAlertDialogProps {
   open: boolean,
   title?: string,
   description?: string,
@@ -25,7 +25,7 @@ interface AlertDialogProps {
   onCancel?: () => void,
 }
 
-export function ConfirmationDialog({
+export function ConfirmationAlertDialog({
   open,
   title,
   description,
@@ -35,7 +35,7 @@ export function ConfirmationDialog({
   onOpenChange,
   onConfirm,
   onCancel,
-}: AlertDialogProps) {
+}: ConfirmationAlertDialogProps) {
   const { t } = useTranslation();
 
   const translatedTitle = title ?? t("defaults.alert.title");
