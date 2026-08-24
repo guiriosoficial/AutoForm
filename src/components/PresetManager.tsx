@@ -38,8 +38,7 @@ import { ConfirmationDialog } from "@/components/ConfirmationDialog";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
 import { preventDefaultEscape } from "@/lib/utils";
 import {
-  IMPORT_FILE_TYPE,
-  IMPORT_REPLACE_ALL_THRESHOLD,
+  IMPORT_CONFIG,
   type ImportStrategy
 } from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
@@ -95,7 +94,7 @@ export function PresetManager({
 
     const loaded = await onLoadFile(json);
 
-    if (loaded && presets.length <= IMPORT_REPLACE_ALL_THRESHOLD) {
+    if (loaded && presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD) {
       onImportPresets(loaded.parsed);
       return
     }
@@ -216,7 +215,7 @@ export function PresetManager({
         ref={importInputRef}
         className="hidden"
         type="file"
-        accept={IMPORT_FILE_TYPE}
+        accept={IMPORT_CONFIG.FILE_TYPE}
         onChange={handleLoadFile}
       />
     </div>

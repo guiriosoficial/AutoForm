@@ -6,7 +6,7 @@ import { json5ParseLinter } from "codemirror-json5";
 
 const json5Linter = json5ParseLinter();
 
-export const EDITOR_SETUP = {
+const BASIC_SETUP = {
   lineNumbers: false,
   foldGutter: false,
   highlightActiveLine: true,
@@ -21,7 +21,13 @@ export const EDITOR_SETUP = {
   autocompletion: false,
   searchKeymap: false,
   lintKeymap: false,
-}
+} as const
+
+export const EDITOR_CONFIG = {
+  INDENT_SPACES: 2,
+  LINT_DELAY_MS: 1400,
+  BASIC_SETUP: BASIC_SETUP
+} as const
 
 export const EDITOR_THEME = [
   createTheme({
@@ -102,6 +108,3 @@ export const EDITOR_LINT = (hasConfig: boolean) => linter((view) => {
     tooltipFilter: () => [],
   }
 );
-
-export const EDITOR_INDENT_SPACES = 2;
-export const EDITOR_LINT_DELAY_MS = 1400

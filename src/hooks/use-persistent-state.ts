@@ -1,8 +1,8 @@
-import {useEffect, useMemo, useState} from "react";
 import browser from "webextension-polyfill";
-import { STORAGE_PERSISTENCE_DELAY_MS } from "@/configs";
+import { useEffect, useMemo, useState } from "react";
+import { debounce } from "@/lib/utils";
+import { STORAGE_CONFIG } from "@/configs";
 import type { StorageKeys } from "@/configs";
-import {debounce} from "@/lib/utils.ts";
 
 const AreaName = {
   LOCAL: "local",
@@ -14,7 +14,7 @@ const AreaName = {
 export function usePersistentState<T>(
   key: StorageKeys,
   initialState: T,
-  persistenceDelay = STORAGE_PERSISTENCE_DELAY_MS,
+  persistenceDelay = STORAGE_CONFIG.PERSISTENCE_DELAY_MS,
 ) {
   const [state, setState] = useState<T>(initialState);
   const [hydrated, setHydrated] = useState(false);

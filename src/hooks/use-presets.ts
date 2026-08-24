@@ -3,9 +3,7 @@ import { useCallback, useEffect, useMemo, useState, type RefObject } from "react
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
   StorageKeys,
-  EXPORT_JSON_INDENT_SPACES,
-  EXPORT_FILE_TYPE,
-  EXPORT_FILE_NAME
+  EXPORT_CONFIG
 } from "@/configs";
 import {
   createEmptyPreset,
@@ -143,13 +141,13 @@ export function usePresets({
   }, [presets, currentPreset, lasPresetId, setCurrentPreset, createPreset]);
 
   const exportPresets = useCallback(() => {
-    const data = JSON.stringify(presets, null, EXPORT_JSON_INDENT_SPACES);
-    const blob = new Blob([data], { type: EXPORT_FILE_TYPE });
+    const data = JSON.stringify(presets, null, EXPORT_CONFIG.INDENT_SPACES);
+    const blob = new Blob([data], { type: EXPORT_CONFIG.FILE_TYPE });
     const url = URL.createObjectURL(blob);
 
     try {
       const a = document.createElement("a");
-      a.download = EXPORT_FILE_NAME;
+      a.download = EXPORT_CONFIG.FILE_NAME;
       a.href = url;
       a.click();
       a.remove()

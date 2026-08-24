@@ -18,9 +18,7 @@ import {
 import {
   EDITOR_KEYMAP,
   EDITOR_LINT,
-  EDITOR_LINT_DELAY_MS,
-  EDITOR_INDENT_SPACES,
-  EDITOR_SETUP,
+  EDITOR_CONFIG,
   EDITOR_THEME,
 } from "@/configs";
 import {
@@ -53,7 +51,7 @@ export function JsonConfigEditor({
 
     const formattedValue = JSON5.stringify(
       parsedValue,
-      { space: EDITOR_INDENT_SPACES }
+      { space: EDITOR_CONFIG.INDENT_SPACES }
     );
 
     onChange(formattedValue)
@@ -82,7 +80,7 @@ export function JsonConfigEditor({
 
   const debouncedParseConfig = debounce((value: string) => {
     parseConfig(value);
-  }, EDITOR_LINT_DELAY_MS)
+  }, EDITOR_CONFIG.LINT_DELAY_MS)
 
 
   const handleConfigChange = (value: string) => {
@@ -170,7 +168,7 @@ export function JsonConfigEditor({
           className={editorClasses}
           extensions={editorExtension}
           theme={EDITOR_THEME}
-          basicSetup={EDITOR_SETUP}
+          basicSetup={EDITOR_CONFIG.BASIC_SETUP}
           onChange={handleConfigChange}
         />
 

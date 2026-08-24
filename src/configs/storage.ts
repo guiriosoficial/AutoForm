@@ -2,6 +2,10 @@ import { APP_ID } from "./app";
 
 export const STORAGE_PERSISTENCE_DELAY_MS = 500;
 
+export const STORAGE_CONFIG = {
+  PERSISTENCE_DELAY_MS: 500,
+} as const
+
 export const StorageKeys = {
   LAST_GENERATED_VALUES: `${APP_ID}:last-generated-values`,
   LAST_PRESET_ID: `${APP_ID}:last-preset-id`,
