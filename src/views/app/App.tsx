@@ -1,13 +1,13 @@
 import { Toaster } from "@/components/ui/toast";
 import { Index } from "@/components/Index";
-import { ThemeProvider } from "@/providers/theme-provider";
+import { AppSettingsProvider } from "@/providers/AppSettingsProvider";
 
 const App = () => (
   <>
-    <ThemeProvider>
+    <AppSettingsProvider>
       <Toaster />
       <Index />
-    </ThemeProvider>
+    </AppSettingsProvider>
   </>
 );
 

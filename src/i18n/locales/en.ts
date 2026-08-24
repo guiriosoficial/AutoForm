@@ -22,6 +22,7 @@ export default {
     failedToCopy: "Failed to copy {{ item }}",
   },
   configs: {
+    // TODO: Add config modal translations
     importStrategy: {
       append: {
         title: "Append",
