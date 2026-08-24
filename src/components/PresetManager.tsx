@@ -95,7 +95,7 @@ export function PresetManager({
     const loaded = await onLoadFile(json);
 
     if (loaded && presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD) {
-      onImportPresets(loaded.parsed);
+      await onImportPresets(loaded.parsed);
       return
     }
 

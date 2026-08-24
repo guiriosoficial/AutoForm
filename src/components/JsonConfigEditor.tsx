@@ -16,11 +16,13 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover";
 import {
-  EDITOR_KEYMAP,
-  EDITOR_LINT,
   EDITOR_CONFIG,
   EDITOR_THEME,
 } from "@/configs";
+import {
+  createEditorKeymap,
+  createEditorLinter,
+} from "@/lib/editor"
 import {
   cn,
   debounce,
@@ -108,8 +110,8 @@ export function JsonConfigEditor({
 
   const editorExtension = [
     json5(),
-    EDITOR_LINT(hasConfig),
-    EDITOR_KEYMAP(formatConfig),
+    createEditorLinter(hasConfig),
+    createEditorKeymap({ onFormat: formatConfig }),
   ];
 
   const triggerButtonClasses = cn(

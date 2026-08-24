@@ -9,6 +9,7 @@ import { name, version } from './package.json'
 
 export default defineConfig({
   define: {
+    __APP_VERSION__: JSON.stringify(version),
     __APP_NAME__: JSON.stringify(name),
   },
   resolve: {

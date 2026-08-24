@@ -1,6 +1,6 @@
-import { Toaster } from "@/components/ui/toast.tsx";
-import { Index } from "@/components";
-import { ThemeProvider } from "@/providers/theme-provider.tsx";
+import { Toaster } from "@/components/ui/toast";
+import { Index } from "@/components/Index";
+import { ThemeProvider } from "@/providers/theme-provider";
 
 const App = () => (
   <>
