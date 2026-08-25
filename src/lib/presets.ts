@@ -1,6 +1,14 @@
-import { createField, isValidFieldArray, type FieldConfig } from "@/lib/fields-config";
-import { isObject } from "@/lib/utils";
-import { PRESET_DEFAULT_NAME } from "@/configs";
+import i18n from "@/i18n";
+import {
+  createField,
+  isValidFieldArray,
+  type FieldConfig
+} from "@/lib/fields-config";
+import {
+  isPopulatedString,
+  isTimestamp,
+  isObject
+} from "@/lib/guards";
 
 export interface Preset {
   id: string;
@@ -9,11 +17,19 @@ export interface Preset {
   createdAt: number;
 }
 
-export const presetDefaultNameRegex = new RegExp(`^${PRESET_DEFAULT_NAME} (\\d+)$`)
+export const getPresetDefaultName = (): string => {
+  return i18n.t("configs.preset.defaultName");
+};
+
+export const getPresetDefaultNameRegex = (): RegExp => {
+  const baseName = getPresetDefaultName();
+  const escapedName = baseName.replace(/[^\w\s]/g, "\\$&");
+  return new RegExp(`^${escapedName} (\\d+)$`);
+};
 
 export const createEmptyPreset = (number: number): Preset => ({
   id: crypto.randomUUID(),
-  name: `${PRESET_DEFAULT_NAME} ${number}`,
+  name: `${getPresetDefaultName()} ${number}`,
   fields: [createField()],
   createdAt: Date.now(),
 });
@@ -22,9 +38,9 @@ export function isValidPreset(value: unknown): value is Preset {
   if (!isObject(value)) return false;
 
   return (
-    typeof value.id === "string" &&
-    typeof value.name === "string" &&
-    typeof value.createdAt === "number" &&
+    isPopulatedString(value.id) &&
+    isPopulatedString(value.name) &&
+    isTimestamp(value.createdAt) &&
     isValidFieldArray(value.fields)
   );
 }
@@ -38,7 +54,8 @@ export function isValidPresetArray(value: unknown): value is Preset[] {
 
 export function getNewPresetNumber(presets: Preset[]) {
   return presets.reduce((max, preset) => {
-    const match = preset.name.match(presetDefaultNameRegex);
+    const regex = getPresetDefaultNameRegex();
+    const match = preset.name.match(regex)
 
     if (!match) return max;
 

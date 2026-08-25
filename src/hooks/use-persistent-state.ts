@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { useEffect, useMemo, useState } from "react";
-import { debounce } from "@/lib/utils";
+import { debounce } from "@/lib/async";
 import { STORAGE_CONFIG } from "@/configs";
 import type { StorageKeys } from "@/configs";
 

@@ -21,7 +21,7 @@ import {
   type CatalogModule,
   type CatalogMethod
 } from "@/lib/main-catalog";
-import { preventDefaultEscape } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/events"
 import type { FieldConfig } from "@/lib/fields-config";
 
 interface FieldRowProps {

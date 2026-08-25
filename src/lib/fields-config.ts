@@ -1,4 +1,4 @@
-import { isObject } from "@/lib/utils";
+import {isObject, isOptionalString, isPopulatedString,} from "@/lib/guards";
 
 export interface FieldConfig {
   id: string;
@@ -17,13 +17,10 @@ export function isValidField(value: unknown): value is FieldConfig {
   if (!isObject(value)) return false;
 
   return (
-    typeof value.id === "string" &&
-    typeof value.selector === "string" &&
-    typeof value.generator === "string" &&
-    (
-      value.config === undefined ||
-      typeof value.config === "string"
-    )
+    isPopulatedString(value.id) &&
+    isOptionalString(value.selector) &&
+    isOptionalString(value.generator) &&
+    isOptionalString(value.options)
   );
 }
 

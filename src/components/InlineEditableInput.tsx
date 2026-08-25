@@ -8,7 +8,7 @@ import {
 } from "react";
 import { X, Check, PenLine } from "lucide-react";
 import { InlineButton } from "@/components/InlineButton";
-import {preventDefaultEscape} from "@/lib/utils.ts";
+import { preventDefaultEscape } from "@/lib/events"
 
 interface InlineEditableInputProps {
   value: string;

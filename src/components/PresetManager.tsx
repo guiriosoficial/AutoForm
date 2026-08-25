@@ -36,7 +36,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ConfirmationAlertDialog } from "@/components/ConfirmationAlertDialog.tsx";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
-import { preventDefaultEscape } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/events"
 import {
   IMPORT_CONFIG,
   type ImportStrategy

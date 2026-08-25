@@ -11,7 +11,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { preventDefaultEscape } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/events"
 
 interface ConfirmationAlertDialogProps {
   open: boolean,

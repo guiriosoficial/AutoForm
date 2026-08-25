@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { ImportStrategy } from "@/configs";
-import { preventDefaultEscape } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/events"
 import type { Preset } from "@/lib/presets";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 
