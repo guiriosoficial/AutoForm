@@ -1,7 +1,7 @@
 import i18n from 'i18next';
 import detector from 'i18next-browser-languagedetector';
 import { initReactI18next } from 'react-i18next';
-import { LOCALE_LANGUAGE_DEFAULT, LocaleLanguage } from "@/configs";
+import { LANGUAGE_CONFIG, Language } from "@/configs";
 import {
   enTranslations,
   ptBrTranslations
@@ -12,10 +12,10 @@ i18n
   .use(initReactI18next)
   .init({
     resources: {
-      [LocaleLanguage.EN]: { translation:  enTranslations },
-      [LocaleLanguage.PT_BR]: { translation: ptBrTranslations },
+      [Language.EN]: { translation:  enTranslations },
+      [Language.PT_BR]: { translation: ptBrTranslations },
     },
-    fallbackLng: LOCALE_LANGUAGE_DEFAULT,
+    fallbackLng: LANGUAGE_CONFIG.DEFAULT,
     interpolation: {
       escapeValue: false
     },
@@ -24,4 +24,6 @@ i18n
       caches: []
     }
   });
+
+export default i18n;
 

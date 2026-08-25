@@ -1,59 +1,27 @@
-// src/lib/editor/extensions.ts
-import { tags as t } from "@lezer/highlight";
-import { keymap, EditorView } from "@codemirror/view";
-import { linter } from "@codemirror/lint";
-import { createTheme } from "@uiw/codemirror-themes";
 import { json5ParseLinter } from "codemirror-json5";
+import { createTheme } from "@uiw/codemirror-themes";
+import { linter } from "@codemirror/lint";
+import { keymap, EditorView } from "@codemirror/view";
+import { EDITOR_SHORTCUTS, EDITOR_THEME } from "@/configs";
 
-const json5Linter = json5ParseLinter();
-
-// Tema do CodeMirror isolado como uma extensão
 export const createEditorTheme = () => [
   createTheme({
     theme: "light",
-    settings: {
-      background: "var(--card)",
-      foreground: "var(--card-foreground)",
-      caret: "var(--foreground)",
-      selection: "var(--editor-selection)",
-      lineHighlight: "var(--editor-line-highlight)",
-    },
-    styles: [
-      { tag: t.comment, color: "var(--muted-foreground)" },
-      { tag: t.propertyName, color: "var(--syntax-property)" },
-      { tag: t.keyword, color: "var(--syntax-keyword)" },
-      { tag: t.string, color: "var(--syntax-string)" },
-      { tag: t.number, color: "var(--syntax-number)" },
-      { tag: [t.bool, t.null], color: "var(--syntax-literal)" },
-      { tag: [t.paren, t.brace, t.bracket, t.punctuation], color: "var(--foreground)" },
-    ],
+    settings: EDITOR_THEME.settings,
+    styles: EDITOR_THEME.syntax,
   }),
 
-  EditorView.theme({
-    ".cm-scroller:has(.cm-selectionBackground) .cm-activeLine": {
-      background: "transparent",
-    },
-    ".cm-matchingBracket": {
-      backgroundColor: "var(--editor-bracket-highlight) !important",
-    },
-    ".cm-nonmatchingBracket": {
-      backgroundColor: "var(--destructive)",
-    },
-    ".cm-lintRange-error": {
-      textDecoration: "underline wavy var(--destructive) !important",
-    },
-  }),
+  EditorView.theme(EDITOR_THEME.overrides),
 ];
 
-// Keymap builder
 export const createEditorKeymap = ({
- onFormat
+  onFormat
 }: {
   onFormat: () => void;
 }) =>
   keymap.of([
     {
-      key: "Mod-Shift-f",
+      key: EDITOR_SHORTCUTS.FORMAT,
       run: () => {
         onFormat();
         return true;
@@ -61,9 +29,8 @@ export const createEditorKeymap = ({
     },
   ]);
 
-// Linter builder
 export const createEditorLinter = (enabled: boolean) =>
   linter(
-    (view) => (enabled ? json5Linter(view) : []),
+    (view) => (enabled ? json5ParseLinter()(view) : []),
     { tooltipFilter: () => [] }
   );

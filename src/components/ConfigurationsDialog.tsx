@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Sun, MoonStar, MonitorDot, Settings2 } from "lucide-react"
-import {Button, buttonVariants} from "@/components/ui/button"
+import { Button, buttonVariants } from "@/components/ui/button"
+import { ButtonGroup } from "@/components/ui/button-group";
 import {
   Dialog,
   DialogContent,
@@ -18,9 +19,6 @@ import {
   ToggleGroup,
   ToggleGroupItem
 } from "@/components/ui/toggle-group";
-import { ButtonGroup } from "@/components/ui/button-group";
-import { ImportStrategy, Locale, LocaleLanguage, Theme } from "@/configs";
-import { cn, preventDefaultEscape } from "@/lib/utils";
 import {
   Combobox,
   ComboboxContent,
@@ -29,7 +27,15 @@ import {
   ComboboxItem,
   ComboboxList
 } from "@/components/ui/combobox.tsx";
-import { useAppSettings } from "@/hooks/use-app-settings.ts";
+import {
+  ImportStrategy,
+  Language,
+  Locale,
+  Theme
+} from "@/configs";
+import { cn } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/events"
+import { useAppSettings } from "@/hooks/use-app-settings";
 
 interface ConfigurationsDialogProps {
  className: string
@@ -78,7 +84,7 @@ export function ConfigurationsDialog({
   const handleChangeLanguage = (language: string | null) => {
     if (!language) return
 
-    setLanguage(language as LocaleLanguage)
+    setLanguage(language as Language)
   }
 
 
@@ -227,7 +233,7 @@ export function ConfigurationsDialog({
           </FieldLabel>
           <Combobox
             value={language}
-            items={Object.values(LocaleLanguage)}
+            items={Object.values(Language)}
             itemToStringLabel={getLocaleDisplayName}
             onValueChange={handleChangeLanguage}
           >

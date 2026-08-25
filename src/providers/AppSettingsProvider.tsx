@@ -1,6 +1,16 @@
 import { createContext, useEffect, type ReactNode } from "react"
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import {ImportStrategy, Locale, LocaleLanguage, StorageKeys, Theme} from "@/configs";
+import {
+  LOCALE_CONFIG,
+  LANGUAGE_CONFIG,
+  THEME_CONFIG,
+  IMPORT_CONFIG,
+  ImportStrategy,
+  Locale,
+  Language,
+  StorageKeys,
+  Theme,
+} from "@/configs";
 import i18n from "i18next";
 
 interface AppSettingsProviderProps {
@@ -12,20 +22,20 @@ interface AppSettingsProviderState {
   setTheme: (theme: Theme) => void
   importStrategy: ImportStrategy
   setImportStrategy: (strategy: ImportStrategy) => void
-  language: LocaleLanguage
-  setLanguage: (language: LocaleLanguage) => void
+  language: Language
+  setLanguage: (language: Language) => void
   locale: Locale
   setLocale: (locale: Locale) => void
 }
 
 const initialState: AppSettingsProviderState = {
-  theme: Theme.SYSTEM,
+  theme: THEME_CONFIG.DEFAULT,
   setTheme: () => null,
-  importStrategy: ImportStrategy.ALWAYS_ASK,
+  importStrategy: IMPORT_CONFIG.DEFAULT_STRATEGY,
   setImportStrategy: () => null,
-  language: LocaleLanguage.EN,
+  language: LANGUAGE_CONFIG.DEFAULT,
   setLanguage: () => null,
-  locale: Locale.EN,
+  locale: LOCALE_CONFIG.DEFAULT,
   setLocale: () => null,
 }
 
@@ -34,10 +44,10 @@ export const AppSettingsProviderContext = createContext<AppSettingsProviderState
 export function AppSettingsProvider({
   children,
 }: AppSettingsProviderProps) {
-  const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(StorageKeys.IMPORT_STRATEGY, ImportStrategy.ALWAYS_ASK)
-  const [language, setLanguage] = usePersistentState<LocaleLanguage>(StorageKeys.LANGUAGE, LocaleLanguage.EN)
-  const [locale, setLocale] = usePersistentState<Locale>(StorageKeys.LOCALE, Locale.EN)
-  const [theme, setTheme] = usePersistentState<Theme>(StorageKeys.THEME, Theme.SYSTEM)
+  const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(StorageKeys.IMPORT_STRATEGY, IMPORT_CONFIG.DEFAULT_STRATEGY)
+  const [language, setLanguage] = usePersistentState<Language>(StorageKeys.LANGUAGE, LANGUAGE_CONFIG.DEFAULT)
+  const [locale, setLocale] = usePersistentState<Locale>(StorageKeys.LOCALE, LOCALE_CONFIG.DEFAULT)
+  const [theme, setTheme] = usePersistentState<Theme>(StorageKeys.THEME, THEME_CONFIG.DEFAULT)
 
   useEffect(() => {
     const root = window.document.documentElement

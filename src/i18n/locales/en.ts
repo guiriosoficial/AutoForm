@@ -22,7 +22,15 @@ export default {
     failedToCopy: "Failed to copy {{ item }}",
   },
   configs: {
-    // TODO: Add config modal translations
+    preset: {
+      defaultName: "New preset"
+    },
+    theme: {
+      dark: "Dark",
+      light: "Light",
+      system: "System",
+    },
+    //  TODO: Add config modal translations
     importStrategy: {
       append: {
         title: "Append",

@@ -1,5 +1,9 @@
-import pkg from '../../package.json'
+export const APP_CONFIG = {
+  name: __APP_NAME__,
+  version: __APP_VERSION__,
+  id: __APP_ID__,
+} as const;
 
-export const APP_NAME = pkg.name.replace(/(^|-)(\w)/g, (_, __, char) => char.toUpperCase());
-export const APP_VERSION = pkg.version
-export const APP_ID = pkg.name
+export const APP_NAME = APP_CONFIG.name;
+export const APP_VERSION = APP_CONFIG.version;
+export const APP_ID = APP_CONFIG.id;

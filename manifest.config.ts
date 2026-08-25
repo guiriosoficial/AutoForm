@@ -1,5 +1,9 @@
 import { defineManifest } from '@crxjs/vite-plugin'
-import { APP_NAME, APP_VERSION } from "./src/configs";
+import { name, version } from './package.json'
+
+export const APP_NAME = name.replace(/(^|-)(\w)/g, (_, __, char) => char.toUpperCase());
+export const APP_VERSION = version;
+export const APP_ID = name;
 
 export default defineManifest({
   manifest_version: 3,

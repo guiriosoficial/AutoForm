@@ -4,13 +4,17 @@ import zip from 'vite-plugin-zip-pack'
 import tailwindcss from "@tailwindcss/vite";
 import { crx } from '@crxjs/vite-plugin'
 import react from '@vitejs/plugin-react'
-import manifest from './manifest.config'
-import { name, version } from './package.json'
+import manifest, {
+  APP_NAME,
+  APP_VERSION,
+  APP_ID
+} from './manifest.config'
 
 export default defineConfig({
   define: {
-    __APP_VERSION__: JSON.stringify(version),
-    __APP_NAME__: JSON.stringify(name),
+    __APP_NAME__: APP_NAME,
+    __APP_VERSION__: APP_VERSION,
+    __APP_ID__: APP_ID
   },
   resolve: {
     alias: {
@@ -21,7 +25,7 @@ export default defineConfig({
     react(),
     tailwindcss(),
     crx({ manifest }),
-    zip({ outDir: 'release', outFileName: `crx-${name}-${version}.zip` }),
+    zip({ outDir: 'release', outFileName: `crx-${APP_ID}-${APP_VERSION}.zip` }),
   ],
   server: {
     cors: {
