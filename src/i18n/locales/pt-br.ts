@@ -2,6 +2,10 @@ import { APP_NAME } from "@/configs";
 
 export default {
   globals: {
+    appTitle: APP_NAME,
+    appDescription: "Preencha formulários automaticamente com dados aleatórios",
+    credits: "Made with ♥ by\u00A0<author>guiriosoficial</author>",
+
     field: "Campo",
     fields: "Campos",
     fields_zero: "Nenhum campo" ,
@@ -33,7 +37,6 @@ export default {
       light: "Claro",
       system: "Sistema",
     },
-    // TODO: Add config modal translations
     importStrategy: {
       append: {
         title: "Adicionar",
@@ -46,6 +49,10 @@ export default {
       replaceAll: {
         title: "Substituir tudo",
         description: "Remove todos os presets atuais e importa os novos",
+      },
+      alwaysAsk: {
+        title: "Perguntar sempre",
+        description: "Sempre perguntar ao importar presets",
       }
     }
   },
@@ -57,9 +64,28 @@ export default {
       cancelButton: "$t(globals.cancel)",
     }
   },
-  header: {
-    title: APP_NAME,
-    description: "Preencha formulários automaticamente com dados aleatórios",
+  preferencesManager: {
+    title: "Preferencias",
+    description: "Configure o $t(globals.appTitle)",
+    confirmButton: "Concluído",
+    form: {
+      themeToggle: {
+        label: "Tema",
+      },
+      importStrategyToggle: {
+        label: "Estrategia de importação",
+      },
+      localeSelect: {
+        label: "Localização",
+        placeholder: "Selecione uma localização",
+        empty: "Nenhuma localização encontrada",
+      },
+      languageSelect: {
+        label: "Língua",
+        placeholder: "Seleciona uma língua",
+        empty: "Nenhuma língua encontrada",
+      }
+    }
   },
   presetsManager: {
     title: "$t(globals.presets)",

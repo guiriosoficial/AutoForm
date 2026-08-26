@@ -2,6 +2,10 @@ import { APP_NAME } from "@/configs";
 
 export default {
   globals: {
+    appTitle: APP_NAME,
+    appDescription: "Fill forms automatically with random data",
+    credits: "Made with ♥ by\u00A0<author>guiriosoficial</author>",
+
     field: "Field",
     fields: "Fields",
     fields_zero: "No fields",
@@ -13,6 +17,9 @@ export default {
     presets_zero: "No presets",
     presets_one: "{{ count }} Preset",
     presets_other: "{{ count }} Presets",
+    loadedPresets_zero: "No presets loaded",
+    loadedPresets_one: "{{ count }} preset loaded",
+    loadedPresets_other: "{{ count }} presets loaded",
 
     import: "Import",
     export: "Export",
@@ -43,6 +50,10 @@ export default {
       replaceAll: {
         title: "Replace all",
         description: "Delete all current presets and import new ones",
+      },
+      alwaysAsk: {
+        title: "Always ask",
+        description: "Always ask when importing presets",
       }
     }
   },
@@ -54,9 +65,28 @@ export default {
       cancelButton: "$t(globals.cancel)",
     }
   },
-  header: {
-    title: APP_NAME,
-    description: "Fill forms automatically with random data",
+  preferencesManager: {
+    title: "Preferences",
+    description: "Configure the $t(globals.appTitle)",
+    confirmButton: "Concluded",
+    form: {
+      themeToggle: {
+        label: "Theme",
+      },
+      importStrategyToggle: {
+        label: "Import strategy",
+      },
+      localeSelect: {
+        label: "Locale",
+        placeholder: "Select a locale",
+        empty: "No locale found",
+      },
+      languageSelect: {
+        label: "Language",
+        placeholder: "Select a language",
+        empty: "No language found",
+      }
+    }
   },
   presetsManager: {
     title: "$t(globals.presets)",
@@ -73,9 +103,9 @@ export default {
     dialogs: {
       importPreset: {
         title: "$t(globals.import)",
-        description_zero: "$t(globals.presets, { count: total }) to import",
-        description_one: "{{ count }} conflict among $t(globals.presets, { count: total })",
-        description_other: "{{ count }} conflicts among $t(globals.presets, { count: total })",
+        description_zero: "$t(globals.presets, { 'count': total }) to import",
+        description_one: "{{ count }} conflict among $t(globals.presets, { 'count': total })",
+        description_other: "{{ count }} conflicts among $t(globals.presets, { 'count': total })",
         confirmButton: "$t(globals.import)",
         cancelButton: "$t(globals.cancel)",
         form: {
@@ -128,7 +158,7 @@ export default {
     },
     messages: {
       copyValue: {
-        failed: "$t(globals.failedToCopy, { item: 'value' })",
+        failed: "$t(globals.failedToCopy, { 'item': 'value' })",
         success: "$t(globals.copiedToClipboard)",
       }
     }
@@ -141,7 +171,7 @@ export default {
     messages: {
       copyJson: {
         success: "$t(globals.copiedToClipboard)",
-        failed: "$t(globals.failedToCopy, { item: 'JSON' })",
+        failed: "$t(globals.failedToCopy, { 'item': 'JSON' })",
       },
     }
   }

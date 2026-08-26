@@ -7,3 +7,4 @@ export const APP_CONFIG = {
 export const APP_NAME = APP_CONFIG.name;
 export const APP_VERSION = APP_CONFIG.version;
 export const APP_ID = APP_CONFIG.id;
+export const APP_AUTHOR_URL = "https://github.com/guiriosoficial";
