@@ -12,9 +12,9 @@ import manifest, {
 
 export default defineConfig({
   define: {
-    __APP_NAME__: APP_NAME,
-    __APP_VERSION__: APP_VERSION,
-    __APP_ID__: APP_ID
+    __APP_NAME__: JSON.stringify(APP_NAME),
+    __APP_VERSION__: JSON.stringify(APP_VERSION),
+    __APP_ID__: JSON.stringify(APP_ID)
   },
   resolve: {
     alias: {
