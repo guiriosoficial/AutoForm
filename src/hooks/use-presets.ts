@@ -15,10 +15,10 @@ import {
 import { toast } from "@/lib/toast"
 import { ImportStrategy } from "@/configs"
 import type { FieldConfig } from "@/lib/fields";
-import type { InlineEditableInputRef } from "@/components/InlineEditableInput.tsx";
+import type { InputInlineRef } from "@/components/shared/InputInline.tsx";
 
 interface UsePresetsArgs {
-  presetNameEditorRef: RefObject<InlineEditableInputRef | null>;
+  presetNameEditorRef: RefObject<InputInlineRef | null>;
 }
 
 export interface ParsePresetsResult {

@@ -2,31 +2,34 @@ import {
   useEffect,
   useRef,
   useState,
+  useImperativeHandle,
+  forwardRef,
   type KeyboardEvent,
   type MouseEvent,
-  type FocusEvent, useImperativeHandle, forwardRef, ForwardedRef
+  type FocusEvent,
+  type ForwardedRef
 } from "react";
 import { X, Check, PenLine } from "lucide-react";
-import { InlineButton } from "@/components/InlineButton";
+import { ButtonInline } from "@/components/shared/ButtonInline.tsx";
 import { preventDefaultEscape } from "@/lib/events"
 
-interface InlineEditableInputProps {
+interface InputInlineProps {
   value: string;
   placeholder?: string;
   onSave: (value: string) => void;
 }
 
-export interface InlineEditableInputRef {
+export interface InputInlineRef {
   startEditing: () => void;
 }
 
-export const InlineEditableInput = forwardRef((
+export const InputInline = forwardRef((
   {
     value,
     placeholder,
     onSave,
-  }: InlineEditableInputProps,
-  ref: ForwardedRef<InlineEditableInputRef>
+  }: InputInlineProps,
+  ref: ForwardedRef<InputInlineRef>
 ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
@@ -106,17 +109,17 @@ export const InlineEditableInput = forwardRef((
           onBlur={confirmEditing}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <InlineButton
+        <ButtonInline
           icon={Check}
           size={14}
           persistent
           onClick={confirmEditing}
         />
-        <InlineButton
+        <ButtonInline
           icon={X}
           size={14}
           persistent
-          className="hover:text-destructive"
+          destructive
           onClick={cancelEditing}
         />
       </div>
@@ -135,7 +138,7 @@ export const InlineEditableInput = forwardRef((
       {restantWords}{" "}
       <span className="whitespace-nowrap">
       {lastWord}{" "}
-        <InlineButton
+        <ButtonInline
           className="inline-flex translate-y-0.5 ml-1"
           icon={PenLine}
         />

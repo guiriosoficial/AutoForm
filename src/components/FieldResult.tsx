@@ -1,5 +1,5 @@
 import { Copy, RotateCcw } from "lucide-react";
-import { InlineButton } from "@/components/InlineButton";
+import { ButtonInline } from "@/components/shared/ButtonInline.tsx";
 import { cn } from "@/lib/utils";
 
 interface FieldResultProps {
@@ -29,12 +29,12 @@ export function FieldResult({
       <span className="truncate">
         {text}
       </span>
-      <InlineButton
+      <ButtonInline
         icon={RotateCcw}
         onClick={onRegenerateValue}
       />
       {!error && (
-        <InlineButton
+        <ButtonInline
           icon={Copy}
           onClick={onCopyValue}
         />

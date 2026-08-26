@@ -34,7 +34,7 @@ import {
   ItemActions
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import { ConfirmationAlertDialog } from "@/components/ConfirmationAlertDialog.tsx";
+import { ConfirmationAlertDialog } from "@/components/shared/ConfirmationAlertDialog.tsx";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
 import { preventDefaultEscape } from "@/lib/events"
 import {
@@ -108,8 +108,6 @@ export function PresetManager({
     setPresetsToImport(null)
   }
 
-  const deleteButtonClasses = "absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
-
   return (
     <div className="flex items-center gap-2">
       <Combobox
@@ -150,7 +148,7 @@ export function PresetManager({
                   </ItemContent>
                   <ItemActions>
                     <button
-                      className={deleteButtonClasses}
+                      className="absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
                       onClick={(event) => handleStartDeletePreset(event, preset)}
                     >
                       <Trash />

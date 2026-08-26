@@ -1,4 +1,9 @@
-import { createContext, useEffect, type ReactNode } from "react"
+import {
+  useEffect,
+  useContext,
+  createContext,
+  type ReactNode
+} from "react"
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
   LOCALE_CONFIG,
@@ -68,7 +73,7 @@ export function AppSettingsProvider({
 
   useEffect(() => {
     const html = window.document.documentElement;
-    html.lang = language.replace("_", "-");
+    html.lang = language;
 
     i18n.changeLanguage(language);
   }, [language]);
@@ -93,4 +98,13 @@ export function AppSettingsProvider({
       {children}
     </AppSettingsProviderContext>
   )
+}
+
+export function useAppSettings ()  {
+  const context = useContext(AppSettingsProviderContext)
+
+  if (context === undefined)
+    throw new Error("useAppSettings must be used within a AppSettingsProvider")
+
+  return context
 }

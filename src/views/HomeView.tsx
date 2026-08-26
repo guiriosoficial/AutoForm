@@ -1,5 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { useRef } from "react";
+import { useTranslation } from "react-i18next";
+import { Copy, Zap } from "lucide-react";
 import {
   Card,
   CardAction,
@@ -9,20 +10,19 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import {
-  InlineEditableInput,
-  type InlineEditableInputRef
-} from "@/components/InlineEditableInput";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
+  InputInline,
+  type InputInlineRef
+} from "@/components/shared/InputInline";
+import { Footer } from "@/components/layouts/Footer";
 import { PresetManager } from "@/components/PresetManager";
-import { FormManager } from "@/components/FormManager";
+import { FieldsManager } from "@/components/FieldsManager";
 import { usePresets } from "@/hooks/use-presets";
 import { useForm } from "@/hooks/use-form";
 
-export function Index(){
+export function HomeView(){
   const { t } = useTranslation();
 
-  const presetNameEditorRef = useRef<InlineEditableInputRef>(null)
+  const presetNameEditorRef = useRef<InputInlineRef>(null)
 
   const {
     presets,
@@ -57,10 +57,7 @@ export function Index(){
   });
 
   return (
-    <div className="w-xl bg-background flex flex-col gap-4 p-4 pt-8">
-      <Header />
-
-      {/* Presets */}
+    <>
       <Card>
         <CardHeader>
           <CardTitle>
@@ -81,11 +78,10 @@ export function Index(){
         </CardContent>
       </Card>
 
-      {/* Fields */}
       <Card>
         <CardHeader>
           <CardTitle>
-            <InlineEditableInput
+            <InputInline
               ref={presetNameEditorRef}
               value={currentPreset?.name}
               placeholder={t("fieldsManager.form.presetNameInput.placeholder")}
@@ -99,7 +95,7 @@ export function Index(){
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-2">
-          <FormManager
+          <FieldsManager
             fields={fields}
             values={generatedValues}
             onUpdateField={updateField}
@@ -111,12 +107,15 @@ export function Index(){
         </CardContent>
       </Card>
 
-      {/* Actions */}
       <Footer
-        showCopyButton={Object.keys(generatedValues).length > 0}
-        generateValues={generateValues}
-        copyFormAsJSON={copyFormAsJSON}
+        primaryButonText={t("footer.buttons.generateData")}
+        primaryButtonIcon={Zap}
+        onPrimaryButtonClick={generateValues}
+        secondaryButtonText={t("footer.buttons.copyAsJson")}
+        secondaryButtonIcon={Copy}
+        onSecondaryButtonClick={copyFormAsJSON}
+        hideSecondaryButton={Object.keys(generatedValues).length <= 0}
       />
-    </div>
+    </>
   );
 }
