@@ -26,8 +26,8 @@ import {
   ToggleGroupItem
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
-import { ImportStrategy } from "@/configs";
 import { preventDefaultEscape } from "@/lib/events"
+import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 
@@ -44,7 +44,7 @@ export function ImportPresetDialog({
   onOpenChange,
   onImport
 }: ImportPresetDialogProps) {
-  const [strategy, setStrategy] = useState<ImportStrategy[]>([ImportStrategy.APPEND]);
+  const [strategy, setStrategy] = useState<ImportStrategy[]>([IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT]);
 
   const { t } = useTranslation()
 
@@ -60,6 +60,9 @@ export function ImportPresetDialog({
     count: duplicated.length,
     total: parsed.length
   })
+
+  const strategyOptions = Object.values(ImportStrategy)
+    .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK)
 
   return (
     <Dialog
@@ -87,8 +90,12 @@ export function ImportPresetDialog({
               className="p-0 text-destructive list-item marker:text-muted-foreground"
             >
               <ItemContent>
-                <ItemTitle className="text-balance" >{preset.name}</ItemTitle>
-                <ItemDescription>{preset.fields.length} Campos</ItemDescription>
+                <ItemTitle className="text-balance" >
+                  {preset.name}
+                </ItemTitle>
+                <ItemDescription>
+                  {t('globals.fields', { count: preset.fields.length })}
+                </ItemDescription>
               </ItemContent>
             </Item>
           ))}
@@ -101,11 +108,10 @@ export function ImportPresetDialog({
           <ToggleGroup
             value={strategy}
             variant="outline"
-
             onValueChange={handleChangeImportStrategy}
           >
             <ButtonGroup>
-              {Object.values(ImportStrategy).map((value) => (
+              {strategyOptions.map((value) => (
                 <ToggleGroupItem
                   key={value}
                   value={value}

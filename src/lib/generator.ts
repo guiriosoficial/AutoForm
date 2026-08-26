@@ -1,6 +1,7 @@
 import { catalogMethodsById } from "@/lib/catalog";
 import { parseJson5 } from "@/lib/json5";
 
+// TODO: Implements Error Handling
 export function generateValue(type: string, configStr?: string): string {
   const method = catalogMethodsById.get(type)
 
@@ -11,7 +12,6 @@ export function generateValue(type: string, configStr?: string): string {
   try {
     options = parseJson5(configStr ?? "");
   } catch {
-
   }
 
   return method.invoke(options);

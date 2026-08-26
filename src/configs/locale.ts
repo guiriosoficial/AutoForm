@@ -11,7 +11,7 @@ export const Locale = Object.fromEntries(
   ]),
 ) as LocaleMap;
 
-export type Locale = typeof Locale[keyof typeof Locale];
+export type Locale = (typeof Locale)[keyof typeof Locale];
 
 export const LOCALE_CONFIG = {
   DEFAULT: Locale.EN,
