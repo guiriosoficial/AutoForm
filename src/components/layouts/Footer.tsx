@@ -1,0 +1,54 @@
+import { Button } from "@/components/ui/button";
+import { Credits } from "@/components/layouts/Credits";
+import type { LucideIcon } from "lucide-react";
+
+interface FooterProps {
+  primaryButonText: string;
+  primaryButtonIcon: LucideIcon;
+  onPrimaryButtonClick: () => void;
+  secondaryButtonText?: string;
+  secondaryButtonIcon?: LucideIcon;
+  onSecondaryButtonClick?: () => void;
+  hideSecondaryButton?: boolean;
+  hideCredits?: boolean;
+}
+
+export function Footer({
+  primaryButonText,
+  primaryButtonIcon: PrimaryButtonIcon,
+  onPrimaryButtonClick,
+  secondaryButtonText,
+  secondaryButtonIcon: SecondaryButtonIcon,
+  onSecondaryButtonClick,
+  hideSecondaryButton,
+  hideCredits,
+}: FooterProps) {
+  const showSecondaryButton = onSecondaryButtonClick && secondaryButtonText && !hideSecondaryButton;
+
+  return (
+    <>
+      <div className="flex gap-2">
+        <Button
+          className="flex-1"
+          onClick={onPrimaryButtonClick}
+        >
+          {PrimaryButtonIcon && <PrimaryButtonIcon />}
+          {primaryButonText}
+        </Button>
+
+        {showSecondaryButton && (
+          <Button
+            variant="outline"
+            className="px-6"
+            onClick={onSecondaryButtonClick}
+          >
+            {SecondaryButtonIcon && <SecondaryButtonIcon />}
+            {secondaryButtonText}
+          </Button>
+        )}
+      </div>
+
+      {!hideCredits && <Credits />}
+    </>
+  )
+}
