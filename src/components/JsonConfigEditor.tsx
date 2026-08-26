@@ -56,10 +56,7 @@ export function JsonConfigEditor({
 
     const parsedValue = await parseConfig(value);
 
-    const formattedValue = stringifyJson5(
-      parsedValue,
-      { space: EDITOR_CONFIG.INDENT_SPACES }
-    );
+    const formattedValue = stringifyJson5(parsedValue);
 
     onChange(formattedValue)
   };

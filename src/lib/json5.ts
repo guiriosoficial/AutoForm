@@ -1,4 +1,5 @@
 import JSON5 from 'json5'
+import { EDITOR_CONFIG } from "@/configs";
 
 type JsonValue =
   | string
@@ -9,7 +10,10 @@ type JsonValue =
   | JsonValue[];
 
 interface StringifyOptions {
-  replacer?: ((this: any, key: string, value: any) => any) | (string | number)[] | null
+  replacer?:
+    | ((this: any, key: string, value: any) => any)
+    | (string | number)[]
+    | null
   space?: string | number | null
   quote?: string | null
 }
@@ -18,7 +22,10 @@ export function parseJson5<T = any>(text: string): T {
   return JSON5.parse(text)
 }
 
-export function stringifyJson5(json: JsonValue, options: StringifyOptions) {
+export function stringifyJson5(
+  json: JsonValue,
+  options: StringifyOptions = { space: EDITOR_CONFIG.INDENT_SPACES }
+) {
   return JSON5.stringify(json, options)
 }
 

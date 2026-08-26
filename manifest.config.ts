@@ -20,9 +20,10 @@ export default defineManifest({
     default_path: 'src/entrypoints/app/index.html',
   },
   permissions: [
+    'scripting',
+    'activeTab',
     'storage',
     'sidePanel',
-    'contentSettings',
   ],
   // content_scripts: [{
   //   js: ['src/content/main.tsx'],

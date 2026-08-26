@@ -10,5 +10,6 @@ export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy
 export const IMPORT_CONFIG = {
   FILE_TYPE: "application/json",
   REPLACE_ALL_THRESHOLD: 1,
-  DEFAULT_STRATEGY: ImportStrategy.ALWAYS_ASK,
+  STRATEGY_DEFAULT: ImportStrategy.ALWAYS_ASK,
+  ASKED_STRATEGY_DEFAULT: ImportStrategy.APPEND,
 } as const;

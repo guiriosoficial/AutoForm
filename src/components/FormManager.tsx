@@ -3,7 +3,7 @@ import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldEditor } from "@/components/FieldEditor";
 import { FieldResult } from "@/components/FieldResult";
-import type { FieldConfig }  from "@/lib/fields-config";
+import type { FieldConfig }  from "@/lib/fields";
 
 interface FormManagerProps {
   fields: FieldConfig[];

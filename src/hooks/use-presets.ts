@@ -14,7 +14,7 @@ import {
 } from "@/lib/presets";
 import { toast } from "@/lib/toast"
 import { ImportStrategy } from "@/configs"
-import type { FieldConfig } from "@/lib/fields-config";
+import type { FieldConfig } from "@/lib/fields";
 import type { InlineEditableInputRef } from "@/components/InlineEditableInput.tsx";
 
 interface UsePresetsArgs {

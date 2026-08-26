@@ -1,8 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { toast } from "@/lib/toast"
-import { generateValue, fillInputElement } from "@/lib/data-generator";
-import { createField, type FieldConfig } from "@/lib/fields-config";
+import { generateValue, fillInputElement } from "@/lib/generator";
+import { createField, type FieldConfig } from "@/lib/fields";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { StorageKeys } from "@/configs";
 

@@ -31,7 +31,7 @@ interface AppSettingsProviderState {
 const initialState: AppSettingsProviderState = {
   theme: THEME_CONFIG.DEFAULT,
   setTheme: () => null,
-  importStrategy: IMPORT_CONFIG.DEFAULT_STRATEGY,
+  importStrategy: IMPORT_CONFIG.STRATEGY_DEFAULT,
   setImportStrategy: () => null,
   language: LANGUAGE_CONFIG.DEFAULT,
   setLanguage: () => null,
@@ -44,7 +44,7 @@ export const AppSettingsProviderContext = createContext<AppSettingsProviderState
 export function AppSettingsProvider({
   children,
 }: AppSettingsProviderProps) {
-  const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(StorageKeys.IMPORT_STRATEGY, IMPORT_CONFIG.DEFAULT_STRATEGY)
+  const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(StorageKeys.IMPORT_STRATEGY, IMPORT_CONFIG.STRATEGY_DEFAULT)
   const [language, setLanguage] = usePersistentState<Language>(StorageKeys.LANGUAGE, LANGUAGE_CONFIG.DEFAULT)
   const [locale, setLocale] = usePersistentState<Locale>(StorageKeys.LOCALE, LOCALE_CONFIG.DEFAULT)
   const [theme, setTheme] = usePersistentState<Theme>(StorageKeys.THEME, THEME_CONFIG.DEFAULT)

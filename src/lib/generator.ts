@@ -1,13 +1,20 @@
-import { CATALOG_METHODS_BY_VALUE } from "@/lib/main-catalog";
+import { catalogMethodsById } from "@/lib/catalog";
 import { parseJson5 } from "@/lib/json5";
 
-export function generateValue(type: keyof typeof CATALOG_METHODS_BY_VALUE, configStr?: string): string {
+export function generateValue(type: string, configStr?: string): string {
+  const method = catalogMethodsById.get(type)
+
+  if (!method) return "";
+
   let options
+
   try {
     options = parseJson5(configStr ?? "");
-  } catch {}
+  } catch {
 
-  return CATALOG_METHODS_BY_VALUE[type].invoke(options);
+  }
+
+  return method.invoke(options);
 }
 
 export function fillInputElement(selector: string, value: string | boolean) {

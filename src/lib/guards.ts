@@ -28,3 +28,7 @@ export function isTimestamp(value: unknown): value is number {
 export function isObject(value: unknown): value is Record<string, unknown> {
   return value !== null && typeof value === "object";
 }
+
+export function isFunction(value: unknown): value is Function {
+  return typeof value === "function";
+}

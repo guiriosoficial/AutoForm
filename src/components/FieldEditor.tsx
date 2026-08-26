@@ -16,13 +16,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { JsonConfigEditor } from "@/components/JsonConfigEditor";
 import {
-  CATALOG_METHODS_BY_VALUE,
-  AutoFormCatalog,
+  catalogMethodsById,
+  catalogOptions,
   type CatalogModule,
   type CatalogMethod
-} from "@/lib/main-catalog";
+} from "@/lib/catalog";
 import { preventDefaultEscape } from "@/lib/events"
-import type { FieldConfig } from "@/lib/fields-config";
+import type { FieldConfig } from "@/lib/fields.ts";
 
 interface FieldRowProps {
   field: FieldConfig;
@@ -37,7 +37,7 @@ export function FieldEditor({
 }: FieldRowProps) {
   const { t } = useTranslation();
 
-  const selectedMethod = CATALOG_METHODS_BY_VALUE[field.generator];
+  const selectedMethod = catalogMethodsById.get(field.generator) ?? null;
 
   const updateField = (
     key: keyof FieldConfig,
@@ -60,7 +60,7 @@ export function FieldEditor({
       />
 
       <Combobox
-        items={AutoFormCatalog}
+        items={catalogOptions}
         value={selectedMethod}
         onValueChange={(value) => updateField("generator", value?.value)}
         itemToStringLabel={(item) => item.label}
@@ -95,7 +95,7 @@ export function FieldEditor({
                     </ComboboxItem>
                   )}
                 </ComboboxCollection>
-                {index < AutoFormCatalog.length - 1 && <ComboboxSeparator />}
+                {index < catalogOptions.length - 1 && <ComboboxSeparator />}
               </ComboboxGroup>
             )}
           </ComboboxList>

@@ -1,4 +1,4 @@
-import {isObject, isOptionalString, isPopulatedString,} from "@/lib/guards";
+import { isObject, isOptionalString, isPopulatedString } from "@/lib/guards";
 
 export interface FieldConfig {
   id: string;

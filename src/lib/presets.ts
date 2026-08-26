@@ -3,7 +3,7 @@ import {
   createField,
   isValidFieldArray,
   type FieldConfig
-} from "@/lib/fields-config";
+} from "@/lib/fields";
 import {
   isPopulatedString,
   isTimestamp,
