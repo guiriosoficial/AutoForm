@@ -73,11 +73,6 @@ export function PresetsManager({
 
   const { t } = useTranslation();
 
-  const handleConfirmDeletePreset = (presetId: string) => {
-    onDeletePreset(presetId);
-    setPresetToDelete(null);
-  }
-
   const handleStartDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
     event.stopPropagation();
 
@@ -85,7 +80,12 @@ export function PresetsManager({
     setPresetToDelete(preset)
   }
 
-  const handleLoadFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleConfirmDeletePreset = (presetId: string) => {
+    onDeletePreset(presetId);
+    setPresetToDelete(null);
+  }
+
+  const handleLoadPresetsFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -102,14 +102,14 @@ export function PresetsManager({
     setPresetsToImport(loaded)
   }
 
-  const handleImportPreset = async (presets: Preset[], strategy: ImportStrategy) => {
+  const handleImportPresets = async (presets: Preset[], strategy: ImportStrategy) => {
     await onImportPresets(presets, strategy)
 
     setPresetsToImport(null)
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <>
       <Combobox
         open={isPresetSelectorOpen}
         value={selectedPreset}
@@ -118,7 +118,6 @@ export function PresetsManager({
         itemToStringValue={preset => preset.id}
         onValueChange={onSelectPreset}
         onOpenChange={setIsPresetSelectorOpen}
-        onValueChange={onSelectPreset}
       >
         <ComboboxInput
           className="flex-1"
@@ -178,7 +177,7 @@ export function PresetsManager({
           >
             <EllipsisVertical />
           </Button>
-        }/>
+        } />
         <DropdownMenuContent onKeyDown={preventDefaultEscape}>
           <DropdownMenuItem onClick={onExportPresets}>
             <Download />

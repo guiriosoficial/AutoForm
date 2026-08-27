@@ -61,8 +61,8 @@ export function AppSettingsProvider({
 
     if (theme === Theme.SYSTEM) {
       const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
-        ? "dark"
-        : "light"
+        ? Theme.DARK
+        : Theme.LIGHT
 
       root.classList.add(systemTheme)
       return
@@ -80,7 +80,7 @@ export function AppSettingsProvider({
 
   useEffect(() => {
     // TODO: Implement this effect to change faker locale
-  }, []);
+  }, [locale]);
 
   const value = {
     theme,

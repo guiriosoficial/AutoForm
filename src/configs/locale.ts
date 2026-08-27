@@ -5,10 +5,12 @@ type LocaleMap = {
 };
 
 export const Locale = Object.fromEntries(
-  Object.keys(allLocales).map((locale) => [
-    locale.toUpperCase(),
-    locale,
-  ]),
+  Object.keys(allLocales)
+    .filter((locale) => locale !== "base")
+    .map((locale) => [
+      locale.toUpperCase(),
+      locale,
+    ]),
 ) as LocaleMap;
 
 export type Locale = (typeof Locale)[keyof typeof Locale];

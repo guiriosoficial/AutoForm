@@ -58,7 +58,7 @@ export function Footer({
                 <a
                   href={APP_AUTHOR_URL}
                   target="_blank"
-                  rel="noreferrer"
+                  rel="noopener,noreferrer"
                   className={buttonVariants({ variant: "link" })}
                 />
               )

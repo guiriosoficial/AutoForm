@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Copy, RotateCcw, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { FieldOptionsPopover } from "@/components/FieldOptionsPopover.tsx";
+import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
