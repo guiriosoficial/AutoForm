@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useState} from "react"
+import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import {
   Dialog,
@@ -20,7 +20,7 @@ import {
   ItemContent,
   ItemDescription,
   ItemTitle
-} from "@/components/ui/item.tsx";
+} from "@/components/ui/item";
 import {
   ToggleGroup,
   ToggleGroupItem
@@ -44,25 +44,25 @@ export function ImportPresetDialog({
   onOpenChange,
   onImport
 }: ImportPresetDialogProps) {
-  const [strategy, setStrategy] = useState<ImportStrategy[]>([IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT]);
+  const [strategy, setStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
   const { t } = useTranslation()
 
-  const handleChangeImportStrategy = (strategy: string[]) => {
-    if (strategy.length === 0) return
-
-    setStrategy(strategy as ImportStrategy[])
-  }
-
   const { parsed, duplicated } = presetsToImport
 
-  const descriptionText = t("presetsManager.dialogs.importPreset.description", {
+  const strategyOptions = Object.values(ImportStrategy)
+    .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK)
+
+  const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicated.length,
     total: parsed.length
   })
 
-  const strategyOptions = Object.values(ImportStrategy)
-    .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK)
+  const handleChangeImportStrategy = (strategy: string[]) => {
+    if (strategy.length === 0) return
+
+    setStrategy(strategy[0] as ImportStrategy)
+  }
 
   return (
     <Dialog
@@ -78,7 +78,7 @@ export function ImportPresetDialog({
             {t("presetsManager.dialogs.importPreset.title")}
           </DialogTitle>
           <DialogDescription>
-            {descriptionText}
+            {strategyDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -106,7 +106,7 @@ export function ImportPresetDialog({
             {t("presetsManager.dialogs.importPreset.form.strategyToggle.label")}
           </FieldLabel>
           <ToggleGroup
-            value={strategy}
+            value={[strategy]}
             variant="outline"
             onValueChange={handleChangeImportStrategy}
           >
@@ -127,14 +127,12 @@ export function ImportPresetDialog({
         </Field>
 
         <DialogFooter>
-          <DialogClose
-            render={
-              <Button variant="outline">
-                {t("presetsManager.dialogs.importPreset.cancelButton")}
-              </Button>
-            }
-          />
-          <Button onClick={() => onImport(presetsToImport.parsed, strategy[0])}>
+          <DialogClose render={
+            <Button variant="outline">
+              {t("presetsManager.dialogs.importPreset.cancelButton")}
+            </Button>
+          } />
+          <Button onClick={() => onImport(presetsToImport.parsed, strategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>

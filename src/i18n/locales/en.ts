@@ -37,22 +37,21 @@ export default {
       light: "Light",
       system: "System",
     },
-    //  TODO: Add config modal translations
     importStrategy: {
       append: {
-        title: "Append",
+        label: "Append",
         description: "Append new presets to existing ones without replacing duplicates",
       },
       overwrite: {
-        title: "Overwrite",
+        label: "Overwrite",
         description: "Overwrite the existing preset with the imported one",
       },
       replaceAll: {
-        title: "Replace all",
+        label: "Replace all",
         description: "Delete all current presets and import new ones",
       },
       alwaysAsk: {
-        title: "Always ask",
+        label: "Always ask",
         description: "Always ask when importing presets",
       }
     }
