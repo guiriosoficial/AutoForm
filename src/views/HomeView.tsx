@@ -10,11 +10,11 @@ import {
   CardTitle
 } from "@/components/ui/card";
 import {
-  InputInline,
-  type InputInlineRef
-} from "@/components/shared/InputInline";
+  InlineInput,
+  type InlineInputRef
+} from "@/components/shared/InlineInput";
 import { Footer } from "@/components/layouts/Footer";
-import { PresetManager } from "@/components/PresetManager";
+import { PresetsManager } from "@/components/PresetsManager";
 import { FieldsManager } from "@/components/FieldsManager";
 import { usePresets } from "@/hooks/use-presets";
 import { useForm } from "@/hooks/use-form";
@@ -22,7 +22,7 @@ import { useForm } from "@/hooks/use-form";
 export function HomeView(){
   const { t } = useTranslation();
 
-  const presetNameEditorRef = useRef<InputInlineRef>(null)
+  const presetNameEditorRef = useRef<InlineInputRef>(null)
 
   const {
     presets,
@@ -64,8 +64,8 @@ export function HomeView(){
             {t("presetsManager.title")}
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <PresetManager
+        <CardContent className="flex-row">
+          <PresetsManager
             presets={presets}
             selectedPreset={currentPreset}
             onSelectPreset={setCurrentPreset}
@@ -81,7 +81,7 @@ export function HomeView(){
       <Card>
         <CardHeader>
           <CardTitle>
-            <InputInline
+            <InlineInput
               ref={presetNameEditorRef}
               value={currentPreset?.name}
               placeholder={t("fieldsManager.form.presetNameInput.placeholder")}

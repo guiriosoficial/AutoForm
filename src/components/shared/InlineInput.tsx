@@ -10,26 +10,26 @@ import {
   type ForwardedRef
 } from "react";
 import { X, Check, PenLine } from "lucide-react";
-import { ButtonInline } from "@/components/shared/ButtonInline.tsx";
+import { InlineButton } from "@/components/shared/InlineButton";
 import { preventDefaultEscape } from "@/lib/events"
 
-interface InputInlineProps {
+interface InlineInputProps {
   value: string;
   placeholder?: string;
-  onSave: (value: string) => void;
+  onSave: (newValue: string) => void;
 }
 
-export interface InputInlineRef {
+export interface InlineInputRef {
   startEditing: () => void;
 }
 
-export const InputInline = forwardRef((
+export const InlineInput = forwardRef((
   {
     value,
     placeholder,
     onSave,
-  }: InputInlineProps,
-  ref: ForwardedRef<InputInlineRef>
+  }: InlineInputProps,
+  ref: ForwardedRef<InlineInputRef>
 ) => {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
@@ -109,13 +109,13 @@ export const InputInline = forwardRef((
           onBlur={confirmEditing}
           onChange={(e) => setDraft(e.target.value)}
         />
-        <ButtonInline
+        <InlineButton
           icon={Check}
           size={14}
           persistent
           onClick={confirmEditing}
         />
-        <ButtonInline
+        <InlineButton
           icon={X}
           size={14}
           persistent
@@ -138,7 +138,7 @@ export const InputInline = forwardRef((
       {restantWords}{" "}
       <span className="whitespace-nowrap">
       {lastWord}{" "}
-        <ButtonInline
+        <InlineButton
           className="inline-flex translate-y-0.5 ml-1"
           icon={PenLine}
         />

@@ -33,7 +33,7 @@ import {
   isPopulatedJson5
 } from "@/lib/json5";
 
-interface JsonConfigEditorProps {
+interface FieldOptionsPopoverProps {
   value: string | undefined;
   docUrl?: string;
   onChange: (value: string) => void;
@@ -41,11 +41,11 @@ interface JsonConfigEditorProps {
 
 const editorTheme = createEditorTheme()
 
-export function JsonConfigEditor({
+export function FieldOptionsPopover({
   value,
   docUrl,
   onChange,
-}: JsonConfigEditorProps) {
+}: FieldOptionsPopoverProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
 

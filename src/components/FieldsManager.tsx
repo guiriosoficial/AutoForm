@@ -1,8 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { FieldEditor } from "@/components/FieldEditor";
-import { FieldResult } from "@/components/FieldResult";
+import { FieldItem } from "@/components/FieldItem";
 import type { FieldConfig }  from "@/lib/fields";
 
 interface FieldsManagerProps {
@@ -28,25 +27,16 @@ export function FieldsManager({
 
   return (
     <>
-      {fields.map(field => (
-        <div
+      {fields.map((field) => (
+        <FieldItem
           key={field.id}
-          className="space-y-1"
-        >
-          <FieldEditor
-            field={field}
-            onRemove={() => onRemoveField(field.id)}
-            onUpdate={(updated) => onUpdateField(field.id, updated)}
-          />
-
-          {/*TODO: Implements error handling for field generation*/}
-          <FieldResult
-            value={values[field.id]}
-            error={undefined}
-            onRegenerateValue={() => onRegenerateValue(field.id)}
-            onCopyValue={() => onCopyValue(values[field.id])}
-          />
-        </div>
+          field={field}
+          value={values[field.id]}
+          onUpdate={onUpdateField}
+          onRemove={onRemoveField}
+          onRegenerateValue={onRegenerateValue}
+          onCopyValue={onCopyValue}
+        />
       ))}
 
       <Button
@@ -58,5 +48,5 @@ export function FieldsManager({
         {t("fieldsManager.buttons.add")}
       </Button>
     </>
-  )
+  );
 }

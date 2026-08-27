@@ -1,10 +1,11 @@
-import { Button } from "@/components/ui/button";
-import { Credits } from "@/components/layouts/Credits";
+import { Trans } from "react-i18next";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { APP_AUTHOR_URL } from "@/configs";
 import type { LucideIcon } from "lucide-react";
 
 interface FooterProps {
   primaryButonText: string;
-  primaryButtonIcon: LucideIcon;
+  primaryButtonIcon?: LucideIcon;
   onPrimaryButtonClick: () => void;
   secondaryButtonText?: string;
   secondaryButtonIcon?: LucideIcon;
@@ -23,7 +24,7 @@ export function Footer({
   hideSecondaryButton,
   hideCredits,
 }: FooterProps) {
-  const showSecondaryButton = onSecondaryButtonClick && secondaryButtonText && !hideSecondaryButton;
+  const showSecondaryButton = !!onSecondaryButtonClick && !!secondaryButtonText && !hideSecondaryButton;
 
   return (
     <>
@@ -48,7 +49,23 @@ export function Footer({
         )}
       </div>
 
-      {!hideCredits && <Credits />}
+      {!hideCredits && (
+        <span className="text-sm text-center text-muted-foreground">
+          <Trans
+            i18nKey="globals.credits"
+            components={{
+              author: (
+                <a
+                  href={APP_AUTHOR_URL}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={buttonVariants({ variant: "link" })}
+                />
+              )
+            }}
+          />
+        </span>
+      )}
     </>
   )
 }

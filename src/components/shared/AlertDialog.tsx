@@ -1,8 +1,7 @@
-import type { KeyboardEvent } from "react"
 import { useTranslation } from "react-i18next"
 import { AlertOctagon } from "lucide-react"
 import {
-  AlertDialog,
+  AlertDialog as AlertDialogPrimitive,
   AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
@@ -12,8 +11,9 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
 import { preventDefaultEscape } from "@/lib/events"
+import type { KeyboardEvent } from "react"
 
-interface ConfirmationAlertDialogProps {
+interface AlertDialogProps {
   open: boolean,
   title?: string,
   description?: string,
@@ -25,7 +25,7 @@ interface ConfirmationAlertDialogProps {
   onCancel?: () => void,
 }
 
-export function ConfirmationAlertDialog({
+export function AlertDialog({
   open,
   title,
   description,
@@ -35,7 +35,7 @@ export function ConfirmationAlertDialog({
   onOpenChange,
   onConfirm,
   onCancel,
-}: ConfirmationAlertDialogProps) {
+}: AlertDialogProps) {
   const { t } = useTranslation();
 
   const translatedTitle = title ?? t("defaults.alert.title");
@@ -60,7 +60,7 @@ export function ConfirmationAlertDialog({
   }
 
   return (
-    <AlertDialog
+    <AlertDialogPrimitive
       open={open}
       onOpenChange={onOpenChange}
     >
@@ -93,6 +93,6 @@ export function ConfirmationAlertDialog({
           )}
         </AlertDialogFooter>
       </AlertDialogContent>
-    </AlertDialog>
+    </AlertDialogPrimitive>
   )
 }

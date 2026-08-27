@@ -34,7 +34,7 @@ import {
   ItemActions
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
-import { ConfirmationAlertDialog } from "@/components/shared/ConfirmationAlertDialog.tsx";
+import { AlertDialog } from "@/components/shared/AlertDialog";
 import { ImportPresetDialog } from "@/components/ImportPresetDialog";
 import { preventDefaultEscape } from "@/lib/events"
 import {
@@ -44,7 +44,7 @@ import {
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
 
-interface PresetManagerProps {
+interface PresetsManagerProps {
   presets: Preset[];
   selectedPreset: Preset | null;
   onSelectPreset: (preset: Preset | null) => void;
@@ -55,7 +55,7 @@ interface PresetManagerProps {
   onLoadFile: (json: string) => Promise<ParsePresetsResult | null>;
 }
 
-export function PresetManager({
+export function PresetsManager({
   presets,
   selectedPreset,
   onSelectPreset,
@@ -64,7 +64,7 @@ export function PresetManager({
   onExportPresets,
   onImportPresets,
   onLoadFile
-}: PresetManagerProps) {
+}: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
   const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
@@ -116,6 +116,7 @@ export function PresetManager({
         items={presets}
         itemToStringLabel={preset => preset.name}
         itemToStringValue={preset => preset.id}
+        onValueChange={onSelectPreset}
         onOpenChange={setIsPresetSelectorOpen}
         onValueChange={onSelectPreset}
       >
@@ -191,7 +192,7 @@ export function PresetManager({
       </DropdownMenu>
 
       {presetToDelete && (
-        <ConfirmationAlertDialog
+        <AlertDialog
           destructive
           open={!!presetToDelete}
           description={t("presetsManager.alerts.deletePreset.description", { presetToDelete })}
@@ -204,7 +205,7 @@ export function PresetManager({
         <ImportPresetDialog
           open={!!presetsToImport}
           presetsToImport={presetsToImport}
-          onImport={handleImportPreset}
+          onImport={handleImportPresets}
           onOpenChange={() => setPresetsToImport(null)}
         />
       )}
@@ -214,8 +215,8 @@ export function PresetManager({
         className="hidden"
         type="file"
         accept={IMPORT_CONFIG.FILE_TYPE}
-        onChange={handleLoadFile}
+        onChange={handleLoadPresetsFile}
       />
-    </div>
+    </>
   );
 }
