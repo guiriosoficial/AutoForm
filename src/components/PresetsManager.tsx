@@ -35,7 +35,7 @@ import {
 } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/shared/AlertDialog";
-import { ImportPresetDialog } from "@/components/ImportPresetDialog";
+import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
 import { preventDefaultEscape } from "@/lib/events"
 import {
   IMPORT_CONFIG,
@@ -201,7 +201,7 @@ export function PresetsManager({
       )}
 
       {presetsToImport && (
-        <ImportPresetDialog
+        <ImportPresetsDialog
           open={!!presetsToImport}
           presetsToImport={presetsToImport}
           onImport={handleImportPresets}

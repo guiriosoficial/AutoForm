@@ -31,19 +31,19 @@ import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 
-interface ImportPresetDialogProps {
+interface ImportPresetsDialogProps {
   open: boolean;
   presetsToImport: ParsePresetsResult;
   onOpenChange: (open: boolean) => void;
   onImport: (presets: Preset[], strategy: ImportStrategy) => void;
 }
 
-export function ImportPresetDialog({
+export function ImportPresetsDialog({
   open,
   presetsToImport,
   onOpenChange,
   onImport
-}: ImportPresetDialogProps) {
+}: ImportPresetsDialogProps) {
   const [strategy, setStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
   const { t } = useTranslation()
