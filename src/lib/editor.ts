@@ -14,11 +14,7 @@ export const createEditorTheme = () => [
   EditorView.theme(EDITOR_THEME.overrides),
 ];
 
-export const createEditorKeymap = ({
-  onFormat
-}: {
-  onFormat: () => void;
-}) =>
+export const createEditorKeymap = ({ onFormat }: { onFormat: () => void }) =>
   keymap.of([
     {
       key: EDITOR_SHORTCUTS.FORMAT,

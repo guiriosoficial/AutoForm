@@ -1,5 +1,5 @@
-import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
 import { toast } from "@/lib/toast"
 import { generateValue, fillInputElement } from "@/lib/generator";
 import { createField, type FieldConfig } from "@/lib/fields";
@@ -21,7 +21,7 @@ interface UseFormArgs {
 //   value: string;
 // }
 
-type ValuesByPresetId = Record<string, Record<string, string>>
+type ValuesByPresetId = Record<string, Record<string, string>>;
 
 export function useForm({
   presetId,
@@ -34,7 +34,7 @@ export function useForm({
 
   const generatedValues = useMemo(() => {
     return generatedValuesByPresetId[presetId] ?? {};
-  }, [generatedValuesByPresetId, presetId])
+  }, [generatedValuesByPresetId, presetId]);
 
   const setGeneratedValues = useCallback((
     valuesOrUpdater:
@@ -60,7 +60,7 @@ export function useForm({
     return Object.fromEntries(
       fields.map(f => [f.id, f])
     );
-  }, [fields])
+  }, [fields]);
 
   const addField = useCallback(() => {
     updateFields((prev) =>
@@ -97,7 +97,7 @@ export function useForm({
     );
 
     setGeneratedValues(values);
-  }, [fields]);
+  }, [fields, setGeneratedValues]);
 
   const regenerateValue = useCallback(async (fieldId: string) => {
     const field = fieldsById[fieldId];
@@ -113,7 +113,7 @@ export function useForm({
       [fieldId]: newValue,
     }));
     await fillInputElement(field.selector, newValue);
-  }, [fields]);
+  }, [fieldsById, setGeneratedValues]);
 
   const copyValue = useCallback(async (value: string) => {
     try {
@@ -122,7 +122,7 @@ export function useForm({
     } catch {
       toast.error(t("fieldsManager.messages.copyValue.failed"));
     }
-  }, []);
+  }, [t]);
 
   const copyFormAsJSON = useCallback(async () => {
     try {
@@ -138,7 +138,7 @@ export function useForm({
     } catch {
       toast.error(t("footer.messages.copyJson.failed"));
     }
-  }, [fields, generatedValues]);
+  }, [fields, generatedValues, t]);
 
   return {
     generatedValues,
@@ -148,6 +148,6 @@ export function useForm({
     generateValues,
     regenerateValue,
     copyValue,
-    copyFormAsJSON,
+    copyFormAsJSON
   };
 }

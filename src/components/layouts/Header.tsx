@@ -1,26 +1,26 @@
-import { useMemo } from "react";
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
 import { Button }  from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { useNavigation } from "@/providers/NavigationProvider";
-import { Page } from "@/configs";
-import { PageIcons } from "@/configs";
+import { Page, PageIcons } from "@/configs";
 
 export function Header() {
   const { activePage, setActivePage } = useNavigation()
-  const { t } = useTranslation();
+  const { t } = useTranslation()
 
-  const handleNavigate = (page: Page) => {
-    if (page.startsWith("https")) {
-      window.open(page, "_blank", "noopener,noreferrer")
-      return;
+  const handleNavigate = useCallback((nextPage: Page) => {
+    if (nextPage.startsWith("https")) {
+      window.open(nextPage, "_blank", "noreferrer")
+      return
     }
-    setActivePage(page)
-  }
+
+    setActivePage(nextPage)
+  }, [setActivePage])
 
   const navigationItems = useMemo(() =>
-      Object.values(Page).filter((page) => page !== activePage),
+    Object.values(Page).filter((page) => page !== activePage),
     [activePage]
   )
 

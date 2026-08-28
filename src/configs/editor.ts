@@ -2,11 +2,11 @@ import { tags as t } from "@lezer/highlight";
 
 export const EDITOR_CONFIG = {
   INDENT_SPACES: 2,
-  LINT_DELAY_MS: 1400,
+  LINT_DELAY_MS: 1400
 } as const;
 
 export const EDITOR_SHORTCUTS = {
-  FORMAT: "Mod-Shift-f",
+  FORMAT: "Mod-Shift-f"
 } as const;
 
 export const EDITOR_BASIC_SETUP = {
@@ -23,7 +23,7 @@ export const EDITOR_BASIC_SETUP = {
   closeBrackets: true,
   autocompletion: false,
   searchKeymap: false,
-  lintKeymap: false,
+  lintKeymap: false
 };
 
 
@@ -33,7 +33,7 @@ export const EDITOR_THEME = {
     foreground: "var(--card-foreground)",
     caret: "var(--foreground)",
     selection: "var(--editor-selection)",
-    lineHighlight: "var(--editor-line-highlight)",
+    lineHighlight: "var(--editor-line-highlight)"
   },
   syntax: [
     { tag: t.comment, color: "var(--muted-foreground)" },
@@ -42,7 +42,7 @@ export const EDITOR_THEME = {
     { tag: t.string, color: "var(--syntax-string)" },
     { tag: t.number, color: "var(--syntax-number)" },
     { tag: [t.bool, t.null], color: "var(--syntax-literal)" },
-    { tag: [t.paren, t.brace, t.bracket, t.punctuation], color: "var(--foreground)" },
+    { tag: [t.paren, t.brace, t.bracket, t.punctuation], color: "var(--foreground)" }
   ],
   overrides: {
     ".cm-scroller:has(.cm-selectionBackground) .cm-activeLine": {
@@ -56,6 +56,6 @@ export const EDITOR_THEME = {
     },
     ".cm-lintRange-error": {
       textDecoration: "underline wavy var(--destructive) !important",
-    },
-  },
+    }
+  }
 };

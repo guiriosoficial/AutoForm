@@ -11,17 +11,17 @@ export interface GeneratorMessage {
 }
 
 export interface GeneratorMessageResponse {
-  success: boolean,
-  error?: string
+  success: boolean;
+  error?: string;
 }
 
 // TODO: Implement Error Handling
 export function generateValue(type: string, optionsStr?: string): string {
-  const method = catalogMethodsById.get(type)
+  const method = catalogMethodsById.get(type);
 
   if (!method) return "";
 
-  let options
+  let options;
 
   try {
     options = parseJson5(optionsStr ?? "");

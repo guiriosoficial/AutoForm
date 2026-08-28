@@ -1,3 +1,4 @@
+import { useMemo } from "react";
 import { Trans } from "react-i18next";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { APP_AUTHOR_URL } from "@/configs";
@@ -22,9 +23,12 @@ export function Footer({
   secondaryButtonIcon: SecondaryButtonIcon,
   onSecondaryButtonClick,
   hideSecondaryButton,
-  hideCredits,
+  hideCredits
 }: FooterProps) {
-  const showSecondaryButton = !!onSecondaryButtonClick && !!secondaryButtonText && !hideSecondaryButton;
+  const showSecondaryButton = useMemo(() =>
+    !!onSecondaryButtonClick && !!secondaryButtonText && !hideSecondaryButton,
+    [onSecondaryButtonClick, secondaryButtonText, hideSecondaryButton]
+  );
 
   return (
     <>
@@ -58,7 +62,7 @@ export function Footer({
                 <a
                   href={APP_AUTHOR_URL}
                   target="_blank"
-                  rel="noopener,noreferrer"
+                  rel="noreferrer"
                   className={buttonVariants({ variant: "link" })}
                 />
               )

@@ -5,7 +5,7 @@ import { LANGUAGE_CONFIG, Language } from "@/configs";
 import {
   enTranslations,
   ptBrTranslations
-} from '@/i18n/locales'
+} from '@/i18n/locales';
 
 i18n
   .use(detector)

@@ -9,7 +9,7 @@ const AreaName = {
   SYNC: "sync",
   MANAGED: "managed",
   SESSION: "session",
-} as const
+} as const;
 
 export function usePersistentState<T>(
   key: StorageKeys,
@@ -42,16 +42,16 @@ export function usePersistentState<T>(
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, initialState]);
 
   // Persist
   const persist = useMemo(() => {
-    return debounce((state: T) => {
+    return debounce((newState: T) => {
       browser.storage?.local.set({
-        [key]: state,
+        [key]: newState,
       });
-    }, persistenceDelay)
-  }, [persistenceDelay, key, debounce])
+    }, persistenceDelay);
+  }, [persistenceDelay, key]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -59,7 +59,7 @@ export function usePersistentState<T>(
     persist(state);
 
     return () => persist.cancel();
-  }, [key, state, persistenceDelay, hydrated]);
+  }, [key, state, persistenceDelay, hydrated, persist]);
 
   // Sync
   useEffect(() => {

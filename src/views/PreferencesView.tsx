@@ -1,7 +1,7 @@
-import i18n from "@/i18n"
+import i18n from "@/i18n";
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
-import { ArrowLeft } from "lucide-react"
+import { ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/layouts/Footer";
 import {
   Card,
@@ -23,7 +23,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { preventDefaultEscape } from "@/lib/events"
+import { preventDefaultEscape } from "@/lib/events";
 import {
   Page,
   Language,
@@ -47,9 +47,9 @@ import {
 } from "@/lib/locale";
 
 export function PreferencesView() {
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
-  const { setActivePage } = useNavigation()
+  const { setActivePage } = useNavigation();
 
   const {
     theme,
@@ -60,41 +60,38 @@ export function PreferencesView() {
     setLocale,
     language,
     setLanguage
-  } = useAppSettings()
+  } = useAppSettings();
 
-  const handleChangeImportStrategy = (strategy: string[]) => {
-    if (strategy.length === 0) return
+  const handleChangeImportStrategy = useCallback((newStrategy: string[]) => {
+    if (newStrategy.length === 0) return;
 
-    setImportStrategy(strategy[0] as ImportStrategy)
-  }
+    setImportStrategy(newStrategy[0] as ImportStrategy);
+  }, [setImportStrategy]);
 
-  const handleChangeTheme = (theme: string[]) => {
-    if (theme.length === 0) return
+  const handleChangeTheme = useCallback((newTheme: string[]) => {
+    if (newTheme.length === 0) return;
 
-    setTheme(theme[0] as Theme)
-  }
+    setTheme(newTheme[0] as Theme);
+  }, [setTheme]);
 
-  const handleChangeLocale = (locale: string | null) => {
-    if (!locale) return
+  const handleChangeLocale = useCallback((newLocale: string | null) => {
+    if (!newLocale) return;
 
-    setLocale(locale as Locale)
-  }
+    setLocale(newLocale as Locale);
+  }, [setLocale]);
 
-  const handleChangeLanguage = (language: string | null) => {
-    if (!language) return
+  const handleChangeLanguage = useCallback((newLanguage: string | null) => {
+    if (!newLanguage) return;
 
-    setLanguage(language as Language)
-  }
+    setLanguage(newLanguage as Language);
+  }, [setLanguage]);
 
-  const displayNames = useMemo(
-    () => createLocaleDisplayNames(i18n.language),
-    [i18n.language]
-  )
+  const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), []);
 
   const localeDisplayName = useCallback(
-    (locale: string) => getLocaleDisplayName(locale, displayNames),
+    (itemLocale: string) => getLocaleDisplayName(itemLocale, displayNames),
     [displayNames]
-  )
+  );
 
   return (
     <>
@@ -119,13 +116,13 @@ export function PreferencesView() {
                 onValueChange={handleChangeTheme}
               >
                 <ButtonGroup>
-                  {Object.values(Theme).map((theme) => (
+                  {Object.values(Theme).map((itemTheme) => (
                     <ToggleGroupItem
-                      key={theme}
-                      value={theme}
+                      key={itemTheme}
+                      value={itemTheme}
                     >
-                      <DynamicIcon icon={ThemeIcons[theme]} />
-                      {t(`configs.theme.${theme}`)}
+                      <DynamicIcon icon={ThemeIcons[itemTheme]} />
+                      {t(`configs.theme.${itemTheme}`)}
                     </ToggleGroupItem>
                   ))}
                 </ButtonGroup>
@@ -142,13 +139,13 @@ export function PreferencesView() {
                 onValueChange={handleChangeImportStrategy}
               >
                 <ButtonGroup>
-                  {Object.values(ImportStrategy).map((strategy) => (
+                  {Object.values(ImportStrategy).map((itemStrategy) => (
                     <ToggleGroupItem
-                      key={strategy}
-                      value={strategy}
+                      key={itemStrategy}
+                      value={itemStrategy}
                     >
-                      <DynamicIcon icon={ImportStrategyIcons[strategy]} />
-                      {t(`configs.importStrategy.${strategy}.title`)}
+                      <DynamicIcon icon={ImportStrategyIcons[itemStrategy]} />
+                      {t(`configs.importStrategy.${itemStrategy}.title`)}
                     </ToggleGroupItem>
                   ))}
                 </ButtonGroup>
@@ -178,13 +175,13 @@ export function PreferencesView() {
                     {t("preferencesManager.form.localeSelect.empty")}
                   </ComboboxEmpty>
                   <ComboboxList>
-                    {(item) => (
+                    {(itemLocale) => (
                       <ComboboxItem
-                        key={item}
-                        value={item}
+                        key={itemLocale}
+                        value={itemLocale}
                         className="capitalize"
                       >
-                        {localeDisplayName(item)}
+                        {localeDisplayName(itemLocale)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>
@@ -212,13 +209,13 @@ export function PreferencesView() {
                     {t("preferencesManager.form.languageSelect.empty")}
                   </ComboboxEmpty>
                   <ComboboxList>
-                    {(item) => (
+                    {(itemLanguage) => (
                       <ComboboxItem
-                        key={item}
-                        value={item}
+                        key={itemLanguage}
+                        value={itemLanguage}
                         className="capitalize"
                       >
-                        {localeDisplayName(item)}
+                        {localeDisplayName(itemLanguage)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>

@@ -1,10 +1,11 @@
 import { useTranslation } from "react-i18next";
-import { useCallback, useEffect, useMemo, useState, type RefObject } from "react";
-import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
-  EXPORT_CONFIG,
-  StorageKeys
-} from "@/configs";
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+  type RefObject
+} from "react";
 import {
   createEmptyPreset,
   getNewPresetNumber,
@@ -12,8 +13,9 @@ import {
   isValidPresetArray,
   type Preset
 } from "@/lib/presets";
-import { toast } from "@/lib/toast"
-import { ImportStrategy } from "@/configs"
+import { usePersistentState } from "@/hooks/use-persistent-state";
+import { toast } from "@/lib/toast";
+import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
 import type { FieldConfig } from "@/lib/fields";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
 
@@ -32,17 +34,17 @@ export function usePresets({
   const { t } = useTranslation();
 
   const [currentPresetId, setCurrentPresetId] = useState<string>("");
-  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] = usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "")
+  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] = usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
   const [presets, setPresets, , hydratedPresets] = usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
   const presetsById = useMemo(() => {
     return Object.fromEntries(
       presets.map(p => [p.id, p])
-    )
+    );
   }, [presets]);
 
   const currentPreset = useMemo(() => {
-    return presetsById[currentPresetId] ?? null
+    return presetsById[currentPresetId] ?? null;
   }, [presetsById, currentPresetId]);
 
   const setCurrentPreset = useCallback((preset: Preset | null) => {
@@ -50,7 +52,7 @@ export function usePresets({
 
     setCurrentPresetId(preset.id);
     setLastPresetId(preset.id);
-  }, [setCurrentPresetId, setLastPresetId, presetsById]);
+  }, [setCurrentPresetId, setLastPresetId]);
 
   const createPreset = useCallback(() => {
     const nextPresetNumber = getNewPresetNumber(presets) + 1;
@@ -63,8 +65,8 @@ export function usePresets({
 
     if (presets.length <= 1) return;
 
-    presetNameEditorRef.current?.startEditing()
-  }, [setPresets, presets, presetNameEditorRef]);
+    presetNameEditorRef.current?.startEditing();
+  }, [presets, presetNameEditorRef, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
     setPresets((prev) =>
@@ -74,10 +76,10 @@ export function usePresets({
     const isCurrent = presetId === currentPresetId;
 
     if (isCurrent) {
-      const presetToSet = getAdjacentPreset(presets, presetId)
+      const presetToSet = getAdjacentPreset(presets, presetId);
       setCurrentPreset(presetToSet);
     }
-  }, [setPresets, setCurrentPreset, presets, currentPreset]);
+  }, [presets, currentPresetId, setPresets, setCurrentPreset]);
 
   const updatePreset = useCallback((
     presetId: string,
@@ -140,7 +142,7 @@ export function usePresets({
     }
 
     createPreset()
-  }, [presets, currentPreset, lasPresetId, setCurrentPreset, createPreset]);
+  }, [presets, currentPreset, presetsById, lasPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
   const exportPresets = useCallback(() => {
     const data = JSON.stringify(presets, null, EXPORT_CONFIG.INDENT_SPACES);
@@ -156,11 +158,11 @@ export function usePresets({
     } catch {
       toast.error(t("presetsManager.messages.exportPreset.failed"));
     } finally {
-      URL.revokeObjectURL(url)
+      URL.revokeObjectURL(url);
     }
-  }, [presets]);
+  }, [presets, t]);
 
-  const parsePresets = useCallback(async (json: string) => {
+  const parsePresets = useCallback((json: string) => {
     try {
       const imported: Preset[] = JSON.parse(json);
 
@@ -182,11 +184,10 @@ export function usePresets({
       const errorMessage = error.message ?? t("presetsManager.messages.importPreset.failed");
 
       toast.error(errorMessage);
-      return null;
     }
-  }, [presets]);
+  }, [presets, t]);
 
-  const importPresets = useCallback(async (
+  const importPresets = useCallback((
     imported: Preset[],
     strategy: ImportStrategy = ImportStrategy.OVERWRITE
   ) => {

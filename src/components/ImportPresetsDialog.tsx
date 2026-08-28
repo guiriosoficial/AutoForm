@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
-import { useState } from "react"
-import { Button } from "@/components/ui/button"
+import { useCallback, useMemo, useState } from "react";
+import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -8,13 +8,13 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle,
-} from "@/components/ui/dialog"
+  DialogTitle
+} from "@/components/ui/dialog";
 import {
   Field,
   FieldDescription,
-  FieldLabel,
-} from "@/components/ui/field"
+  FieldLabel
+} from "@/components/ui/field";
 import {
   Item,
   ItemContent,
@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
-import { preventDefaultEscape } from "@/lib/events"
+import { preventDefaultEscape } from "@/lib/events";
 import {
   IMPORT_CONFIG,
   ImportStrategy,
@@ -43,6 +43,9 @@ interface ImportPresetsDialogProps {
   onImport: (presets: Preset[], strategy: ImportStrategy) => void;
 }
 
+const strategyOptions = Object.values(ImportStrategy)
+  .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK);
+
 export function ImportPresetsDialog({
   open,
   presetsToImport,
@@ -51,23 +54,20 @@ export function ImportPresetsDialog({
 }: ImportPresetsDialogProps) {
   const [strategy, setStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
-  const { t } = useTranslation()
+  const { t } = useTranslation();
 
   const { parsed, duplicated } = presetsToImport
 
-  const strategyOptions = Object.values(ImportStrategy)
-    .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK)
-
-  const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
+  const strategyDescription = useMemo(() => t("presetsManager.dialogs.importPreset.description", {
     count: duplicated.length,
     total: parsed.length
-  })
+  }), [t, duplicated.length, parsed.length]);
 
-  const handleChangeImportStrategy = (strategy: string[]) => {
+  const handleChangeImportStrategy = useCallback((strategy: string[]) => {
     if (strategy.length === 0) return
 
     setStrategy(strategy[0] as ImportStrategy)
-  }
+  }, [setStrategy]);
 
   return (
     <Dialog
@@ -144,5 +144,5 @@ export function ImportPresetsDialog({
         </DialogFooter>
       </DialogContent>
     </Dialog>
-  )
+  );
 }

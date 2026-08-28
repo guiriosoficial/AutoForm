@@ -5,7 +5,7 @@ import { useNavigation } from "@/providers/NavigationProvider";
 import { Page } from "@/configs";
 
 export function App ()  {
-  const { activePage } = useNavigation()
+  const { activePage } = useNavigation();
 
   return (
     <div className="flex flex-col gap-4 p-4 w-xl bg-background">

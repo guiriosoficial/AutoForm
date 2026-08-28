@@ -1,10 +1,10 @@
-import { APP_NAME } from "@/configs";
+import { APP_NAME, APP_AUTHOR_USER } from "@/configs";
 
 export default {
   globals: {
     appTitle: APP_NAME,
     appDescription: "Fill forms automatically with random data",
-    credits: "Made with ♥ by\u00A0<author>guiriosoficial</author>",
+    credits: `Made with ♥ by\u00A0<author>${APP_AUTHOR_USER}</author>`,
 
     field: "Field",
     fields: "Fields",
@@ -173,4 +173,4 @@ export default {
       },
     }
   }
-}
+};

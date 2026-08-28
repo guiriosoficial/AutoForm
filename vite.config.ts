@@ -5,15 +5,15 @@ import tailwindcss from "@tailwindcss/vite";
 import { crx } from '@crxjs/vite-plugin'
 import react from '@vitejs/plugin-react'
 import manifest, {
+  APP_ID,
   APP_NAME,
   APP_VERSION,
-  APP_ID
 } from './manifest.config'
 
 const defineVariables = {
+  __APP_ID__: JSON.stringify(APP_ID),
   __APP_NAME__: JSON.stringify(APP_NAME),
   __APP_VERSION__: JSON.stringify(APP_VERSION),
-  __APP_ID__: JSON.stringify(APP_ID)
 };
 
 export default defineConfig({
@@ -33,7 +33,7 @@ export default defineConfig({
       transformIndexHtml(html) {
         let transformedHtml = html;
         for (const [key, value] of Object.entries(defineVariables)) {
-          const rawValue = String(value).replace(/^"|"$/g, '')
+          const rawValue = String(value).replaceAll(/^"|"$/gu, '')
           transformedHtml = transformedHtml.replaceAll(`%${key}%`, rawValue);
         }
         return transformedHtml;
@@ -43,7 +43,7 @@ export default defineConfig({
   server: {
     cors: {
       origin: [
-        /chrome-extension:\/\//,
+        /chrome-extension:\/\//u,
       ],
     },
   },

@@ -1,5 +1,6 @@
-import { useTranslation } from "react-i18next"
-import { AlertOctagon } from "lucide-react"
+import {useCallback, type KeyboardEvent, useMemo} from "react";
+import { useTranslation } from "react-i18next";
+import { AlertOctagon } from "lucide-react";
 import {
   AlertDialog as AlertDialogPrimitive,
   AlertDialogAction,
@@ -9,20 +10,19 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog"
-import { preventDefaultEscape } from "@/lib/events"
-import type { KeyboardEvent } from "react"
+} from "@/components/ui/alert-dialog";
+import { preventDefaultEscape } from "@/lib/events";
 
 interface AlertDialogProps {
-  open: boolean,
-  title?: string,
-  description?: string,
-  confirmButtonText?: string,
-  cancelButtonText?: string,
-  destructive?: boolean,
-  onOpenChange?: (open: boolean) => void,
-  onConfirm?: () => void,
-  onCancel?: () => void,
+  open: boolean;
+  title?: string;
+  description?: string;
+  confirmButtonText?: string;
+  cancelButtonText?: string;
+  destructive?: boolean;
+  onOpenChange?: (open: boolean) => void;
+  onConfirm?: () => void;
+  onCancel?: () => void;
 }
 
 export function AlertDialog({
@@ -34,20 +34,35 @@ export function AlertDialog({
   destructive,
   onOpenChange,
   onConfirm,
-  onCancel,
+  onCancel
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
-  const translatedTitle = title ?? t("defaults.alert.title");
-  const translatedDescription = description ?? t("defaults.alert.description");
-  const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
-  const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
+  const translatedTitle = useMemo(() =>
+    title ?? t("defaults.alert.title"),
+    [title, t]
+  );
+  const translatedDescription = useMemo(() =>
+    description ?? t("defaults.alert.description"),
+    [description, t]
+  );
+  const translatedConfirmButtonText = useMemo(() =>
+    confirmButtonText ?? t("defaults.alert.confirmButton"),
+    [confirmButtonText, t]
+  );
+  const translatedCancelButtonText = useMemo(() =>
+    cancelButtonText ?? t("defaults.alert.cancelButton"),
+    [cancelButtonText, t]
+  );
 
-  const variant = destructive ? 'destructive' : 'default';
+  const variant = useMemo(() =>
+    destructive ? 'destructive' : 'default',
+    [destructive]
+  );
 
-  const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
-    preventDefaultEscape(event)
-    event.stopPropagation()
+  const handleKeyPress = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+    preventDefaultEscape(event);
+    event.stopPropagation();
 
     switch (event.key) {
       case 'Enter':
@@ -57,7 +72,7 @@ export function AlertDialog({
         onCancel?.();
         break;
     }
-  }
+  }, []);
 
   return (
     <AlertDialogPrimitive

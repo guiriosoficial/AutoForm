@@ -1,5 +1,6 @@
 import { useTranslation } from "react-i18next";
 import {
+  useCallback,
   useState,
   useRef,
   type MouseEvent,
@@ -36,14 +37,11 @@ import {
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
+import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { preventDefaultEscape } from "@/lib/events"
-import {
-  IMPORT_CONFIG,
-  ImportStrategy
-} from "@/configs";
+import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
-import {useAppSettings} from "@/providers/AppSettingsProvider.tsx";
 
 interface PresetsManagerProps {
   presets: Preset[];
@@ -52,8 +50,8 @@ interface PresetsManagerProps {
   onDeletePreset: (presetId: string) => void;
   onCreatePreset: () => void;
   onExportPresets: () => void;
-  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => Promise<void>;
-  onLoadFile: (json: string) => Promise<ParsePresetsResult | null>;
+  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
+  onLoadFile: (json: string) => ParsePresetsResult | void;
 }
 
 export function PresetsManager({
@@ -70,32 +68,32 @@ export function PresetsManager({
   const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
-  const { importStrategy } = useAppSettings()
+  const { importStrategy } = useAppSettings();
 
   const importInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
-  const handleStartDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
+  const handleStartDeletePreset = useCallback((event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
     event.stopPropagation();
 
     setIsPresetSelectorOpen(false);
     setPresetToDelete(preset)
-  }
+  }, [setIsPresetSelectorOpen, setPresetToDelete]);
 
-  const handleConfirmDeletePreset = (presetId: string) => {
+  const handleConfirmDeletePreset = useCallback((presetId: string) => {
     onDeletePreset(presetId);
     setPresetToDelete(null);
-  }
+  }, [onDeletePreset, setPresetToDelete]);
 
-  const handleLoadPresetsFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleLoadPresetsFile = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
     const json = await file.text();
 
-    const loaded = await onLoadFile(json);
+    const loaded = onLoadFile(json);
 
     if (!loaded) return;
 
@@ -103,18 +101,18 @@ export function PresetsManager({
       presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
       importStrategy !== ImportStrategy.ALWAYS_ASK
     ) {
-      await onImportPresets(loaded.parsed, importStrategy);
-      return
+      onImportPresets(loaded.parsed, importStrategy);
+      return;
     }
 
     setPresetsToImport(loaded)
-  }
+  }, [presets, importStrategy, onLoadFile, onImportPresets]);
 
-  const handleImportPresets = async (presets: Preset[], strategy: ImportStrategy) => {
-    await onImportPresets(presets, strategy)
+  const handleImportPresets = useCallback((imported: Preset[], strategy: ImportStrategy) => {
+    onImportPresets(imported, strategy)
 
     setPresetsToImport(null)
-  }
+  }, [onImportPresets, setPresetsToImport])
 
   return (
     <>

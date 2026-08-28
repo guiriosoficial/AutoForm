@@ -1,10 +1,3 @@
-// const SPECIAL_LOCALE_REGIONS: Record<string, string> = {
-//   ku: "iq",
-//   ku_ckb: "iq",
-//   ku_cmr_latin: "tr",
-//   eo: "",
-// };
-
 const REGIONAL_OFFSET = 0x1F1E6 - 65;
 
 // const SPECIAL_LOCALES = {
@@ -14,7 +7,7 @@ const REGIONAL_OFFSET = 0x1F1E6 - 65;
 // } as const;
 
 export function toLocaleTag(locale: string): string {
-  return locale.replace(/_/g, "-");
+  return locale.replace(/_/gu, "-");
 }
 
 export function getLocaleFlagEmoji(locale: string): string {

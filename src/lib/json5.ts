@@ -1,4 +1,4 @@
-import JSON5 from 'json5'
+import JSON5 from 'json5';
 import { EDITOR_CONFIG } from "@/configs";
 
 type JsonValue =
@@ -13,20 +13,25 @@ interface StringifyOptions {
   replacer?:
     | ((this: any, key: string, value: any) => any)
     | (string | number)[]
-    | null
-  space?: string | number | null
-  quote?: string | null
+    | null;
+  space?: string | number | null;
+  quote?: string | null;
 }
 
-export function parseJson5<T = any>(text: string): T {
-  return JSON5.parse(text)
-}
+const defaultStringifyOptions: StringifyOptions = {
+  space: EDITOR_CONFIG.INDENT_SPACES,
+};
 
 export function stringifyJson5(
   json: JsonValue,
-  options: StringifyOptions = { space: EDITOR_CONFIG.INDENT_SPACES }
+  options: StringifyOptions = defaultStringifyOptions
 ) {
-  return JSON5.stringify(json, options)
+  return JSON5.stringify(json, options);
+}
+
+
+export function parseJson5<T = any>(text: string): T {
+  return JSON5.parse(text);
 }
 
 export function isPopulatedJson5(input: string | undefined) {
@@ -36,8 +41,8 @@ export function isPopulatedJson5(input: string | undefined) {
 
   return (
     !!trimmed &&
-    !/^\{\s*}$/.test(trimmed) &&
-    !/^\[\s*\]$/.test(trimmed) &&
-    !/^(['"]) *\1$/.test(trimmed)
+    !/^\{\s*\}$/u.test(trimmed) &&
+    !/^\[\s*\]$/u.test(trimmed) &&
+    !/^(['"]) *\1$/u.test(trimmed)
   );
 }

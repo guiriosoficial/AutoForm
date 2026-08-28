@@ -1,14 +1,6 @@
 import i18n from "@/i18n";
-import {
-  createField,
-  isValidFieldArray,
-  type FieldConfig
-} from "@/lib/fields";
-import {
-  isPopulatedString,
-  isTimestamp,
-  isObject
-} from "@/lib/guards";
+import { createField, isValidFieldArray, type FieldConfig } from "@/lib/fields";
+import { isPopulatedString, isTimestamp, isObject } from "@/lib/guards";
 
 export interface Preset {
   id: string;
@@ -23,7 +15,7 @@ export const getPresetDefaultName = (): string => {
 
 export const getPresetDefaultNameRegex = (): RegExp => {
   const baseName = getPresetDefaultName();
-  const escapedName = baseName.replace(/[^\w\s]/g, "\\$&");
+  const escapedName = baseName.replace(/[^\w\s]/gu, "\\$&");
   return new RegExp(`^${escapedName} (\\d+)$`);
 };
 
@@ -64,7 +56,7 @@ export function getNewPresetNumber(presets: Preset[]) {
 }
 
 export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
-  const presetIndex = presets.findIndex(p => p.id === currentPresetId)
+  const presetIndex = presets.findIndex(p => p.id === currentPresetId);
 
   if (presetIndex === -1) return null;
 

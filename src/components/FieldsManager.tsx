@@ -7,11 +7,11 @@ import type { FieldConfig }  from "@/lib/fields";
 interface FieldsManagerProps {
   fields: FieldConfig[];
   values: Record<string, string>;
-  onAddField: () => void,
-  onRemoveField: (fieldId: string) => void,
-  onUpdateField: (fieldId: string, updated: FieldConfig) => void,
-  onRegenerateValue: (fieldId: string) => void,
-  onCopyValue: (value: string) => void,
+  onAddField: () => void;
+  onRemoveField: (fieldId: string) => void;
+  onUpdateField: (fieldId: string, updated: FieldConfig) => void;
+  onRegenerateValue: (fieldId: string) => void;
+  onCopyValue: (value: string) => void;
 }
 
 export function FieldsManager({

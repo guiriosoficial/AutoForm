@@ -1,3 +1,4 @@
+import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, RotateCcw, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
@@ -22,7 +23,7 @@ import {
   catalogMethodsById,
   catalogOptions,
   type CatalogModule,
-  type CatalogMethod,
+  type CatalogMethod
 } from "@/lib/catalog";
 import type { FieldConfig }  from "@/lib/fields";
 
@@ -30,10 +31,10 @@ interface FieldItemProps {
   field: FieldConfig;
   value: string;
   error?: boolean;
-  onRemove: (fieldId: string) => void,
-  onUpdate: (fieldId: string, newValue: FieldConfig) => void,
-  onRegenerateValue: (fieldId: string) => void,
-  onCopyValue: (value: string) => void,
+  onRemove: (fieldId: string) => void;
+  onUpdate: (fieldId: string, newValue: FieldConfig) => void;
+  onRegenerateValue: (fieldId: string) => void;
+  onCopyValue: (value: string) => void;
 }
 
 export function FieldItem({
@@ -43,16 +44,16 @@ export function FieldItem({
   onRemove,
   onUpdate,
   onCopyValue,
-  onRegenerateValue,
+  onRegenerateValue
 }: FieldItemProps) {
   const { t } = useTranslation();
 
-  const selectedMethod = catalogMethodsById.get(field.generator) ?? null;
-  const hasValue = value !== undefined;
+  const selectedMethod = useMemo(() => catalogMethodsById.get(field.generator) ?? null, [field.generator]);
+  const hasValue = useMemo(() => value !== undefined, [value]);
 
-  const handleUpdateField = (
+  const handleUpdateField = useCallback((
     key: keyof FieldConfig,
-    newValue: string | undefined,
+    newValue: string | undefined
   ) => {
     if (newValue === undefined) return;
 
@@ -60,12 +61,12 @@ export function FieldItem({
       ...field,
       [key]: newValue
     })
-  }
+  }, [field, onUpdate]);
 
-  const resultClasses = cn(
+  const resultClasses = useMemo(() => cn(
     "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group",
-    error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary",
-  )
+    error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary"
+  ), [error]);
 
   return (
     <div className="space-y-1">
@@ -79,7 +80,7 @@ export function FieldItem({
         <Combobox
           items={catalogOptions}
           value={selectedMethod}
-          onValueChange={(value) => handleUpdateField("generator", value?.value)}
+          onValueChange={(newValue) => handleUpdateField("generator", newValue?.value)}
           itemToStringLabel={(item) => item.label}
           itemToStringValue={(item) => item.value}
         >
@@ -122,7 +123,7 @@ export function FieldItem({
         <FieldOptionsPopover
           value={field.options}
           docUrl={selectedMethod?.docs}
-          onChange={(value) => handleUpdateField("options", value)}
+          onChange={(newValue) => handleUpdateField("options", newValue)}
         />
 
         <Button

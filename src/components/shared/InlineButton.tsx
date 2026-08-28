@@ -1,14 +1,14 @@
+import { useMemo, type MouseEventHandler } from "react";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
-import type { MouseEventHandler } from "react";
 
 interface InlineButtonProps {
-  icon: LucideIcon
-  size?: number
-  persistent?: boolean
-  destructive?: boolean
-  className?: string
-  onClick?: MouseEventHandler<HTMLButtonElement>
+  icon: LucideIcon;
+  size?: number;
+  persistent?: boolean;
+  destructive?: boolean;
+  className?: string;
+  onClick?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export function InlineButton({
@@ -17,14 +17,14 @@ export function InlineButton({
   persistent,
   destructive,
   className,
-  onClick,
+  onClick
 }: InlineButtonProps) {
-  const buttonClasses = cn(
+  const buttonClasses = useMemo(() => cn(
     "text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all",
     destructive && "hover:text-destructive",
     persistent && "opacity-100",
     className
-  );
+  ), [destructive, persistent, className]);
 
   return (
     <button

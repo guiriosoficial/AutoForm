@@ -13,7 +13,7 @@ export const ToastTypes = {
   INFO: "info",
   WARNING: "warning",
   LOADING: "loading"
-} as const
+} as const;
 
 export type ToastTypes = typeof ToastTypes[keyof typeof ToastTypes];
 
@@ -21,7 +21,7 @@ interface ToastOptions {
   title?: string;
   description?: string;
   duration?: number;
-  priority?: ToastPriority
+  priority?: ToastPriority;
 }
 
 function createToast(type: ToastTypes) {

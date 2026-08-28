@@ -1,5 +1,6 @@
 import {
   useEffect,
+  useCallback,
   useRef,
   useState,
   useImperativeHandle,
@@ -11,7 +12,7 @@ import {
 } from "react";
 import { X, Check, PenLine } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { preventDefaultEscape } from "@/lib/events"
+import { preventDefaultEscape } from "@/lib/events";
 
 interface InlineInputProps {
   value: string;
@@ -27,7 +28,7 @@ export const InlineInput = forwardRef((
   {
     value,
     placeholder,
-    onSave,
+    onSave
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>
 ) => {
@@ -54,8 +55,8 @@ export const InlineInput = forwardRef((
     return () => cancelAnimationFrame(frame);
   }, [isEditing]);
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    preventDefaultEscape(event)
+  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+    preventDefaultEscape(event);
 
     switch (event.key) {
       case "Enter":
@@ -65,9 +66,10 @@ export const InlineInput = forwardRef((
         cancelEditing();
         break;
     }
-  }
+  }, []);
 
-  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
+
+  const confirmEditing = useCallback((event?: MouseEvent | FocusEvent) => {
     event?.preventDefault();
 
     const nextValue = draft.trim();
@@ -80,18 +82,18 @@ export const InlineInput = forwardRef((
     }
 
     onSave(nextValue);
-  }
+  }, [value, draft, onSave, setDraft, setIsEditing]);
 
-  const cancelEditing = (event?: MouseEvent) => {
+  const cancelEditing = useCallback((event?: MouseEvent) => {
     event?.preventDefault();
 
     setDraft(value);
     setIsEditing(false);
-  }
+  }, [setDraft, setIsEditing]);
 
-  const startEditing = () => {
+  const startEditing = useCallback(() => {
     setIsEditing(true);
-  };
+  }, [setIsEditing]);
 
   useImperativeHandle(ref, () => ({
     startEditing
@@ -126,7 +128,7 @@ export const InlineInput = forwardRef((
     );
   }
 
-  const safeValue = value ?? ""
+  const safeValue = value ?? "";
   const words = safeValue?.split(" ");
   const lastWord = words?.pop();
   const restantWords = words?.join(" ");
@@ -147,3 +149,5 @@ export const InlineInput = forwardRef((
     </p>
   );
 });
+
+InlineInput.displayName = "InlineInput";

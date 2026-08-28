@@ -1,6 +1,10 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, Zap } from "lucide-react";
+import { InlineInput, type InlineInputRef } from "@/components/shared/InlineInput";
+import { Footer } from "@/components/layouts/Footer";
+import { PresetsManager } from "@/components/PresetsManager";
+import { FieldsManager } from "@/components/FieldsManager";
 import {
   Card,
   CardAction,
@@ -9,20 +13,13 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import {
-  InlineInput,
-  type InlineInputRef
-} from "@/components/shared/InlineInput";
-import { Footer } from "@/components/layouts/Footer";
-import { PresetsManager } from "@/components/PresetsManager";
-import { FieldsManager } from "@/components/FieldsManager";
 import { usePresets } from "@/hooks/use-presets";
 import { useForm } from "@/hooks/use-form";
 
 export function HomeView(){
   const { t } = useTranslation();
 
-  const presetNameEditorRef = useRef<InlineInputRef>(null)
+  const presetNameEditorRef = useRef<InlineInputRef>(null);
 
   const {
     presets,
