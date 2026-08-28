@@ -29,9 +29,10 @@ import {
   Language,
   Locale,
   Theme,
+  ThemeIcons,
   ImportStrategy,
+  ImportStrategyIcons,
 } from "@/configs";
-import {ImportStrategyIcons, ThemeIcons} from "@/configs/maps";
 import {
   Combobox,
   ComboboxContent,

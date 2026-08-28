@@ -5,7 +5,7 @@ import { Button }  from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { Page } from "@/configs";
-import { PageIcons } from "@/configs/maps";
+import { PageIcons } from "@/configs";
 
 export function Header() {
   const { activePage, setActivePage } = useNavigation()

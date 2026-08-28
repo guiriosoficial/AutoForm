@@ -1,3 +1,5 @@
+import { MessageCircleQuestion, RefreshCw, RotateCw, SquaresUnite, type LucideIcon } from "lucide-react";
+
 export const ImportStrategy = {
   APPEND: "append",
   OVERWRITE: "overwrite",
@@ -6,6 +8,13 @@ export const ImportStrategy = {
 } as const;
 
 export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy];
+
+export const ImportStrategyIcons: Record<ImportStrategy, LucideIcon> = {
+  [ImportStrategy.APPEND]: SquaresUnite,
+  [ImportStrategy.OVERWRITE]: RefreshCw,
+  [ImportStrategy.REPLACE_ALL]: RotateCw,
+  [ImportStrategy.ALWAYS_ASK]: MessageCircleQuestion,
+};
 
 export const IMPORT_CONFIG = {
   FILE_TYPE: "application/json",

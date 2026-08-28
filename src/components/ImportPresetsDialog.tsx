@@ -28,8 +28,11 @@ import {
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { preventDefaultEscape } from "@/lib/events"
-import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import { ImportStrategyIcons } from "@/configs/maps";
+import {
+  IMPORT_CONFIG,
+  ImportStrategy,
+  ImportStrategyIcons
+} from "@/configs";
 import type { Preset } from "@/lib/presets";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 
