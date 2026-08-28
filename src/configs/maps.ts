@@ -1,12 +1,10 @@
-import {Page, Theme, ImportStrategy} from "@/configs";
-import {ArrowLeft, MonitorDot, MoonStar, Settings2, Sun, type LucideIcon} from "lucide-react";
-import i18n from "@/i18n"
-
-const { t } = i18n
+import { Page, Theme } from "@/configs";
+import { ArrowLeft, MonitorDot, MoonStar, Settings2, Sun, Heart, type LucideIcon } from "lucide-react";
 
 export const PageIcons: Record<Page, LucideIcon> = {
+  [Page.SPONSOR]: Heart,
   [Page.HOME]: ArrowLeft,
-  [Page.PREFERENCES]: Settings2
+  [Page.PREFERENCES]: Settings2,
 } as const;
 
 export const ThemeIcons: Record<Theme, LucideIcon> = {
@@ -14,14 +12,3 @@ export const ThemeIcons: Record<Theme, LucideIcon> = {
   [Theme.DARK]: MoonStar,
   [Theme.SYSTEM]: MonitorDot
 } as const;
-
-export const getThemeOptions = () => Object.values(Theme).map((theme: Theme) => ({
-  value: theme,
-  label: t(`configs.theme.${theme}`),
-  icon: ThemeIcons[theme]
-}))
-
-export const getImportStrategyOptions = () => Object.values(ImportStrategy).map((strategy: ImportStrategy) => ({
-  value: strategy,
-  label: t(`configs.importStrategy.${strategy}.title`),
-}))

@@ -1,4 +1,5 @@
 export const Page = {
+  SPONSOR: "https://github.com/sponsors/guiriosoficial?frequency=one-time&sponsor=guiriosoficial",
   HOME: "home",
   PREFERENCES: "preferences",
 } as const;

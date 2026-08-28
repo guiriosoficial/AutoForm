@@ -11,6 +11,14 @@ export function Header() {
   const { activePage, setActivePage } = useNavigation()
   const { t } = useTranslation();
 
+  const handleNavigate = (page: Page) => {
+    if (page.startsWith("https")) {
+      window.open(page, "_blank", "noopener,noreferrer")
+      return;
+    }
+    setActivePage(page)
+  }
+
   const navigationItems = useMemo(() =>
       Object.values(Page).filter((page) => page !== activePage),
     [activePage]
@@ -23,7 +31,7 @@ export function Header() {
           <Button
             size="icon"
             variant="ghost"
-            onClick={() => setActivePage(page)}
+            onClick={() => handleNavigate(page)}
           >
             <DynamicIcon icon={PageIcons[page]} />
           </Button>
