@@ -6,13 +6,13 @@ import { Footer } from "@/components/layouts/Footer";
 import {
   Card,
   CardContent,
-  CardDescription,
   CardTitle,
   CardHeader,
 } from "@/components/ui/card";
 import {
   Field,
   FieldDescription,
+  FieldGroup,
   FieldLabel,
 } from "@/components/ui/field"
 import {
@@ -31,7 +31,7 @@ import {
   Theme,
   ImportStrategy,
 } from "@/configs";
-import { ThemeIcons } from "@/configs/maps";
+import {ImportStrategyIcons, ThemeIcons} from "@/configs/maps";
 import {
   Combobox,
   ComboboxContent,
@@ -102,129 +102,129 @@ export function PreferencesView() {
           <CardTitle>
             {t("preferencesManager.title")}
           </CardTitle>
-          <CardDescription>
-            {t("preferencesManager.description")}
-          </CardDescription>
         </CardHeader>
 
         <CardContent onKeyDown={preventDefaultEscape}>
-          <Field>
-            <FieldLabel>
-              {t("preferencesManager.form.themeToggle.label")}
-            </FieldLabel>
+          <FieldGroup>
 
-            <ToggleGroup
-              value={[theme]}
-              variant="outline"
-              onValueChange={handleChangeTheme}
-            >
-              <ButtonGroup>
-                {Object.values(Theme).map((theme) => (
-                  <ToggleGroupItem
-                    key={theme}
-                    value={theme}
-                  >
-                    <DynamicIcon icon={ThemeIcons[theme]} />
-                    {t(`configs.theme.${theme}`)}
-                  </ToggleGroupItem>
-                ))}
-              </ButtonGroup>
-            </ToggleGroup>
-          </Field>
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.themeToggle.label")}
+              </FieldLabel>
 
-          <Field>
-            <FieldLabel>
-              {t("preferencesManager.form.importStrategyToggle.label")}
-            </FieldLabel>
-            <ToggleGroup
-              value={[importStrategy]}
-              variant="outline"
-              onValueChange={handleChangeImportStrategy}
-            >
-              <ButtonGroup>
-                {Object.values(ImportStrategy).map((strategy) => (
-                  <ToggleGroupItem
-                    key={strategy}
-                    value={strategy}
-                  >
-                    {t(`configs.importStrategy.${strategy}.title`)}
-                  </ToggleGroupItem>
-                ))}
-              </ButtonGroup>
-            </ToggleGroup>
-            <FieldDescription>
-              {t(`configs.importStrategy.${importStrategy}.description`)}
-            </FieldDescription>
-          </Field>
-
-          <Field>
-            <FieldLabel>
-              {t("preferencesManager.form.localeSelect.label")}
-            </FieldLabel>
-            <Combobox
-              value={locale}
-              items={Object.values(Locale)}
-              itemToStringLabel={localeDisplayName}
-              onValueChange={handleChangeLocale}
-            >
-              <ComboboxInput
-                className="flex-1"
-                placeholder={t("preferencesManager.form.localeSelect.placeholder")}
-                onKeyDown={preventDefaultEscape}
-              />
-              <ComboboxContent>
-                <ComboboxEmpty>
-                  {t("preferencesManager.form.localeSelect.empty")}
-                </ComboboxEmpty>
-                <ComboboxList>
-                  {(item) => (
-                    <ComboboxItem
-                      key={item}
-                      value={item}
-                      className="capitalize"
+              <ToggleGroup
+                value={[theme]}
+                variant="outline"
+                onValueChange={handleChangeTheme}
+              >
+                <ButtonGroup>
+                  {Object.values(Theme).map((theme) => (
+                    <ToggleGroupItem
+                      key={theme}
+                      value={theme}
                     >
-                      {localeDisplayName(item)}
-                    </ComboboxItem>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
-          </Field>
+                      <DynamicIcon icon={ThemeIcons[theme]} />
+                      {t(`configs.theme.${theme}`)}
+                    </ToggleGroupItem>
+                  ))}
+                </ButtonGroup>
+              </ToggleGroup>
+            </Field>
 
-          <Field>
-            <FieldLabel>
-              {t("preferencesManager.form.languageSelect.label")}
-            </FieldLabel>
-            <Combobox
-              value={language}
-              items={Object.values(Language)}
-              itemToStringLabel={localeDisplayName}
-              onValueChange={handleChangeLanguage}
-            >
-              <ComboboxInput
-                className="flex-1"
-                placeholder={t("preferencesManager.form.languageSelect.placeholder")}
-                onKeyDown={preventDefaultEscape}
-              />
-              <ComboboxContent>
-                <ComboboxEmpty>
-                  {t("preferencesManager.form.languageSelect.empty")}
-                </ComboboxEmpty>
-                <ComboboxList>
-                  {(item) => (
-                    <ComboboxItem
-                      key={item}
-                      value={item}
-                      className="capitalize"
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.importStrategyToggle.label")}
+              </FieldLabel>
+              <ToggleGroup
+                value={[importStrategy]}
+                variant="outline"
+                onValueChange={handleChangeImportStrategy}
+              >
+                <ButtonGroup>
+                  {Object.values(ImportStrategy).map((strategy) => (
+                    <ToggleGroupItem
+                      key={strategy}
+                      value={strategy}
                     >
-                      {localeDisplayName(item)}
-                    </ComboboxItem>
-                  )}
-                </ComboboxList>
-              </ComboboxContent>
-            </Combobox>
-          </Field>
+                      <DynamicIcon icon={ImportStrategyIcons[strategy]} />
+                      {t(`configs.importStrategy.${strategy}.title`)}
+                    </ToggleGroupItem>
+                  ))}
+                </ButtonGroup>
+              </ToggleGroup>
+              <FieldDescription>
+                {t(`configs.importStrategy.${importStrategy}.description`)}
+              </FieldDescription>
+            </Field>
 
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.localeSelect.label")}
+              </FieldLabel>
+              <Combobox
+                value={locale}
+                items={Object.values(Locale)}
+                itemToStringLabel={localeDisplayName}
+                onValueChange={handleChangeLocale}
+              >
+                <ComboboxInput
+                  className="flex-1"
+                  placeholder={t("preferencesManager.form.localeSelect.placeholder")}
+                  onKeyDown={preventDefaultEscape}
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>
+                    {t("preferencesManager.form.localeSelect.empty")}
+                  </ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem
+                        key={item}
+                        value={item}
+                        className="capitalize"
+                      >
+                        {localeDisplayName(item)}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+            </Field>
+
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.languageSelect.label")}
+              </FieldLabel>
+              <Combobox
+                value={language}
+                items={Object.values(Language)}
+                itemToStringLabel={localeDisplayName}
+                onValueChange={handleChangeLanguage}
+              >
+                <ComboboxInput
+                  className="flex-1"
+                  placeholder={t("preferencesManager.form.languageSelect.placeholder")}
+                  onKeyDown={preventDefaultEscape}
+                />
+                <ComboboxContent>
+                  <ComboboxEmpty>
+                    {t("preferencesManager.form.languageSelect.empty")}
+                  </ComboboxEmpty>
+                  <ComboboxList>
+                    {(item) => (
+                      <ComboboxItem
+                        key={item}
+                        value={item}
+                        className="capitalize"
+                      >
+                        {localeDisplayName(item)}
+                      </ComboboxItem>
+                    )}
+                  </ComboboxList>
+                </ComboboxContent>
+              </Combobox>
+            </Field>
+          </FieldGroup>
         </CardContent>
       </Card>
 

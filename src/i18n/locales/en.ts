@@ -66,7 +66,6 @@ export default {
   },
   preferencesManager: {
     title: "Preferences",
-    description: "Configure the $t(globals.appTitle)",
     confirmButton: "Concluded",
     form: {
       themeToggle: {

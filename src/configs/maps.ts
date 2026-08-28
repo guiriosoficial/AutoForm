@@ -1,5 +1,21 @@
-import { Page, Theme } from "@/configs";
-import { ArrowLeft, MonitorDot, MoonStar, Settings2, Sun, Heart, type LucideIcon } from "lucide-react";
+import {
+  ImportStrategy,
+  Page,
+  Theme
+} from "@/configs";
+import {
+  ArrowLeft,
+  MonitorDot,
+  MoonStar,
+  Settings2,
+  Sun,
+  Heart,
+  SquaresUnite,
+  RefreshCw,
+  RotateCw,
+  MessageCircleQuestion,
+  type LucideIcon
+} from "lucide-react";
 
 export const PageIcons: Record<Page, LucideIcon> = {
   [Page.SPONSOR]: Heart,
@@ -12,3 +28,10 @@ export const ThemeIcons: Record<Theme, LucideIcon> = {
   [Theme.DARK]: MoonStar,
   [Theme.SYSTEM]: MonitorDot
 } as const;
+
+export const ImportStrategyIcons: Record<ImportStrategy, LucideIcon> = {
+  [ImportStrategy.APPEND]: SquaresUnite,
+  [ImportStrategy.OVERWRITE]: RefreshCw,
+  [ImportStrategy.REPLACE_ALL]: RotateCw,
+  [ImportStrategy.ALWAYS_ASK]: MessageCircleQuestion,
+};
