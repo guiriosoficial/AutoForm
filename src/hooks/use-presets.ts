@@ -61,6 +61,8 @@ export function usePresets({
     );
     setCurrentPreset(emptyPreset);
 
+    if (presets.length <= 1) return;
+
     presetNameEditorRef.current?.startEditing()
   }, [setPresets, presets, presetNameEditorRef]);
 

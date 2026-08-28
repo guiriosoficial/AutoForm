@@ -32,12 +32,12 @@ export const InlineInput = forwardRef((
   ref: ForwardedRef<InlineInputRef>
 ) => {
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(value);
+  const [draft, setDraft] = useState(value ?? "");
 
   const inputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    setDraft(value);
+    setDraft(value ?? "");
   }, [value]);
 
   useEffect(() => {
@@ -126,7 +126,8 @@ export const InlineInput = forwardRef((
     );
   }
 
-  const words = value?.split(" ");
+  const safeValue = value ?? ""
+  const words = safeValue?.split(" ");
   const lastWord = words?.pop();
   const restantWords = words?.join(" ");
 
