@@ -39,10 +39,11 @@ import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
 import { preventDefaultEscape } from "@/lib/events"
 import {
   IMPORT_CONFIG,
-  type ImportStrategy
+  ImportStrategy
 } from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
+import {useAppSettings} from "@/providers/AppSettingsProvider.tsx";
 
 interface PresetsManagerProps {
   presets: Preset[];
@@ -69,6 +70,8 @@ export function PresetsManager({
   const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
+  const { importStrategy } = useAppSettings()
+
   const importInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
@@ -94,8 +97,13 @@ export function PresetsManager({
 
     const loaded = await onLoadFile(json);
 
-    if (loaded && presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD) {
-      await onImportPresets(loaded.parsed);
+    if (!loaded) return;
+
+    if (
+      presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
+      importStrategy !== ImportStrategy.ALWAYS_ASK
+    ) {
+      await onImportPresets(loaded.parsed, importStrategy);
       return
     }
 
