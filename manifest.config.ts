@@ -15,6 +15,7 @@ export default defineManifest({
   action: {
     default_icon: { 48: 'public/logo.png' },
     default_popup: 'src/entrypoints/app/index.html',
+    default_title: APP_NAME,
   },
   side_panel: {
     default_path: 'src/entrypoints/app/index.html',
