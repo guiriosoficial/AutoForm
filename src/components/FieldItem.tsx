@@ -17,6 +17,7 @@ import {
   ComboboxSeparator
 } from "@/components/ui/combobox";
 import { preventDefaultEscape } from "@/lib/events";
+import { cn } from "@/lib/utils";
 import {
   catalogMethodsById,
   catalogOptions,
@@ -28,6 +29,7 @@ import type { FieldConfig }  from "@/lib/fields";
 interface FieldItemProps {
   field: FieldConfig;
   value: string;
+  error?: boolean;
   onRemove: (fieldId: string) => void,
   onUpdate: (fieldId: string, newValue: FieldConfig) => void,
   onRegenerateValue: (fieldId: string) => void,
@@ -37,6 +39,7 @@ interface FieldItemProps {
 export function FieldItem({
   field,
   value,
+  error,
   onRemove,
   onUpdate,
   onCopyValue,
@@ -58,6 +61,11 @@ export function FieldItem({
       [key]: newValue
     })
   }
+
+  const resultClasses = cn(
+    "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group",
+    error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary",
+  )
 
   return (
     <div className="space-y-1">
@@ -128,7 +136,7 @@ export function FieldItem({
       </div>
 
       {hasValue && (
-        <div className="flex items-center gap-2 pl-3 border-l-2 border-primary/30 text-xs font-mono text-primary group">
+        <div className={resultClasses}>
           <span className="truncate">
             {String(value)}
           </span>
