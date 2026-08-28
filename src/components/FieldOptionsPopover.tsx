@@ -24,7 +24,7 @@ import {
   createEditorKeymap,
   createEditorLinter,
 } from "@/lib/editor"
-import { cn } from "@/lib/utils";
+import { cn, getErrorMessage } from "@/lib/utils";
 import { preventDefaultEscape } from "@/lib/events"
 import { debounce } from "@/lib/async"
 import {
@@ -76,9 +76,9 @@ export function FieldOptionsPopover({
       const parsedValue = parseJson5(value);
       setError("");
       return parsedValue;
-    } catch (err: Error | unknown) {
-      if (!(err instanceof Error)) return
-      setError(err.message);
+    } catch (err) {
+      const message = getErrorMessage(err)
+      setError(message);
     }
   };
 

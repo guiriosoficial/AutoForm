@@ -64,8 +64,8 @@ export function useForm({
 
   const addField = useCallback(() => {
     updateFields((prev) =>
-      [...prev, createField()])
-    ;
+      [...prev, createField()]
+    );
   }, [updateFields]);
 
   const removeField = useCallback((id: string) => {
@@ -80,29 +80,31 @@ export function useForm({
     );
   }, [updateFields]);
 
-  const generateValues = useCallback(() => {
+  const generateValues = useCallback(async () => {
     const values: Record<string, string> = {};
 
-    fields.forEach(f => {
-      if (!f.generator) return;
+    await Promise.all(
+      fields.map(async (f) => {
+        if (!f.generator) return;
 
-      const newValue = generateValue(f.generator, f.options)
+        const newValue = generateValue(f.generator, f.options);
 
-      if (!newValue) return;
+        if (!newValue) return;
 
-      values[f.id] = newValue;
-      fillInputElement(f.selector, newValue)
-    });
+        values[f.id] = newValue;
+        await fillInputElement(f.selector, newValue);
+      })
+    );
 
     setGeneratedValues(values);
   }, [fields]);
 
-  const regenerateValue = useCallback((fieldId: string) => {
+  const regenerateValue = useCallback(async (fieldId: string) => {
     const field = fieldsById[fieldId];
 
     if (!field.generator) return;
 
-    const newValue = generateValue(field.generator, field.options)
+    const newValue = generateValue(field.generator, field.options);
 
     if (!newValue) return;
 
@@ -110,7 +112,7 @@ export function useForm({
       ...prev,
       [fieldId]: newValue,
     }));
-    fillInputElement(field.selector, newValue)
+    await fillInputElement(field.selector, newValue);
   }, [fields]);
 
   const copyValue = useCallback(async (value: string) => {

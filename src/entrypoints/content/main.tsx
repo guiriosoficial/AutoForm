@@ -1,13 +1,18 @@
-import { StrictMode } from "react"
-import { createRoot } from "react-dom/client"
-import { App } from "@/views/App"
-import { APP_ID } from "@/configs"
+import browser from "webextension-polyfill";
+import { MessageAction } from "@/configs";
+import {
+  executeFillInputElement,
+  type GeneratorMessageResponse,
+  type GeneratorMessage
+} from "@/lib/generator";
 
-const container = document.createElement("div");
-container.id = `${APP_ID}-app`;
-document.body.appendChild(container);
-createRoot(container).render(
-  <StrictMode>
-    <App />
-  </StrictMode>,
+browser.runtime.onMessage.addListener(
+  (rawMessage: unknown): Promise<GeneratorMessageResponse> | void => {
+    const message = rawMessage as GeneratorMessage;
+
+    if (message.action === MessageAction.FILL_INPUT) {
+      const response = executeFillInputElement(message.selector, message.value);
+      return Promise.resolve(response);
+    }
+  }
 );

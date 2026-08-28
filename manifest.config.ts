@@ -26,8 +26,8 @@ export default defineManifest({
     'storage',
     'sidePanel',
   ],
-  // content_scripts: [{
-  //   js: ['src/content/main.tsx'],
-  //   matches: ['https://*/*'],
-  // }],
+  content_scripts: [{
+    js: ['src/entrypoints/content/main.tsx'],
+    matches: ['https://*/*', 'http://*/*'],
+  }],
 })
