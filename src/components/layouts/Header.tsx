@@ -29,6 +29,7 @@ export function Header() {
       <div className="absolute top-2 right-2 text-muted-foreground">
         {navigationItems.map((page) => (
           <Button
+            key={page}
             size="icon"
             variant="ghost"
             onClick={() => handleNavigate(page)}

@@ -16,7 +16,7 @@ import {
   StorageKeys,
   Theme,
 } from "@/configs";
-import i18n from "i18next";
+import i18n from "@/i18n";
 
 interface AppSettingsProviderProps {
   children: ReactNode
