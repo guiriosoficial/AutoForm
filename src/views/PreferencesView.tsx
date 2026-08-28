@@ -147,7 +147,7 @@ export function PreferencesView() {
                     key={strategy}
                     value={strategy}
                   >
-                    {t(`configs.importStrategy.${strategy}.label`)}
+                    {t(`configs.importStrategy.${strategy}.title`)}
                   </ToggleGroupItem>
                 ))}
               </ButtonGroup>

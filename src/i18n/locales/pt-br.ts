@@ -39,19 +39,19 @@ export default {
     },
     importStrategy: {
       append: {
-        label: "Adicionar",
+        title: "Adicionar",
         description: "Adiciona novos presets aos existentes sem substituir os duplicados",
       },
       overwrite: {
-        label: "Sobrescrever",
+        title: "Sobrescrever",
         description: "Sobrescreve o preset existente com o importado",
       },
       replaceAll: {
-        label: "Substituir tudo",
+        title: "Substituir tudo",
         description: "Remove todos os presets atuais e importa os novos",
       },
       alwaysAsk: {
-        label: "Perguntar sempre",
+        title: "Perguntar sempre",
         description: "Sempre perguntar ao importar presets",
       }
     }
