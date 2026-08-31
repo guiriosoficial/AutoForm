@@ -17,14 +17,10 @@ import {
   ComboboxList,
   ComboboxSeparator
 } from "@/components/ui/combobox";
+import { useCatalog } from "@/hooks/use-catalog"
 import { preventDefaultEscape } from "@/lib/events";
 import { cn } from "@/lib/utils";
-import {
-  catalogMethodsById,
-  catalogOptions,
-  type CatalogModule,
-  type CatalogMethod
-} from "@/lib/catalog";
+import type { CatalogModule, CatalogMethod } from "@/lib/catalog";
 import type { FieldConfig }  from "@/lib/fields";
 
 interface FieldItemProps {
@@ -47,8 +43,9 @@ export function FieldItem({
   onRegenerateValue
 }: FieldItemProps) {
   const { t } = useTranslation();
+  const { catalogMethodsByKey, catalogOptions } = useCatalog();
 
-  const selectedMethod = useMemo(() => catalogMethodsById.get(field.generator) ?? null, [field.generator]);
+  const selectedMethod = useMemo(() => catalogMethodsByKey.get(field.generator) ?? null, [field.generator, catalogMethodsByKey]);
   const hasValue = useMemo(() => value !== undefined, [value]);
 
   const handleUpdateField = useCallback((

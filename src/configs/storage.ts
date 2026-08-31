@@ -11,7 +11,8 @@ export const StorageKeys = {
   THEME: `${APP_ID}:theme`,
   LOCALE: `${APP_ID}:locale`,
   LANGUAGE: `${APP_ID}:language`,
-  IMPORT_STRATEGY: `${APP_ID}:import-strategy`
+  IMPORT_STRATEGY: `${APP_ID}:import-strategy`,
+  CUSTOM_METHODS: `${APP_ID}:custom-methods`,
 } as const;
 
 export type StorageKeys = (typeof StorageKeys)[keyof typeof StorageKeys];
