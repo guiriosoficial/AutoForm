@@ -4,8 +4,7 @@ import {
   useEffect,
   useMemo,
   useState,
-  useRef,
-  useCallback
+  useRef, useCallback
 } from "react";
 import { Settings2, ExternalLink } from "lucide-react";
 import ReactCodeMirror from "@uiw/react-codemirror";
@@ -57,20 +56,7 @@ export function FieldOptionsPopover({
 
   const { t } = useTranslation();
 
-  const formatConfig = useCallback(async () => {
-    if (!value) return;
-
-    const parsedValue = await parseConfig(value);
-
-    const formattedValue = stringifyJson5(parsedValue);
-
-    onChange(formattedValue)
-  }, [value, onChange]);
-
-  const handlePopoverOpenChange = useCallback(async (isOpening: boolean) => {
-    await formatConfig();
-    setOpen(isOpening);
-  }, [formatConfig, setOpen]);
+  const hasConfig = isPopulatedJson5(value);
 
   const parseConfig = useCallback((val: string) => {
     if (!isPopulatedJson5(val)) {
@@ -88,32 +74,41 @@ export function FieldOptionsPopover({
     }
   }, []);
 
+  const formatConfig = useCallback(async () => {
+    if (!value) return;
+
+    const parsedValue = await parseConfig(value);
+
+    const formattedValue = stringifyJson5(parsedValue);
+
+    onChange(formattedValue)
+  }, [value, onChange, parseConfig]);
+
   const debouncedParseConfig = useRef(debounce(
     (text: string) => parseConfig(text),
     EDITOR_CONFIG.LINT_DELAY_MS)
   ).current;
 
-  const valueRef = useRef(value);
 
-  const handleConfigChange = useCallback((value: string) => {
+  const handlePopoverOpenChange = async (isOpening: boolean) => {
+    await formatConfig();
+
+    setOpen(isOpening);
+  };
+
+  const handleConfigChange = (value: string) => {
     onChange(value);
 
     debouncedParseConfig(value)
-  }, [onChange, debouncedParseConfig]);
+  };
 
   useEffect(() => {
-    if (!valueRef.current) return;
+    if (value) parseConfig(value);
 
-    parseConfig(valueRef.current);
-  }, [parseConfig]);
-
-  useEffect(() => {
     return () => {
       debouncedParseConfig.cancel();
-    };
-  }, [debouncedParseConfig]);
-
-  const hasConfig = useMemo(() => isPopulatedJson5(value), [value]);
+    }
+  }, []);
 
   const editorExtension = useMemo(() => [
     json5(),
@@ -121,24 +116,25 @@ export function FieldOptionsPopover({
     createEditorKeymap({ onFormat: formatConfig })
   ], [hasConfig, formatConfig]);
 
-  const triggerButtonClasses = useMemo(() => cn(
+  const triggerButtonClasses = cn(
     "relative",
     hasConfig && "bg-primary/5 hover:bg-primary/15! aria-expanded:bg-primary/15 text-primary hover:text-primary aria-expanded:text-primary",
     error && "bg-destructive/5 hover:bg-destructive/15! aria-expanded:bg-destructive/15 text-destructive hover:text-destructive aria-expanded:text-destructive"
-  ), [hasConfig, error]);
-  const triggerBadgeClasses = useMemo(() => cn(
+  );
+  const triggerBadgeClasses = cn(
     "absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full",
     error ? "bg-destructive": "bg-primary"
-  ), [error]);
-  const editorClasses = useMemo(() => cn(
+  );
+  const editorClasses = cn(
     "border-border border rounded-md *:outline-none! *:h-48 *:p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent",
     error && "border-destructive"
-  ), [error]);
-  const descriptionClasses = useMemo(() => cn(
+  );
+  const descriptionClasses = cn(
     "text-xs text-muted-foreground flex items-start justify-between gap-1",
     error && "text-destructive"
-  ), [error]);
-  const descriptionText = useMemo(() =>  error || t("fieldsManager.popovers.fieldSettings.caption"), [error, t]);
+  );
+
+  const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
 
   return (
     <Popover

@@ -1,3 +1,4 @@
+import i18n from "@/i18n";
 import { useEffect, useContext, createContext, type ReactNode } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
@@ -11,7 +12,6 @@ import {
   StorageKeys,
   Theme,
 } from "@/configs";
-import i18n from "@/i18n";
 
 interface AppSettingsProviderProps {
   children: ReactNode;
@@ -72,10 +72,6 @@ export function AppSettingsProvider({
 
     i18n.changeLanguage(language);
   }, [language]);
-
-  useEffect(() => {
-    // TODO: Implement this effect to change faker locale
-  }, [locale]);
 
   const value = {
     theme,

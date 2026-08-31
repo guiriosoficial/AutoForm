@@ -1,4 +1,3 @@
-import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, RotateCcw, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
@@ -45,10 +44,10 @@ export function FieldItem({
   const { t } = useTranslation();
   const { catalogMethodsByKey, catalogOptions } = useCatalog();
 
-  const selectedMethod = useMemo(() => catalogMethodsByKey.get(field.generator) ?? null, [field.generator, catalogMethodsByKey]);
-  const hasValue = useMemo(() => value !== undefined, [value]);
+  const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
+  const hasValue = value !== undefined;
 
-  const handleUpdateField = useCallback((
+  const handleUpdateField = (
     key: keyof FieldConfig,
     newValue: string | undefined
   ) => {
@@ -58,12 +57,12 @@ export function FieldItem({
       ...field,
       [key]: newValue
     })
-  }, [field, onUpdate]);
+  };
 
-  const resultClasses = useMemo(() => cn(
+  const resultClasses = cn(
     "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group",
     error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary"
-  ), [error]);
+  );
 
   return (
     <div className="space-y-1">

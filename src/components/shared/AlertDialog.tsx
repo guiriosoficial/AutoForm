@@ -1,4 +1,3 @@
-import {useCallback, type KeyboardEvent, useMemo} from "react";
 import { useTranslation } from "react-i18next";
 import { AlertOctagon } from "lucide-react";
 import {
@@ -12,6 +11,7 @@ import {
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { preventDefaultEscape } from "@/lib/events";
+import type { KeyboardEvent } from "react";
 
 interface AlertDialogProps {
   open: boolean;
@@ -38,29 +38,14 @@ export function AlertDialog({
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
-  const translatedTitle = useMemo(() =>
-    title ?? t("defaults.alert.title"),
-    [title, t]
-  );
-  const translatedDescription = useMemo(() =>
-    description ?? t("defaults.alert.description"),
-    [description, t]
-  );
-  const translatedConfirmButtonText = useMemo(() =>
-    confirmButtonText ?? t("defaults.alert.confirmButton"),
-    [confirmButtonText, t]
-  );
-  const translatedCancelButtonText = useMemo(() =>
-    cancelButtonText ?? t("defaults.alert.cancelButton"),
-    [cancelButtonText, t]
-  );
+  const translatedTitle = title ?? t("defaults.alert.title");
+  const translatedDescription = description ?? t("defaults.alert.description");
+  const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
+  const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 
-  const variant = useMemo(() =>
-    destructive ? 'destructive' : 'default',
-    [destructive]
-  );
+  const variant = destructive ? 'destructive' : 'default';
 
-  const handleKeyPress = useCallback((event: KeyboardEvent<HTMLDivElement>) => {
+  const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     preventDefaultEscape(event);
     event.stopPropagation();
 
@@ -72,7 +57,7 @@ export function AlertDialog({
         onCancel?.();
         break;
     }
-  }, []);
+  };
 
   return (
     <AlertDialogPrimitive

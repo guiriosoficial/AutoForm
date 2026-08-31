@@ -55,7 +55,7 @@ export const InlineInput = forwardRef((
     return () => cancelAnimationFrame(frame);
   }, [isEditing]);
 
-  const handleKeyDown = useCallback((event: KeyboardEvent<HTMLInputElement>) => {
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
 
     switch (event.key) {
@@ -66,10 +66,10 @@ export const InlineInput = forwardRef((
         cancelEditing();
         break;
     }
-  }, []);
+  };
 
 
-  const confirmEditing = useCallback((event?: MouseEvent | FocusEvent) => {
+  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
     event?.preventDefault();
 
     const nextValue = draft.trim();
@@ -82,22 +82,23 @@ export const InlineInput = forwardRef((
     }
 
     onSave(nextValue);
-  }, [value, draft, onSave, setDraft, setIsEditing]);
+  };
 
-  const cancelEditing = useCallback((event?: MouseEvent) => {
+  const cancelEditing = (event?: MouseEvent) => {
     event?.preventDefault();
 
     setDraft(value);
     setIsEditing(false);
-  }, [setDraft, setIsEditing]);
+  };
 
+  // TODO: Verificar utilidade desse useCallback
   const startEditing = useCallback(() => {
     setIsEditing(true);
-  }, [setIsEditing]);
+  }, []);
 
   useImperativeHandle(ref, () => ({
     startEditing
-  }))
+  }), [setIsEditing])
 
   if (isEditing) {
     return (
@@ -129,9 +130,9 @@ export const InlineInput = forwardRef((
   }
 
   const safeValue = value ?? "";
-  const words = safeValue?.split(" ");
-  const lastWord = words?.pop();
-  const restantWords = words?.join(" ");
+  const words = safeValue.split(" ");
+  const lastWord = words.pop();
+  const restantWords = words.join(" ");
 
   return (
     <p

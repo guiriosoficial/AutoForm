@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { Trans } from "react-i18next";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { APP_AUTHOR_URL } from "@/configs";
@@ -25,10 +24,10 @@ export function Footer({
   hideSecondaryButton,
   hideCredits
 }: FooterProps) {
-  const showSecondaryButton = useMemo(() =>
-    !!onSecondaryButtonClick && !!secondaryButtonText && !hideSecondaryButton,
-    [onSecondaryButtonClick, secondaryButtonText, hideSecondaryButton]
-  );
+  const showSecondaryButton =
+    !!onSecondaryButtonClick &&
+    !!secondaryButtonText &&
+    !hideSecondaryButton;
 
   return (
     <>

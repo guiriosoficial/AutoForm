@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -58,16 +58,16 @@ export function ImportPresetsDialog({
 
   const { parsed, duplicated } = presetsToImport
 
-  const strategyDescription = useMemo(() => t("presetsManager.dialogs.importPreset.description", {
+  const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicated.length,
     total: parsed.length
-  }), [t, duplicated.length, parsed.length]);
+  });
 
-  const handleChangeImportStrategy = useCallback((strategy: string[]) => {
+  const handleChangeImportStrategy = (strategy: string[]) => {
     if (strategy.length === 0) return
 
     setStrategy(strategy[0] as ImportStrategy)
-  }, [setStrategy]);
+  };
 
   return (
     <Dialog

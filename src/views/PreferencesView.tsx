@@ -1,5 +1,4 @@
-import i18n from "@/i18n";
-import { useCallback, useMemo } from "react";
+import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/layouts/Footer";
@@ -47,7 +46,7 @@ import {
 } from "@/lib/locale";
 
 export function PreferencesView() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
 
   const { setActivePage } = useNavigation();
 
@@ -62,36 +61,33 @@ export function PreferencesView() {
     setLanguage
   } = useAppSettings();
 
-  const handleChangeImportStrategy = useCallback((newStrategy: string[]) => {
+  const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), [i18n.language]);
+
+  const localeDisplayName = (itemLocale: string) => getLocaleDisplayName(itemLocale, displayNames);
+
+  const handleChangeImportStrategy = (newStrategy: string[]) => {
     if (newStrategy.length === 0) return;
 
     setImportStrategy(newStrategy[0] as ImportStrategy);
-  }, [setImportStrategy]);
+  };
 
-  const handleChangeTheme = useCallback((newTheme: string[]) => {
+  const handleChangeTheme = (newTheme: string[]) => {
     if (newTheme.length === 0) return;
 
     setTheme(newTheme[0] as Theme);
-  }, [setTheme]);
+  };
 
-  const handleChangeLocale = useCallback((newLocale: string | null) => {
+  const handleChangeLocale = (newLocale: string | null) => {
     if (!newLocale) return;
 
     setLocale(newLocale as Locale);
-  }, [setLocale]);
+  };
 
-  const handleChangeLanguage = useCallback((newLanguage: string | null) => {
+  const handleChangeLanguage = (newLanguage: string | null) => {
     if (!newLanguage) return;
 
     setLanguage(newLanguage as Language);
-  }, [setLanguage]);
-
-  const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), []);
-
-  const localeDisplayName = useCallback(
-    (itemLocale: string) => getLocaleDisplayName(itemLocale, displayNames),
-    [displayNames]
-  );
+  };
 
   return (
     <>

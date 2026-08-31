@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import {
-  useCallback,
   useState,
   useRef,
   type MouseEvent,
@@ -74,19 +73,19 @@ export function PresetsManager({
 
   const { t } = useTranslation();
 
-  const handleStartDeletePreset = useCallback((event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
+  const handleStartDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
     event.stopPropagation();
 
     setIsPresetSelectorOpen(false);
     setPresetToDelete(preset)
-  }, [setIsPresetSelectorOpen, setPresetToDelete]);
+  };
 
-  const handleConfirmDeletePreset = useCallback((presetId: string) => {
+  const handleConfirmDeletePreset = (presetId: string) => {
     onDeletePreset(presetId);
     setPresetToDelete(null);
-  }, [onDeletePreset, setPresetToDelete]);
+  };
 
-  const handleLoadPresetsFile = useCallback(async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleLoadPresetsFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -106,13 +105,13 @@ export function PresetsManager({
     }
 
     setPresetsToImport(loaded)
-  }, [presets, importStrategy, onLoadFile, onImportPresets]);
+  };
 
-  const handleImportPresets = useCallback((imported: Preset[], strategy: ImportStrategy) => {
+  const handleImportPresets = (imported: Preset[], strategy: ImportStrategy) => {
     onImportPresets(imported, strategy)
 
     setPresetsToImport(null)
-  }, [onImportPresets, setPresetsToImport])
+  };
 
   return (
     <>
