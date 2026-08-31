@@ -42,7 +42,7 @@ export function usePersistentState<T>(
     return () => {
       cancelled = true;
     };
-  }, [key, initialState]);
+  }, [key]);
 
   // Persist
   const persist = useMemo(() => {
