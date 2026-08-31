@@ -8,12 +8,12 @@ import {
 } from "react";
 import {
   createEmptyPreset,
-  getNewPresetNumber,
   getAdjacentPreset,
   isValidPresetArray,
   type Preset
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { getNewListItemNumber } from "@/lib/utils";
 import { isFunction } from "@/lib/guards";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
@@ -56,7 +56,8 @@ export function usePresets({
   }, [setCurrentPresetId, setLastPresetId]);
 
   const createPreset = useCallback(() => {
-    const nextPresetNumber = getNewPresetNumber(presets) + 1;
+    const defaultName = t("configs.preset.defaultName")
+    const nextPresetNumber = getNewListItemNumber<Preset>(presets, "name", defaultName);
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
     setPresets((prev) =>

@@ -13,12 +13,6 @@ export const getPresetDefaultName = (): string => {
   return i18n.t("configs.preset.defaultName");
 };
 
-export const getPresetDefaultNameRegex = (): RegExp => {
-  const baseName = getPresetDefaultName();
-  const escapedName = baseName.replace(/[^\w\s]/gu, "\\$&");
-  return new RegExp(`^${escapedName} (\\d+)$`);
-};
-
 export const createEmptyPreset = (number: number): Preset => ({
   id: crypto.randomUUID(),
   name: `${getPresetDefaultName()} ${number}`,
@@ -44,16 +38,6 @@ export function isValidPresetArray(value: unknown): value is Preset[] {
   );
 }
 
-export function getNewPresetNumber(presets: Preset[]) {
-  return presets.reduce((max, preset) => {
-    const regex = getPresetDefaultNameRegex();
-    const match = preset.name.match(regex)
-
-    if (!match) return max;
-
-    return Math.max(max, Number(match[1]));
-  }, 0);
-}
 
 export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
   const presetIndex = presets.findIndex(p => p.id === currentPresetId);

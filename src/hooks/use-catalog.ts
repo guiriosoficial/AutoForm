@@ -2,12 +2,13 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { getNewListItemNumber } from "@/lib/utils";
 import { createFakerCatalog } from "@/lib/catalog/faker";
 import { createBox4DevCatalog } from "@/lib/catalog/box-4-dev";
 import {
   createCatalogMethod,
   createCatalogModule,
-  type CatalogMethod, getNewCatalogMethodNumber
+  type CatalogMethod
 } from "@/lib/catalog";
 import { CATALOG_CONFIG, StorageKeys } from "@/configs";
 
@@ -35,9 +36,11 @@ export function useCatalog() {
   }, [catalogOptions]);
 
   const createCustomMethod = useCallback(() => {
+    const defaultName = t("configs.catalog.method.defaultName")
+    const nextCatalogNumber = getNewListItemNumber<CatalogMethod>(customMethods, "label", defaultName)
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-      `${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.${t("configs.catalog.method.defaultName")}${getNewCatalogMethodNumber(customMethods) + 1}`,
+      `${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.${defaultName}${nextCatalogNumber}`,
       () => {}
     )
 
