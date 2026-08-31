@@ -52,11 +52,18 @@ npm run build
 - Popup UI should be placed in `src/popup/`
 
 ## TODOs
-- Ajustar cor Hover de ComboList e Popover
-- Adjust scroll and width of ComboLists
-- Implements search filters in ComboLists
-- Create custom generator functions (like cpf, cnpj...)
-- Implements "New Presets" counter
-- Colorir Sonner
-- Separar createField e createPreset functions em lib
-- Adicionar novos geradores
+- Tratar error ao gerar dados
+- Criar Preferência de erros (Ignorar, Preencher, Gerar...)
+- Implementar sufixo de nomes duplicados em importação
+
+- ====================== EM ANDAMENTO ==========================
+- 
+
+- ========================== BONUS ==============================
+- Escrever testes
+- Adicionar botão de doação/feedback/issues
+- Criar página de doação/feedback/issues/backlog/roadmap/changelog
+
+- ========================= BACKLOG =============================
+- Permitir criar métodos personalizados
+- Detectar formulários

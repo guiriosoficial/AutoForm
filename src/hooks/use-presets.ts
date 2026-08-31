@@ -14,6 +14,7 @@ import {
   type Preset
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { isFunction } from "@/lib/guards";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
 import type { FieldConfig } from "@/lib/fields";
@@ -90,7 +91,7 @@ export function usePresets({
         if (preset.id !== presetId) return preset;
 
         const updated =
-          typeof updater === "function"
+          isFunction(updater)
             ? updater(preset)
             : updater;
 

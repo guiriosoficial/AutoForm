@@ -1,8 +1,9 @@
 import { defineManifest } from '@crxjs/vite-plugin'
 import { name, version } from './package.json'
+import { toTitleCase } from "./src/lib/utils";
 
 export const APP_ID = name;
-export const APP_NAME = name.replaceAll(/(^|-)(\w)/gu, (_, __, char) => char.toUpperCase());
+export const APP_NAME = toTitleCase(name);
 export const APP_VERSION = version;
 
 export default defineManifest({
