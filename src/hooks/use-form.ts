@@ -4,6 +4,7 @@ import { toast } from "@/lib/toast"
 import { generateValue, fillInputElement } from "@/lib/generator";
 import { createField, type FieldConfig } from "@/lib/fields";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { useCatalog } from "@/hooks/use-catalog";
 import { StorageKeys } from "@/configs";
 
 interface UseFormArgs {
@@ -29,6 +30,7 @@ export function useForm({
   updateFields
 }: UseFormArgs) {
   const { t } = useTranslation();
+  const { catalogMethodsByKey } = useCatalog();
 
   const [generatedValuesByPresetId, setGeneratedValuesByPresetId] = usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
 
@@ -84,15 +86,17 @@ export function useForm({
     const values: Record<string, string> = {};
 
     await Promise.all(
-      fields.map(async (f) => {
-        if (!f.generator) return;
+      fields.map(async (field) => {
+        const method = catalogMethodsByKey.get(field.generator);
 
-        const newValue = generateValue(f.generator, f.options);
+        if (!method) return;
+
+        const newValue = generateValue(method, field.options);
 
         if (!newValue) return;
 
-        values[f.id] = newValue;
-        await fillInputElement(f.selector, newValue);
+        values[field.id] = newValue;
+        await fillInputElement(field.selector, newValue);
       })
     );
 
@@ -102,9 +106,11 @@ export function useForm({
   const regenerateValue = useCallback(async (fieldId: string) => {
     const field = fieldsById[fieldId];
 
-    if (!field.generator) return;
+    const method = catalogMethodsByKey.get(field.generator);
 
-    const newValue = generateValue(field.generator, field.options);
+    if (!method) return;
+
+    const newValue = generateValue(method, field.options);
 
     if (!newValue) return;
 

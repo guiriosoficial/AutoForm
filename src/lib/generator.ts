@@ -1,8 +1,8 @@
 import browser from "webextension-polyfill";
 import { parseJson5 } from "@/lib/json5";
 import { getErrorMessage } from "@/lib/utils";
-import { catalogMethodsById } from "@/lib/catalog";
 import { MessageAction } from "@/configs"
+import type { CatalogMethod } from "@/lib/catalog";
 
 export interface GeneratorMessage {
   action: typeof MessageAction.FILL_INPUT;
@@ -16,9 +16,8 @@ export interface GeneratorMessageResponse {
 }
 
 // TODO: Implement Error Handling
-export function generateValue(type: string, optionsStr?: string): string {
-  const method = catalogMethodsById.get(type);
-
+// TODO: Handle array params (to generator-br)
+export function generateValue(method: CatalogMethod, optionsStr?: string): string {
   if (!method) return "";
 
   let options;

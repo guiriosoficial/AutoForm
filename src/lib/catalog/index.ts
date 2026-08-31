@@ -1,5 +1,3 @@
-import { fakerCatalog } from "./faker";
-
 export interface CatalogMethod {
   label: string;
   value: string;
@@ -37,12 +35,3 @@ export function createCatalogModule(
     items,
   };
 }
-
-export const catalogOptions = [...fakerCatalog];
-
-export const catalogMethodsById = new Map(
-  catalogOptions
-    .flatMap(group => group.items)
-    .map((method) => [method.value, method])
-);
-
