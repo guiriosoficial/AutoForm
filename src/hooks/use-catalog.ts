@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { usePersistentState } from "@/hooks/use-persistent-state";
@@ -6,16 +7,18 @@ import { createBox4DevCatalog } from "@/lib/catalog/box-4-dev";
 import {
   createCatalogMethod,
   createCatalogModule,
-  type CatalogMethod
+  type CatalogMethod, getNewCatalogMethodNumber
 } from "@/lib/catalog";
-import { StorageKeys } from "@/configs";
+import { CATALOG_CONFIG, StorageKeys } from "@/configs";
 
 export function useCatalog() {
   const [customMethods, setCustomMethods] = usePersistentState<CatalogMethod[]>(StorageKeys.CUSTOM_METHODS, []);
 
+  const { t } = useTranslation();
+
   const { locale } = useAppSettings();
 
-  const customCatalog = useMemo(() => [createCatalogModule("Custom", customMethods)], [])
+  const customCatalog = useMemo(() => [createCatalogModule(CATALOG_CONFIG.CUSTOM_MODULE_NAME, customMethods)], [customMethods])
 
   const catalogOptions = useMemo(() => [
     ...createFakerCatalog(locale),
@@ -33,8 +36,8 @@ export function useCatalog() {
 
   const createCustomMethod = useCallback(() => {
     const newMethod = createCatalogMethod(
-      "custom",
-      "custom.new-method",
+      CATALOG_CONFIG.CUSTOM_MODULE_NAME,
+      `${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.${t("configs.catalog.method.defaultName")}${getNewCatalogMethodNumber(customMethods) + 1}`,
       () => {}
     )
 

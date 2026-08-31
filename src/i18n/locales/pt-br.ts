@@ -29,6 +29,11 @@ export default {
     failedToCopy: "Falha ao copiar {{ item }}",
   },
   configs: {
+    catalog: {
+      method: {
+        defaultName: "novoMetodo",
+      }
+    },
     preset: {
       defaultName: "Novo preset"
     },

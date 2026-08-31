@@ -1,3 +1,4 @@
+import i18n from "@/i18n"
 import { gerar } from "@box4dev/gerador-br"
 import { isFunction } from "@/lib/guards";
 import { toTitleCase } from "@/lib/utils";
@@ -8,11 +9,10 @@ type Box4DevModuleObject = Record<string, Box4DevMethod>;
 type Box4DevInstance = Record<string, Box4DevMethod | Box4DevModuleObject>;
 type Box4DevEntry = [string, Box4DevMethod];
 
-const moduleName = 'gerador-br';
+const MODULE_NAME = 'gerador-br';
 
-// TODO: Get dynamic language
 const createBox4DevDocUrl = (method: string) =>
-  `https://box4.dev/en/pacotes-npm/gerador-br/docs#${method}`
+  `https://box4.dev/${i18n.language}/pacotes-npm/gerador-br/docs#${method}`
 
 const getBox4DevMethods = () =>
   Object.entries(gerar as unknown as Box4DevInstance)
@@ -29,10 +29,10 @@ const getBox4DevMethods = () =>
 
 export const createBox4DevCatalog = () => [
   createCatalogModule(
-    moduleName,
+    MODULE_NAME,
     getBox4DevMethods().map(([methodKey, methodValue]) =>
       createCatalogMethod(
-        moduleName,
+        MODULE_NAME,
         methodKey,
         methodValue.bind(methodValue),
         createBox4DevDocUrl(methodKey)

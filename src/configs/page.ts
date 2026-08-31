@@ -1,8 +1,8 @@
 import { ArrowLeft, Heart, Settings2, type LucideIcon } from "lucide-react";
-import { APP_AUTHOR_USER } from "@/configs/app";
+import { APP_AUTHOR_USER, APP_GITHUB_URL } from "@/configs/app";
 
 export const Page = {
-  SPONSOR: `https://github.com/sponsors/${APP_AUTHOR_USER}?frequency=one-time`,
+  SPONSOR: `${APP_GITHUB_URL}/sponsors/${APP_AUTHOR_USER}?frequency=one-time`,
   HOME: "home",
   PREFERENCES: "preferences"
 } as const;
