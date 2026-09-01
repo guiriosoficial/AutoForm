@@ -2,11 +2,12 @@ import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldItem } from "@/components/FieldItem";
+import type { GeneratedValues } from "@/hooks/use-form";
 import type { FieldConfig }  from "@/lib/fields";
 
 interface FieldsManagerProps {
   fields: FieldConfig[];
-  values: Record<string, string>;
+  values: GeneratedValues;
   onAddField: () => void;
   onRemoveField: (fieldId: string) => void;
   onUpdateField: (fieldId: string, updated: FieldConfig) => void;
@@ -31,7 +32,8 @@ export function FieldsManager({
         <FieldItem
           key={field.id}
           field={field}
-          value={values[field.id]}
+          value={values[field.id].value}
+          error={values[field.id].error}
           onUpdate={onUpdateField}
           onRemove={onRemoveField}
           onRegenerateValue={onRegenerateValue}

@@ -1,6 +1,6 @@
 export interface CatalogMethod {
   label: string;
-  value: string;
+  key: string;
   docs?: string;
   invoke: (...args: any[]) => any;
 }
@@ -20,7 +20,7 @@ export function createCatalogMethod(
 ): CatalogMethod {
   return {
     label: methodKey,
-    value: `${moduleKey}.${methodKey}`,
+    key: `${moduleKey}.${methodKey}`,
     invoke: invokeFn,
     docs: docsUrl,
   };

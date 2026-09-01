@@ -24,8 +24,7 @@ export function generateValue(method: CatalogMethod, optionsStr?: string): strin
 
   try {
     options = parseJson5(optionsStr ?? "");
-  } catch {
-  }
+  } catch {}
 
   return method.invoke(options);
 }

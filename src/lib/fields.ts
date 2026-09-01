@@ -7,11 +7,56 @@ export interface FieldConfig {
   options?: string;
 }
 
+export const FieldErrorType = {
+  EMPTY_SELECTOR: "empty-selector",
+  EMPTY_METHOD: "empty-method",
+  INVALID_METHOD: "invalid-method",
+  INVALID_OPTIONS: "invalid-options",
+  INVALID_SELECTOR: "invalid-selector",
+} as const;
+
+export type FieldErrorType = (typeof FieldErrorType)[keyof typeof FieldErrorType];
+
+export class FieldError {
+  constructor(
+    public type: FieldErrorType,
+    public message: string
+  ) {}
+}
+
+export class FieldResult {
+  constructor(
+    public readonly value: string | undefined,
+    public readonly error: FieldError | undefined
+  ) {}
+
+  addError(type: FieldErrorType, message: string) {
+    return new FieldResult(
+      this.value,
+      new FieldError(type, message)
+    );
+  }
+}
+
+export const createFieldResult = {
+  value(value: string) {
+    return new FieldResult(value, undefined);
+  },
+
+  error(type: FieldErrorType, message: string) {
+    return new FieldResult(
+      undefined,
+      new FieldError(type, message)
+    );
+  }
+};
+
 export const createField = (): FieldConfig => ({
   id: crypto.randomUUID(),
   selector: "",
   generator: "",
 });
+
 
 export function isValidField(value: unknown): value is FieldConfig {
   if (!isObject(value)) return false;

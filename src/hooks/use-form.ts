@@ -1,11 +1,17 @@
 import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "@/lib/toast"
+import { isFunction } from "@/lib/guards";
 import { generateValue, fillInputElement } from "@/lib/generator";
-import { createField, type FieldConfig } from "@/lib/fields";
+import {
+  createField,
+  createFieldResult,
+  type FieldConfig,
+  type FieldResult
+} from "@/lib/fields";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { useCatalog } from "@/hooks/use-catalog";
-import { StorageKeys } from "@/configs";
+import { EXPORT_CONFIG, StorageKeys } from "@/configs";
 
 interface UseFormArgs {
   presetId: string;
@@ -13,16 +19,9 @@ interface UseFormArgs {
   updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
 }
 
-// type GeneratedValue = {
-//   isError: true;
-//   errorMessage: string;
-//   errorType: string
-// } | {
-//   isError: false;
-//   value: string;
-// }
-
-type ValuesByPresetId = Record<string, Record<string, string>>;
+export type GeneratedValuesJson = Record<string, string | undefined>
+export type GeneratedValues = Record<string, FieldResult>;
+export type ValuesByPresetId = Record<string, GeneratedValues>;
 
 export function useForm({
   presetId,
@@ -40,14 +39,14 @@ export function useForm({
 
   const setGeneratedValues = useCallback((
     valuesOrUpdater:
-      | Record<string, string>
-      | ((prev: Record<string, string>) => Record<string, string>)
+      | GeneratedValues
+      | ((prev: GeneratedValues) => GeneratedValues)
   ) => {
     setGeneratedValuesByPresetId(prev => {
       const currentValues = prev[presetId] ?? {};
 
       const values =
-        typeof valuesOrUpdater === "function"
+        isFunction(valuesOrUpdater)
           ? valuesOrUpdater(currentValues)
           : valuesOrUpdater;
 
@@ -83,7 +82,7 @@ export function useForm({
   }, [updateFields]);
 
   const generateValues = useCallback(async () => {
-    const values: Record<string, string> = {};
+    const values: GeneratedValues = {};
 
     await Promise.all(
       fields.map(async (field) => {
@@ -91,12 +90,13 @@ export function useForm({
 
         if (!method) return;
 
-        const newValue = generateValue(method, field.options);
+        const generatedValue = generateValue(method, field.options);
 
-        if (!newValue) return;
+        if (!generatedValue) return;
 
-        values[field.id] = newValue;
-        await fillInputElement(field.selector, newValue);
+        values[field.id] = createFieldResult.value(generatedValue);
+
+        await fillInputElement(field.selector, generatedValue);
       })
     );
 
@@ -110,15 +110,15 @@ export function useForm({
 
     if (!method) return;
 
-    const newValue = generateValue(method, field.options);
+    const generatedValue = generateValue(method, field.options);
 
-    if (!newValue) return;
+    if (!generatedValue) return;
 
     setGeneratedValues(prev => ({
       ...prev,
-      [fieldId]: newValue,
+      [fieldId]: createFieldResult.value(generatedValue),
     }));
-    await fillInputElement(field.selector, newValue);
+    await fillInputElement(field.selector, generatedValue);
   }, [fieldsById, setGeneratedValues]);
 
   const copyValue = useCallback(async (value: string) => {
@@ -132,13 +132,17 @@ export function useForm({
 
   const copyFormAsJSON = useCallback(async () => {
     try {
-      const data: Record<string, string> = {};
+      const data: GeneratedValuesJson = {};
 
       fields.forEach(f => {
-        if (generatedValues[f.id]) data[f.selector || f.id] = generatedValues[f.id];
+        const generatedValue = generatedValues[f.id];
+
+        if (!generatedValue) return;
+
+        data[f.selector || f.id] = generatedValue.value
       });
 
-      const value = JSON.stringify(data, null, 2)
+      const value = JSON.stringify(data, null, EXPORT_CONFIG.INDENT_SPACES)
       await navigator.clipboard.writeText(value);
       toast.success(t("footer.messages.copyJson.success"));
     } catch {

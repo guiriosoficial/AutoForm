@@ -31,7 +31,7 @@ export function useCatalog() {
     return new Map(
       catalogOptions
         .flatMap(group => group.items)
-        .map((method) => [method.value, method])
+        .map((method) => [method.key, method])
     );
   }, [catalogOptions]);
 
@@ -52,7 +52,7 @@ export function useCatalog() {
   const updateCustomMethod = useCallback((updatedMethod: CatalogMethod) => {
     setCustomMethods((prev) =>
       prev.map(method => {
-        if (method.value !== updatedMethod.value) return method;
+        if (method.key !== updatedMethod.key) return method;
 
         return updatedMethod
       })
@@ -61,7 +61,7 @@ export function useCatalog() {
 
   const removeCustomMethod = useCallback((methodKey: string) => {
     setCustomMethods((prev) =>
-      prev.filter(method => method.value !== methodKey)
+      prev.filter(method => method.key !== methodKey)
     )
   }, [setCustomMethods])
 

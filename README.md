@@ -57,7 +57,7 @@ npm run build
 - Implementar sufixo de nomes duplicados em importação
 
 - ====================== EM ANDAMENTO ==========================
-- 
+- Criaçao de metodos customizados
 
 - ========================== BONUS ==============================
 - Escrever testes

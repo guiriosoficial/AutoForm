@@ -20,12 +20,12 @@ import { useCatalog } from "@/hooks/use-catalog"
 import { preventDefaultEscape } from "@/lib/events";
 import { cn } from "@/lib/utils";
 import type { CatalogModule, CatalogMethod } from "@/lib/catalog";
-import type { FieldConfig }  from "@/lib/fields";
+import type { FieldConfig, FieldError } from "@/lib/fields";
 
 interface FieldItemProps {
   field: FieldConfig;
-  value: string;
-  error?: boolean;
+  error: FieldError | undefined;
+  value: string | undefined;
   onRemove: (fieldId: string) => void;
   onUpdate: (fieldId: string, newValue: FieldConfig) => void;
   onRegenerateValue: (fieldId: string) => void;
@@ -59,10 +59,8 @@ export function FieldItem({
     })
   };
 
-  const resultClasses = cn(
-    "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group",
-    error ? "border-destructive/30 text-destructive" : "border-primary/30 text-primary"
-  );
+  const resultClasses = "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group border-primary/30 text-primary";
+  const resultErrorClasses = cn(resultClasses, "border-destructive/30 text-destructive");
 
   return (
     <div className="space-y-1">
@@ -76,9 +74,9 @@ export function FieldItem({
         <Combobox
           items={catalogOptions}
           value={selectedMethod}
-          onValueChange={(newValue) => handleUpdateField("generator", newValue?.value)}
+          onValueChange={(newValue) => handleUpdateField("generator", newValue?.key)}
           itemToStringLabel={(item) => item.label}
-          itemToStringValue={(item) => item.value}
+          itemToStringValue={(item) => item.key}
         >
           <ComboboxInput
             placeholder={t("fieldsManager.form.generatorSelect.placeholder")}
@@ -100,7 +98,7 @@ export function FieldItem({
                   <ComboboxCollection>
                     {(item: CatalogMethod) => (
                       <ComboboxItem
-                        key={item.value}
+                        key={item.key}
                         value={item}
                       >
                         <span className="block truncate">
@@ -131,6 +129,18 @@ export function FieldItem({
           <X size={16} />
         </Button>
       </div>
+
+      {error?.message && (
+        <div className={resultErrorClasses}>
+          <span className="truncate">
+            {error.message}
+          </span>
+          <InlineButton
+            icon={RotateCcw}
+            onClick={() => onRegenerateValue(field.id)}
+          />
+        </div>
+      )}
 
       {hasValue && (
         <div className={resultClasses}>
