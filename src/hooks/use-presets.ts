@@ -13,7 +13,7 @@ import {
   type Preset
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { getNewListItemNumber } from "@/lib/utils";
+import { createNextSequencedName } from "@/lib/string";
 import { isFunction } from "@/lib/guards";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
@@ -57,7 +57,7 @@ export function usePresets({
 
   const createPreset = useCallback(() => {
     const defaultName = t("configs.preset.defaultName")
-    const nextPresetNumber = getNewListItemNumber<Preset>(presets, "name", defaultName);
+    const nextPresetNumber = createNextSequencedName<Preset>(presets, "name", defaultName);
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
     setPresets((prev) =>

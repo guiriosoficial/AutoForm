@@ -27,8 +27,9 @@ import {
   createEditorKeymap,
   createEditorLinter
 } from "@/lib/editor"
-import { cn, getErrorMessage } from "@/lib/utils";
-import { preventDefaultEscape } from "@/lib/events"
+import { cn } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/errors";
+import { preventDefaultEscape } from "@/lib/dom"
 import { debounce } from "@/lib/async"
 import {
   parseJson5,

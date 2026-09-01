@@ -22,7 +22,7 @@ import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { preventDefaultEscape } from "@/lib/events";
+import { preventDefaultEscape } from "@/lib/dom";
 import {
   Page,
   Language,

@@ -1,4 +1,3 @@
-import i18n from "@/i18n";
 import { createField, isValidFieldArray, type FieldConfig } from "@/lib/fields";
 import { isPopulatedString, isTimestamp, isObject } from "@/lib/guards";
 
@@ -9,13 +8,9 @@ export interface Preset {
   createdAt: number;
 }
 
-export const getPresetDefaultName = (): string => {
-  return i18n.t("configs.preset.defaultName");
-};
-
-export const createEmptyPreset = (number: number): Preset => ({
+export const createEmptyPreset = (presetName: string): Preset => ({
   id: crypto.randomUUID(),
-  name: `${getPresetDefaultName()} ${number}`,
+  name: presetName,
   fields: [createField()],
   createdAt: Date.now(),
 });

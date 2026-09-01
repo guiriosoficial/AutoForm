@@ -57,13 +57,14 @@ npm run build
 - Implementar sufixo de nomes duplicados em importação
 
 - ====================== EM ANDAMENTO ==========================
-- Criaçao de metodos customizados
+- Criar suporte de métodos customizados (Editor)
+- Bloquear métodos com nomes iguais
+- Reorganizar pasta lib (lib/generator/executeFillInputElement para lib/dom, presets, fields, editor, catalog, generator para para /domains)
 
 - ========================== BONUS ==============================
+- Rodar Lint
 - Escrever testes
-- Adicionar botão de doação/feedback/issues
-- Criar página de doação/feedback/issues/backlog/roadmap/changelog
+- Criar página e links de feedback/discussions/issues/backlog/roadmap/changelog
 
 - ========================= BACKLOG =============================
-- Permitir criar métodos personalizados
-- Detectar formulários
+- Detectar formulários automaticamente

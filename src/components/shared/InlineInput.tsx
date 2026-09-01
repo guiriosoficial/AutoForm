@@ -12,7 +12,7 @@ import {
 } from "react";
 import { X, Check, PenLine } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { preventDefaultEscape } from "@/lib/events";
+import { preventDefaultEscape } from "@/lib/dom";
 
 interface InlineInputProps {
   value: string;
@@ -91,14 +91,13 @@ export const InlineInput = forwardRef((
     setIsEditing(false);
   };
 
-  // TODO: Verificar utilidade desse useCallback
   const startEditing = useCallback(() => {
     setIsEditing(true);
   }, []);
 
   useImperativeHandle(ref, () => ({
     startEditing
-  }), [setIsEditing])
+  }), [startEditing])
 
   if (isEditing) {
     return (

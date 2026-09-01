@@ -27,7 +27,7 @@ import {
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
-import { preventDefaultEscape } from "@/lib/events";
+import { preventDefaultEscape } from "@/lib/dom";
 import {
   IMPORT_CONFIG,
   ImportStrategy,

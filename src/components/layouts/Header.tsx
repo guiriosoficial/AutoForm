@@ -1,4 +1,3 @@
-import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
 import { Button }  from "@/components/ui/button";
@@ -10,11 +9,7 @@ export function Header() {
   const { activePage, setActivePage } = useNavigation();
   const { t } = useTranslation();
 
-  // TODO: Verificar este useMemo
-  const navigationItems = useMemo(
-    () => Object.values(Page).filter((page) => page !== activePage),
-    [activePage]
-  );
+  const navigationItems = Object.values(Page).filter((page) => page !== activePage);
 
   const handleNavigate = (nextPage: Page) => {
     if (nextPage.startsWith("https")) {

@@ -1,8 +1,8 @@
-import i18n from "@/i18n"
-import { gerar } from "@box4dev/gerador-br"
+import i18n from "@/i18n";
+import { gerar } from "@box4dev/gerador-br";
 import { isFunction } from "@/lib/guards";
-import { toTitleCase } from "@/lib/utils";
-import { createCatalogMethod, createCatalogModule } from "@/lib/catalog/index";
+import { toTitleCase } from "@/lib/string";
+import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
 
 type Box4DevMethod = (...args: never[]) => unknown;
 type Box4DevModuleObject = Record<string, Box4DevMethod>;

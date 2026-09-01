@@ -17,7 +17,7 @@ import {
   ComboboxSeparator
 } from "@/components/ui/combobox";
 import { useCatalog } from "@/hooks/use-catalog"
-import { preventDefaultEscape } from "@/lib/events";
+import { preventDefaultEscape } from "@/lib/dom";
 import { cn } from "@/lib/utils";
 import { CATALOG_CONFIG } from "@/configs";
 import type { CatalogModule, CatalogMethod } from "@/lib/catalog";

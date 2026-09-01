@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { parseJson5 } from "@/lib/json5";
-import { getErrorMessage } from "@/lib/utils";
+import { getErrorMessage } from "@/lib/errors";
 import { MessageAction } from "@/configs"
 import type { CatalogMethod } from "@/lib/catalog";
 
