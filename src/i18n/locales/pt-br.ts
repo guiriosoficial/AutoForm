@@ -147,10 +147,16 @@ export default {
         docUrl: "Docs",
       }
     },
+    alerts: {
+      deleteCustomMethod: {
+        description: "Tem certeza que deseja apagar o gerador customizado \"{{ methodToDeleteName }}\"?"
+      }
+    },
     form: {
       generatorSelect: {
         placeholder: "Selecione um gerador",
-        empty: "Nenhum gerador encontrado"
+        empty: "Nenhum gerador encontrado",
+        addOption: "Novo gerador"
       },
       selectorInput: {
         placeholder: ".class / #id / [data-test]",

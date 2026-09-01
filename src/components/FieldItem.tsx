@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { Copy, RotateCcw, X } from "lucide-react";
+import { Copy, Plus, RotateCcw, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
 import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
 import { Button } from "@/components/ui/button";
@@ -19,6 +19,7 @@ import {
 import { useCatalog } from "@/hooks/use-catalog"
 import { preventDefaultEscape } from "@/lib/events";
 import { cn } from "@/lib/utils";
+import { CATALOG_CONFIG } from "@/configs";
 import type { CatalogModule, CatalogMethod } from "@/lib/catalog";
 import type { FieldConfig, FieldError } from "@/lib/fields";
 
@@ -42,7 +43,11 @@ export function FieldItem({
   onRegenerateValue
 }: FieldItemProps) {
   const { t } = useTranslation();
-  const { catalogMethodsByKey, catalogOptions } = useCatalog();
+  const {
+    catalogMethodsByKey,
+    catalogOptions,
+    createCustomMethod
+  } = useCatalog();
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
   const hasValue = value !== undefined;
@@ -58,6 +63,12 @@ export function FieldItem({
       [key]: newValue
     })
   };
+
+  const handleCreateCustomMethod = () => {
+    const newMethod = createCustomMethod()
+
+    handleUpdateField("generator", newMethod.key)
+  }
 
   const resultClasses = "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group border-primary/30 text-primary";
   const resultErrorClasses = cn(resultClasses, "border-destructive/30 text-destructive");
@@ -96,7 +107,7 @@ export function FieldItem({
                     {group.value}
                   </ComboboxLabel>
                   <ComboboxCollection>
-                    {(item: CatalogMethod) => (
+                    {(item: CatalogMethod) => item.key !== CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
                       <ComboboxItem
                         key={item.key}
                         value={item}
@@ -105,8 +116,17 @@ export function FieldItem({
                           {item.label}
                         </span>
                       </ComboboxItem>
+                    ) : (
+                      <ComboboxItem
+                        key={item.key}
+                        onClick={handleCreateCustomMethod}
+                      >
+                        <Plus />
+                        {t("fieldsManager.form.generatorSelect.addOption")}
+                      </ComboboxItem>
                     )}
                   </ComboboxCollection>
+
                   {index < catalogOptions.length - 1 && <ComboboxSeparator />}
                 </ComboboxGroup>
               )}
@@ -115,6 +135,7 @@ export function FieldItem({
         </Combobox>
 
         <FieldOptionsPopover
+          methodKey={field.generator}
           value={field.options}
           docUrl={selectedMethod?.docs}
           onChange={(newValue) => handleUpdateField("options", newValue)}

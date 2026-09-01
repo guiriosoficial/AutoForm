@@ -8,6 +8,7 @@ import { createBox4DevCatalog } from "@/lib/catalog/box-4-dev";
 import {
   createCatalogMethod,
   createCatalogModule,
+  newCustomMethodOption,
   type CatalogMethod
 } from "@/lib/catalog";
 import { CATALOG_CONFIG, StorageKeys } from "@/configs";
@@ -19,13 +20,16 @@ export function useCatalog() {
 
   const { locale } = useAppSettings();
 
-  const customCatalog = useMemo(() => [createCatalogModule(CATALOG_CONFIG.CUSTOM_MODULE_NAME, customMethods)], [customMethods])
+  const customCatalog = useMemo(() => createCatalogModule(
+    CATALOG_CONFIG.CUSTOM_MODULE_NAME,
+    [...customMethods, newCustomMethodOption]
+  ), [customMethods])
 
   const catalogOptions = useMemo(() => [
     ...createFakerCatalog(locale),
     ...createBox4DevCatalog(),
-    ...customCatalog
-  ], [locale, customCatalog]);
+    customCatalog
+  ], [locale, customMethods]);
 
   const catalogMethodsByKey = useMemo(() => {
     return new Map(
@@ -40,14 +44,16 @@ export function useCatalog() {
     const nextCatalogNumber = getNewListItemNumber<CatalogMethod>(customMethods, "label", defaultName)
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-      `${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.${defaultName}${nextCatalogNumber}`,
+      `${defaultName}${nextCatalogNumber}`,
       () => {}
     )
 
     setCustomMethods((prev) =>
       [...prev, newMethod]
     )
-  }, [setCustomMethods]);
+
+    return newMethod;
+  }, [customMethods]);
 
   const updateCustomMethod = useCallback((updatedMethod: CatalogMethod) => {
     setCustomMethods((prev) =>

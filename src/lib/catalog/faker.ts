@@ -1,7 +1,7 @@
 import { Faker, allLocales } from "@faker-js/faker";
 import { isFunction, isObject } from "@/lib/guards";
-import { createCatalogMethod, createCatalogModule, type Catalog } from "@/lib/catalog";
-import { Locale, LOCALE_CONFIG } from "@/configs";
+import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
+import { LOCALE_CONFIG, Locale } from "@/configs";
 
 type FakerMethodFn = (...args: never[]) => unknown;
 type FakerModuleObject = Record<string, FakerMethodFn>;
@@ -24,7 +24,7 @@ const getFakerModuleMethods = (module: FakerModuleObject) =>
   Object.entries(module)
     .filter(([methodKey, methodValue]) => isFakerMethod(methodKey, methodValue));
 
-export function createFakerCatalog(locale: Locale): Catalog {
+export const createFakerCatalog = (locale: Locale) => {
   const fakerInstance = new Faker({
     locale: [allLocales[locale], allLocales[LOCALE_CONFIG.DEFAULT]]
   })

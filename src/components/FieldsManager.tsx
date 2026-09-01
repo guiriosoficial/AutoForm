@@ -32,8 +32,8 @@ export function FieldsManager({
         <FieldItem
           key={field.id}
           field={field}
-          value={values[field.id].value}
-          error={values[field.id].error}
+          value={values[field.id]?.value}
+          error={values[field.id]?.error}
           onUpdate={onUpdateField}
           onRemove={onRemoveField}
           onRegenerateValue={onRegenerateValue}

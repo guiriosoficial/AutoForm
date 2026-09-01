@@ -21,6 +21,8 @@ export function usePersistentState<T>(
 
   // Hydrate
   useEffect(() => {
+    if (hydrated) return;
+
     let cancelled = false;
 
     browser.storage.local.get(key)
@@ -42,7 +44,7 @@ export function usePersistentState<T>(
     return () => {
       cancelled = true;
     };
-  }, [key]);
+  }, [key, initialState, hydrated]);
 
   // Persist
   const persist = useMemo(() => {

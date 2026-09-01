@@ -1,3 +1,5 @@
+import { CATALOG_CONFIG } from "@/configs";
+
 export interface CatalogMethod {
   label: string;
   key: string;
@@ -10,7 +12,11 @@ export interface CatalogModule {
   items: CatalogMethod[];
 }
 
-export type Catalog = CatalogModule[];
+export const newCustomMethodOption = createCatalogMethod(
+  CATALOG_CONFIG.CUSTOM_MODULE_NAME,
+  CATALOG_CONFIG.CUSTOM_NEW_METHOD_NAME,
+  () => {}
+);
 
 export function createCatalogMethod(
   moduleKey: string,

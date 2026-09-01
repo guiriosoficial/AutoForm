@@ -15,7 +15,8 @@ export function getErrorMessage(error: unknown) {
 
 export const getItemNameRegex = (name: string) => {
   const escapedName = name.replaceAll(/[^\w\s]/gu, "\\$&");
-  return new RegExp(`^${escapedName} (\\d+)$`);
+
+  return new RegExp(`^${escapedName}\\s*(\\d+)$`);
 };
 
 export function getNewListItemNumber<T extends Record<string, any>>(list: T[], key: keyof T, name: string) {
@@ -25,6 +26,6 @@ export function getNewListItemNumber<T extends Record<string, any>>(list: T[], k
 
     if (!match) return max;
 
-    return Math.max(max, Number(match[1])) + 1;
-  }, 0);
+    return Math.max(max, Number(match[1]));
+  }, 0) + 1;
 }

@@ -30,7 +30,7 @@ export default {
   },
   configs: {
     catalog: {
-      methods: {
+      method: {
         defaultName: "newMethod",
       }
     },
@@ -147,10 +147,16 @@ export default {
         docUrl: "Docs",
       }
     },
+    alerts: {
+      deleteCustomMethod: {
+        description: "Are you sure you want to delete custom method \"{{ methodToDeleteName }}\"?"
+      }
+    },
     form: {
       generatorSelect: {
         placeholder: "Select a generator",
-        empty: "No generator found"
+        empty: "No generator found",
+        addOption: "New generator"
       },
       selectorInput: {
         placeholder: ".class / #id / [data-test]",

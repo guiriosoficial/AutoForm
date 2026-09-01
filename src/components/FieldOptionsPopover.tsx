@@ -6,8 +6,10 @@ import {
   useState,
   useRef, useCallback
 } from "react";
-import { Settings2, ExternalLink } from "lucide-react";
 import ReactCodeMirror from "@uiw/react-codemirror";
+import { Settings2, ExternalLink, Trash } from "lucide-react";
+import { PopoverRoot } from "@base-ui/react";
+import { AlertDialog } from "@/components/shared/AlertDialog";
 import {
   Button,
   buttonVariants
@@ -21,10 +23,6 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover";
 import {
-  EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP
-} from "@/configs";
-import {
   createEditorTheme,
   createEditorKeymap,
   createEditorLinter
@@ -37,8 +35,14 @@ import {
   stringifyJson5,
   isPopulatedJson5
 } from "@/lib/json5";
+import { useCatalog } from "@/hooks/use-catalog";
+import {
+  EDITOR_CONFIG,
+  EDITOR_BASIC_SETUP, CATALOG_CONFIG
+} from "@/configs";
 
 interface FieldOptionsPopoverProps {
+  methodKey: string;
   value: string | undefined;
   docUrl?: string;
   onChange: (value: string) => void;
@@ -47,16 +51,32 @@ interface FieldOptionsPopoverProps {
 const editorTheme = createEditorTheme()
 
 export function FieldOptionsPopover({
+  methodKey,
   value,
   docUrl,
   onChange
 }: FieldOptionsPopoverProps) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState("");
+  const [methodToDelete, setMethodToDelete] = useState<string | null>(null);
+
+  const { removeCustomMethod } = useCatalog()
 
   const { t } = useTranslation();
 
+  const methodToDeleteName = methodToDelete?.substring(methodToDelete?.indexOf(".") + 1)
+  const isCustomMethod = methodKey.startsWith(CATALOG_CONFIG.CUSTOM_MODULE_NAME);
   const hasConfig = isPopulatedJson5(value);
+
+  const handleStartDeleteMethod = (methodKey: string) => (
+    setMethodToDelete(methodKey)
+  )
+
+  const handleConfirmDeleteMethod = (methodKey: string) => {
+    removeCustomMethod(methodKey)
+
+    setMethodToDelete(null)
+  }
 
   const parseConfig = useCallback((val: string) => {
     if (!isPopulatedJson5(val)) {
@@ -90,7 +110,9 @@ export function FieldOptionsPopover({
   ).current;
 
 
-  const handlePopoverOpenChange = async (isOpening: boolean) => {
+  const handlePopoverOpenChange = async (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
+    if (!isOpening && event?.reason === "outside-press") return;
+
     await formatConfig();
 
     setOpen(isOpening);
@@ -137,65 +159,89 @@ export function FieldOptionsPopover({
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
 
   return (
-    <Popover
-      open={open}
-      onOpenChange={handlePopoverOpenChange}
-    >
-      <PopoverTrigger render={
-        <Button
-          variant="ghost"
-          size="icon"
-          className={triggerButtonClasses}
-        >
-          <Settings2 size={16} />
-          {hasConfig && (
-            <span className={triggerBadgeClasses} />
-          )}
-        </Button>
-      } />
-
-      <PopoverContent
-        side="left"
-        onKeyDown={preventDefaultEscape}
+    <>
+      <Popover
+        open={open}
+        onOpenChange={handlePopoverOpenChange}
       >
-        <PopoverHeader className="flex-row items-center justify-between">
-          <PopoverTitle>
-            {t("fieldsManager.popovers.fieldSettings.title")}
-          </PopoverTitle>
+        <PopoverTrigger render={
           <Button
-            variant="secondary"
-            size="sm"
-            onClick={formatConfig}
+            variant="ghost"
+            size="icon"
+            className={triggerButtonClasses}
           >
-            {t("fieldsManager.popovers.fieldSettings.formatButton")}
+            <Settings2 size={16} />
+            {hasConfig && (
+              <span className={triggerBadgeClasses} />
+            )}
           </Button>
-        </PopoverHeader>
+        } />
 
-        <ReactCodeMirror
-          value={value}
-          className={editorClasses}
-          extensions={editorExtension}
-          theme={editorTheme}
-          basicSetup={EDITOR_BASIC_SETUP}
-          onChange={handleConfigChange}
+        <PopoverContent
+          side="left"
+          onKeyDown={preventDefaultEscape}
+        >
+          <PopoverHeader className="flex-row items-center justify-between">
+            <PopoverTitle>
+              {t("fieldsManager.popovers.fieldSettings.title")}
+            </PopoverTitle>
+            <div className="flex gap-1">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={formatConfig}
+              >
+                {t("fieldsManager.popovers.fieldSettings.formatButton")}
+              </Button>
+              {isCustomMethod && (
+                <Button
+                  className="hover:text-destructive hover:bg-destructive/10"
+                  variant="secondary"
+                  size="icon-sm"
+                  onClick={() => handleStartDeleteMethod(methodKey)}
+                >
+                  <Trash />
+                </Button>
+              )}
+            </div>
+          </PopoverHeader>
+
+          <ReactCodeMirror
+            value={value}
+            className={editorClasses}
+            extensions={editorExtension}
+            theme={editorTheme}
+            basicSetup={EDITOR_BASIC_SETUP}
+            onChange={handleConfigChange}
+          />
+
+          <PopoverDescription className={descriptionClasses}>
+            {descriptionText}
+
+            {docUrl && (
+              <a
+                href={docUrl}
+                target="_blank"
+                rel="noreferrer"
+                className={buttonVariants({ variant: "link", size: "xs" })}
+              >
+                {t("fieldsManager.popovers.fieldSettings.docUrl")}
+                <ExternalLink />
+              </a>
+            )}
+          </PopoverDescription>
+        </PopoverContent>
+      </Popover>
+
+      {methodToDelete && (
+        <AlertDialog
+          destructive
+          open={!!methodToDelete}
+          description={t("fieldsManager.alerts.deleteCustomMethod.description", { methodToDeleteName })}
+          onConfirm={() => handleConfirmDeleteMethod(methodToDelete)}
+          onCancel={() => setMethodToDelete(null)}
         />
-
-        <PopoverDescription className={descriptionClasses}>
-          {descriptionText}
-
-          {docUrl && (
-            <a
-              href={docUrl}
-              target="_blank"
-              rel="noreferrer"
-              className={buttonVariants({ variant: "link", size: "xs" })}
-            >
-              {t("fieldsManager.popovers.fieldSettings.docUrl")}
-              <ExternalLink />
-            </a>
-          )}
-        </PopoverDescription>
-      </PopoverContent>
-    </Popover>
+      )}
+    </>
   );
 }
