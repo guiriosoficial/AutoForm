@@ -1,12 +1,18 @@
 const REGIONAL_OFFSET = 0x1F1E6 - 65;
 
-// const SPECIAL_LOCALES = {
-//   ku_Ckb: "",
-//   ku_Kmr_Latin: "",
-//   mn_MN_cyrl: "",
-// } as const;
+const SPECIAL_LOCALES = {
+  ku_ckb: "ckb",
+  ku_kmr_latin: "ku-Latn",
+  mn_MN_cyrl: "mn-Cyrl-MN",
+} as const;
+
+type SpecialLocaleKey = keyof typeof SPECIAL_LOCALES;
 
 export function toLocaleTag(locale: string): string {
+  const specialTag = SPECIAL_LOCALES[locale as SpecialLocaleKey];
+
+  if (specialTag) return specialTag;
+
   return locale.replace(/_/gu, "-");
 }
 
