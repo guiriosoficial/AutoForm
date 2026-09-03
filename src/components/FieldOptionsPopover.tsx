@@ -1,12 +1,5 @@
+import {useRef, useState} from "react";
 import { useTranslation } from "react-i18next";
-import { json5 } from "codemirror-json5"
-import {
-  useEffect,
-  useMemo,
-  useState,
-  useRef, useCallback
-} from "react";
-import ReactCodeMirror from "@uiw/react-codemirror";
 import { Settings2, ExternalLink, Trash } from "lucide-react";
 import { PopoverRoot } from "@base-ui/react";
 import { AlertDialog } from "@/components/shared/AlertDialog";
@@ -23,24 +16,18 @@ import {
   PopoverTrigger
 } from "@/components/ui/popover";
 import {
-  createEditorTheme,
-  createEditorKeymap,
-  createEditorLinter
-} from "@/lib/editor"
-import { cn } from "@/lib/utils";
-import { getErrorMessage } from "@/lib/errors";
-import { preventDefaultEscape } from "@/lib/dom"
-import { debounce } from "@/lib/async"
-import {
-  parseJson5,
-  stringifyJson5,
-  isPopulatedJson5
-} from "@/lib/json5";
+  Tabs, TabsContent,
+  TabsList,
+  TabsTrigger
+} from "@/components/ui/tabs";
+import {JsonEditor, JsonEditorRef} from "@/components/layouts/JsonEditor";
+import {JavascriptEditor, JavascriptEditorRef} from "@/components/layouts/JavascriptEditor";
 import { useCatalog } from "@/hooks/use-catalog";
-import {
-  EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP, CATALOG_CONFIG
-} from "@/configs";
+import { preventDefaultEscape } from "@/lib/dom";
+import { isPopulatedJson5 } from "@/lib/json5";
+import { cn } from "@/lib/utils";
+import { EditorTabs } from "@/configs";
+import type { CatalogMethod } from "@/lib/catalog";
 
 interface FieldOptionsPopoverProps {
   methodKey: string;
@@ -49,8 +36,6 @@ interface FieldOptionsPopoverProps {
   onChange: (value: string) => void;
 }
 
-const editorTheme = createEditorTheme()
-
 export function FieldOptionsPopover({
   methodKey,
   value,
@@ -58,86 +43,71 @@ export function FieldOptionsPopover({
   onChange
 }: FieldOptionsPopoverProps) {
   const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
-  const [methodToDelete, setMethodToDelete] = useState<string | null>(null);
+  const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
 
-  const { removeCustomMethod } = useCatalog()
-
+  const {
+    removeCustomMethod,
+    updateCustomMethod,
+    customMethodsByKey
+  } = useCatalog()
   const { t } = useTranslation();
 
-  const methodToDeleteName = methodToDelete?.substring(methodToDelete?.indexOf(".") + 1)
-  const isCustomMethod = methodKey.startsWith(CATALOG_CONFIG.CUSTOM_MODULE_NAME);
+  const [jsonError, setJsonError] = useState<string | null>(null);
+  const [javascriptError, setJavascriptError] = useState<string | null>(null);
+
+  const error = activeTab === EditorTabs.OPTIONS
+    ? jsonError
+    : javascriptError;
+
+  const jsonEditorRef = useRef<JsonEditorRef>(null)
+  const javascriptEditorRef = useRef<JavascriptEditorRef>(null)
+
+  const currentCustomMethod = customMethodsByKey.get(methodKey) ?? null;
+  const isCustomMethod = currentCustomMethod !== null;
   const hasConfig = isPopulatedJson5(value);
 
-  const handleStartDeleteMethod = (methodKey: string) => (
-    setMethodToDelete(methodKey)
-  )
+
+  const handleChangeCustomMethod = <K extends keyof CatalogMethod>(
+    key: K,
+    newValue: CatalogMethod[K]
+  ) => {
+    if (!isCustomMethod) return
+
+    updateCustomMethod(
+      currentCustomMethod?.key,
+      { [key]: newValue }
+    )
+  }
 
   const handleConfirmDeleteMethod = (methodKey: string) => {
     removeCustomMethod(methodKey)
 
-    setMethodToDelete(null)
+    setDeleteMethodAlertOpen(false)
+    setOpen(false)
   }
 
-  const parseConfig = useCallback((val: string) => {
-    if (!isPopulatedJson5(val)) {
-      setError("");
-      return;
-    }
-
-    try {
-      const parsedValue = parseJson5(val);
-      setError("");
-      return parsedValue;
-    } catch (err) {
-      const message = getErrorMessage(err)
-      setError(message);
-    }
-  }, []);
-
-  const formatConfig = useCallback(async () => {
-    if (!value) return;
-
-    const parsedValue = await parseConfig(value);
-
-    const formattedValue = stringifyJson5(parsedValue);
-
-    onChange(formattedValue)
-  }, [value, onChange, parseConfig]);
-
-  const debouncedParseConfig = useRef(debounce(
-    (text: string) => parseConfig(text),
-    EDITOR_CONFIG.LINT_DELAY_MS)
-  ).current;
-
-
   const handlePopoverOpenChange = async (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
-    if (!isOpening && event?.reason === "outside-press") return;
+    const isClosingByClickOnAlert =
+      !isOpening &&
+      deleteMethodAlertOpen &&
+      event?.reason === "outside-press";
 
-    await formatConfig();
+    if (isClosingByClickOnAlert) return;
+
+    jsonEditorRef.current?.format();
+    javascriptEditorRef.current?.format();
 
     setOpen(isOpening);
   };
 
-  const handleConfigChange = (value: string) => {
-    onChange(value);
-
-    debouncedParseConfig(value)
-  };
-
-  useEffect(() => {
-    if (value) parseConfig(value);
-
-    return () => {
-      debouncedParseConfig.cancel();
+  const handleFormatClick = async () => {
+    if (activeTab === EditorTabs.OPTIONS) {
+      jsonEditorRef.current?.format();
+    } else {
+      javascriptEditorRef.current?.format();
     }
-  }, []);
-
-  const editorExtension = useMemo(() => [
-    json5(),
-    createEditorLinter(hasConfig),
-    createEditorKeymap({ onFormat: formatConfig })
-  ], [hasConfig, formatConfig]);
+  }
 
   const triggerButtonClasses = cn(
     "relative",
@@ -149,7 +119,7 @@ export function FieldOptionsPopover({
     error ? "bg-destructive": "bg-primary"
   );
   const editorClasses = cn(
-    "border-border border rounded-md *:outline-none! *:h-48 *:p-2 overflow-y-auto scrollbar-thin scrollbar-thumb-accent scrollbar-track-transparent",
+    "border-border border rounded-md *:outline-none! *:h-48 *:p-2 overflow-y-auto scrollbar-thin",
     error && "border-destructive"
   );
   const descriptionClasses = cn(
@@ -182,39 +152,70 @@ export function FieldOptionsPopover({
           side="left"
           onKeyDown={preventDefaultEscape}
         >
-          <PopoverHeader className="flex-row items-center justify-between">
-            <PopoverTitle>
-              {t("fieldsManager.popovers.fieldSettings.title")}
-            </PopoverTitle>
-            <div className="flex gap-1">
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={formatConfig}
-              >
-                {t("fieldsManager.popovers.fieldSettings.formatButton")}
-              </Button>
-              {isCustomMethod && (
+          <Tabs
+            value={activeTab}
+            onValueChange={setActiveTab}
+          >
+            <PopoverHeader className="flex-row items-center justify-between">
+              <PopoverTitle>
+                <TabsList variant="title">
+                  <TabsTrigger
+                    value={EditorTabs.OPTIONS}
+                    disabled={!isCustomMethod}
+                  >
+                    {t("fieldsManager.popovers.fieldSettings.tabs.options")}
+                  </TabsTrigger>
+                  {isCustomMethod && (
+                    <TabsTrigger value={EditorTabs.METHOD}>
+                      {t("fieldsManager.popovers.fieldSettings.tabs.method")}
+                    </TabsTrigger>
+                  )}
+                </TabsList>
+              </PopoverTitle>
+              <div className="flex gap-1">
                 <Button
-                  className="hover:text-destructive hover:bg-destructive/10"
                   variant="secondary"
-                  size="icon-sm"
-                  onClick={() => handleStartDeleteMethod(methodKey)}
+                  size="sm"
+                  onClick={handleFormatClick}
                 >
-                  <Trash />
+                  {t("fieldsManager.popovers.fieldSettings.formatButton")}
                 </Button>
-              )}
-            </div>
-          </PopoverHeader>
+                {isCustomMethod && (
+                  <Button
+                    className="hover:text-destructive hover:bg-destructive/10"
+                    variant="secondary"
+                    size="icon-sm"
+                    onClick={() => setDeleteMethodAlertOpen(true)}
+                  >
+                    <Trash />
+                  </Button>
+                )}
+              </div>
+            </PopoverHeader>
 
-          <ReactCodeMirror
-            value={value}
-            className={editorClasses}
-            extensions={editorExtension}
-            theme={editorTheme}
-            basicSetup={EDITOR_BASIC_SETUP}
-            onChange={handleConfigChange}
-          />
+            <TabsContent value={EditorTabs.OPTIONS}>
+              <JsonEditor
+                ref={jsonEditorRef}
+                value={value}
+                hasConfig={hasConfig}
+                className={editorClasses}
+                onChange={onChange}
+                onErrorChange={setJsonError}
+              />
+            </TabsContent>
+
+            {isCustomMethod && (
+              <TabsContent value={EditorTabs.METHOD}>
+                <JavascriptEditor
+                  ref={javascriptEditorRef}
+                  value={currentCustomMethod}
+                  className={editorClasses}
+                  onChange={handleChangeCustomMethod}
+                  onErrorChange={setJavascriptError}
+                />
+              </TabsContent>
+            )}
+          </Tabs>
 
           <PopoverDescription className={descriptionClasses}>
             {descriptionText}
@@ -234,13 +235,13 @@ export function FieldOptionsPopover({
         </PopoverContent>
       </Popover>
 
-      {methodToDelete && (
+      {(deleteMethodAlertOpen && isCustomMethod) && (
         <AlertDialog
           destructive
-          open={!!methodToDelete}
-          description={t("fieldsManager.alerts.deleteCustomMethod.description", { methodToDeleteName })}
-          onConfirm={() => handleConfirmDeleteMethod(methodToDelete)}
-          onCancel={() => setMethodToDelete(null)}
+          open={deleteMethodAlertOpen}
+          description={t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.label })}
+          onConfirm={() => handleConfirmDeleteMethod(currentCustomMethod.key)}
+          onCancel={() => setDeleteMethodAlertOpen(false)}
         />
       )}
     </>

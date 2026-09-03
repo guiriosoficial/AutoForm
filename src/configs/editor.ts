@@ -1,8 +1,18 @@
+import babel from "prettier/plugins/babel";
+import estree from "prettier/plugins/estree";
 import { tags as t } from "@lezer/highlight";
+import {createEditorTheme} from "@/lib/editor.ts";
+
+export const EditorTabs = {
+  OPTIONS: "options",
+  METHOD: "method",
+} as const;
+
+export type EditorTabs = (typeof EditorTabs)[keyof typeof EditorTabs];
 
 export const EDITOR_CONFIG = {
   INDENT_SPACES: 2,
-  LINT_DELAY_MS: 1400
+  LINT_DELAY_MS: 1200
 } as const;
 
 export const EDITOR_SHORTCUTS = {
@@ -26,6 +36,12 @@ export const EDITOR_BASIC_SETUP = {
   lintKeymap: false
 };
 
+export const EDITOR_PRETTIER_FORMAT_OPTIONS = {
+  plugins: [babel, estree],
+  parser: "babel",
+  semi: true,
+  singleQuote: true
+};
 
 export const EDITOR_THEME = {
   settings: {
@@ -41,8 +57,12 @@ export const EDITOR_THEME = {
     { tag: t.keyword, color: "var(--syntax-keyword)" },
     { tag: t.string, color: "var(--syntax-string)" },
     { tag: t.number, color: "var(--syntax-number)" },
-    { tag: [t.bool, t.null], color: "var(--syntax-literal)" },
-    { tag: [t.paren, t.brace, t.bracket, t.punctuation], color: "var(--foreground)" }
+    { tag: [t.bool, t.null, t.atom], color: "var(--syntax-literal)" },
+    { tag: [t.paren, t.brace, t.bracket, t.punctuation], color: "var(--foreground)" },
+    { tag: t.operator, color: "var(--syntax-operator)" },
+    { tag: t.variableName, color: "var(--syntax-variable)" },
+    { tag: t.function(t.variableName), color: "var(--syntax-function)" },
+    { tag: t.definition(t.variableName), color: "var(--syntax-definition)" }
   ],
   overrides: {
     ".cm-scroller:has(.cm-selectionBackground) .cm-activeLine": {
@@ -59,3 +79,5 @@ export const EDITOR_THEME = {
     }
   }
 };
+
+export const EDITOR_THEME_CREATED = createEditorTheme();

@@ -40,7 +40,7 @@ export const createFakerCatalog = (locale: Locale) => {
             moduleKey,
             methodKey,
             methodValue.bind(moduleValue),
-            createFakerDocUrl(moduleKey, methodKey)
+            { docsUrl: createFakerDocUrl(moduleKey, methodKey) }
           )
         )
     )

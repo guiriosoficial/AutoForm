@@ -35,7 +35,7 @@ export const createBox4DevCatalog = () => [
         MODULE_NAME,
         methodKey,
         methodValue.bind(methodValue),
-        createBox4DevDocUrl(methodKey)
+        { docsUrl: createBox4DevDocUrl(methodKey) }
       )
     )
   )

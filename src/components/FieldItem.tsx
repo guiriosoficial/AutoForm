@@ -135,8 +135,8 @@ export function FieldItem({
         </Combobox>
 
         <FieldOptionsPopover
-          methodKey={field.generator}
           value={field.options}
+          methodKey={field.generator}
           docUrl={selectedMethod?.docs}
           onChange={(newValue) => handleUpdateField("options", newValue)}
         />

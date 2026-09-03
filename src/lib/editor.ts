@@ -1,8 +1,9 @@
-import { json5ParseLinter } from "codemirror-json5";
 import { createTheme } from "@uiw/codemirror-themes";
-import { linter } from "@codemirror/lint";
+import { json5ParseLinter } from "codemirror-json5";
+import { linter, type LintSource, type Diagnostic } from "@codemirror/lint";
+import { syntaxTree } from "@codemirror/language";
 import { keymap, EditorView } from "@codemirror/view";
-import { EDITOR_SHORTCUTS, EDITOR_THEME } from "@/configs";
+import { EDITOR_CONFIG, EDITOR_SHORTCUTS, EDITOR_THEME } from "@/configs";
 
 export const createEditorTheme = () => [
   createTheme({
@@ -25,8 +26,33 @@ export const createEditorKeymap = ({ onFormat }: { onFormat: () => void }) =>
     },
   ]);
 
-export const createEditorLinter = (enabled: boolean) =>
+export const createEditorLinter = (lintSource: LintSource, enabled: boolean = true) =>
   linter(
-    (view) => (enabled ? json5ParseLinter()(view) : []),
-    { tooltipFilter: () => [] }
+    (view) => (!enabled || !lintSource) ? [] : lintSource(view),
+    {
+      delay: EDITOR_CONFIG.LINT_DELAY_MS,
+      tooltipFilter: () => []
+    }
   );
+
+export const jsonLinter: LintSource = json5ParseLinter()
+
+export const javascriptLinter: LintSource = (view) => {
+  const diagnostics: Diagnostic[] = [];
+  const tree = syntaxTree(view.state);
+
+  tree.iterate({
+    enter: (node) => {
+      if (!node.type.isError) return;
+
+      diagnostics.push({
+        from: node.from,
+        to: Math.max(node.to, node.from + 1),
+        severity: "error",
+        message: "Invalid JavaScript syntax"
+      });
+    }
+  });
+
+  return diagnostics;
+};

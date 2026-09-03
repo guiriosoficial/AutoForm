@@ -4,6 +4,7 @@ export interface CatalogMethod {
   label: string;
   key: string;
   docs?: string;
+  code?: string;
   invoke: (...args: any[]) => any;
 }
 
@@ -22,13 +23,22 @@ export function createCatalogMethod(
   moduleKey: string,
   methodKey: string,
   invokeFn: (...args: any[]) => any,
-  docsUrl?: string
+  options?: {
+    code?: string,
+    docsUrl?: string
+    generateUniqueId?: boolean
+  }
 ): CatalogMethod {
+  const uniqueKey = options?.generateUniqueId
+    ? crypto.randomUUID()
+    : methodKey;
+
   return {
     label: methodKey,
-    key: `${moduleKey}.${methodKey}`,
+    key: `${moduleKey}.${uniqueKey}`,
     invoke: invokeFn,
-    docs: docsUrl,
+    docs: options?.docsUrl,
+    code: options?.code,
   };
 }
 
@@ -40,4 +50,12 @@ export function createCatalogModule(
     value: moduleKey,
     items,
   };
+}
+
+export function createCatalogCustomFunction() {
+  return `
+    (name = "Joh Doe") => {
+      return "Hello " + name
+    }
+  `
 }

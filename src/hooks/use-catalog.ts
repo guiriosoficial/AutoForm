@@ -5,11 +5,13 @@ import { usePersistentState } from "@/hooks/use-persistent-state";
 import { createNextSequencedName } from "@/lib/string";
 import { createFakerCatalog } from "@/lib/catalog/providers/faker";
 import { createBox4DevCatalog } from "@/lib/catalog/providers/box4Dev";
+import { isFunction } from "@/lib/guards";
 import {
   createCatalogMethod,
   createCatalogModule,
+  createCatalogCustomFunction,
   newCustomMethodOption,
-  type CatalogMethod
+  type CatalogMethod,
 } from "@/lib/catalog";
 import { CATALOG_CONFIG, StorageKeys } from "@/configs";
 
@@ -39,14 +41,29 @@ export function useCatalog() {
     );
   }, [catalogOptions]);
 
+  const customMethodsByKey = useMemo(() => {
+    return new Map(
+      customMethods
+        .map((method) => [method.key, method])
+    );
+  }, [customMethods]);
+
   const createCustomMethod = useCallback(() => {
     const defaultName = t("configs.catalog.method.defaultName")
-    const spaced = false
-    const nextCatalogName = createNextSequencedName<CatalogMethod>(customMethods, "label", defaultName, spaced)
+    const nextCatalogName = createNextSequencedName<CatalogMethod>(
+      customMethods,
+      "label",
+      defaultName,
+      { spaced: true }
+    )
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
       nextCatalogName,
-      () => {}
+      () => {},
+      {
+        code: createCatalogCustomFunction(),
+        generateUniqueId: true
+      }
     )
 
     setCustomMethods((prev) =>
@@ -56,12 +73,23 @@ export function useCatalog() {
     return newMethod;
   }, [customMethods]);
 
-  const updateCustomMethod = useCallback((updatedMethod: CatalogMethod) => {
+  const updateCustomMethod = useCallback((
+    methodKey: string,
+    updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
+  ) => {
     setCustomMethods((prev) =>
       prev.map(method => {
-        if (method.key !== updatedMethod.key) return method;
+        if (method.key !== methodKey) return method;
 
-        return updatedMethod
+        const updated =
+          isFunction(updater)
+            ? updater(method)
+            : updater;
+
+        return {
+          ...method,
+          ...updated,
+        };
       })
     )
   }, [setCustomMethods])
@@ -73,8 +101,10 @@ export function useCatalog() {
   }, [setCustomMethods])
 
   return {
+    customMethods,
     catalogOptions,
     catalogMethodsByKey,
+    customMethodsByKey,
     createCustomMethod,
     updateCustomMethod,
     removeCustomMethod

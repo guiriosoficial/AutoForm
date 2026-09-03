@@ -6,7 +6,7 @@ export function createNextSequencedName<T extends object>(
   list: T[],
   key: keyof T,
   name: string,
-  spaced: boolean = true,
+  options?: { spaced?: boolean },
 ) {
   const escapedName = name.replaceAll(/[^\w\s]/gu, "\\$&");
   const nameRegex = RegExp(`^${escapedName}\\s*(\\d+)$`);
@@ -20,5 +20,5 @@ export function createNextSequencedName<T extends object>(
     return Math.max(max, Number(match[1]));
   }, 0) + 1;
 
-  return `${name}${spaced ? " " : ""}${nextNumber}`
+  return `${name}${options?.spaced ? " " : ""}${nextNumber}`
 }
