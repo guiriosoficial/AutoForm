@@ -44,19 +44,19 @@ export default {
     },
     importStrategy: {
       append: {
-        label: "Append",
+        title: "Append",
         description: "Append new presets to existing ones without replacing duplicates",
       },
       overwrite: {
-        label: "Overwrite",
+        title: "Overwrite",
         description: "Overwrite the existing preset with the imported one",
       },
       replaceAll: {
-        label: "Replace all",
+        title: "Replace all",
         description: "Delete all current presets and import new ones",
       },
       alwaysAsk: {
-        label: "Always ask",
+        title: "Always ask",
         description: "Always ask when importing presets",
       }
     }
@@ -141,7 +141,10 @@ export default {
     },
     popovers: {
       fieldSettings: {
-        title: "Settings",
+        tabs: {
+          options: "Settings",
+          method: "Generator",
+        },
         formatButton: "Format",
         caption: "Use JSON5 to configure the generator.",
         docUrl: "Docs",
@@ -149,7 +152,7 @@ export default {
     },
     alerts: {
       deleteCustomMethod: {
-        description: "Are you sure you want to delete custom method \"{{ methodToDeleteName }}\"?"
+        description: "Are you sure you want to delete custom method \"{{ name }}\"?"
       }
     },
     form: {
