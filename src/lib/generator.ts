@@ -1,6 +1,7 @@
 import browser from "webextension-polyfill";
 import { parseJson5 } from "@/lib/json5";
 import { getErrorMessage } from "@/lib/errors";
+import { isObject } from "@/lib/guards";
 import { MessageAction } from "@/configs"
 import type { CatalogMethod } from "@/lib/catalog";
 
@@ -16,7 +17,6 @@ export interface GeneratorMessageResponse {
 }
 
 // TODO: Implement Error Handling
-// TODO: Handle array params (to generator-br)
 export function generateValue(method: CatalogMethod, optionsStr?: string): string {
   if (!method) return "";
 
@@ -24,9 +24,14 @@ export function generateValue(method: CatalogMethod, optionsStr?: string): strin
 
   try {
     options = parseJson5(optionsStr ?? "");
-  } catch {}
+  } catch {
 
-  return method.invoke(options);
+  }
+
+  if (Array.isArray(options)) return method.invoke(...options);
+  if (isObject(options)) return method.invoke(options);
+
+  return method.invoke();
 }
 
 export async function fillInputElement(
