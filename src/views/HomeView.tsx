@@ -76,7 +76,7 @@ export function HomeView(){
       </Card>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-x-11">
           <CardTitle>
             <InlineInput
               ref={presetNameEditorRef}
