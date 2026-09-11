@@ -1,6 +1,6 @@
-import { defineManifest } from '@crxjs/vite-plugin';
+import { defineManifest } from "@crxjs/vite-plugin";
 import { toTitleCase } from "./src/lib/string";
-import { name, version } from './package.json';
+import { name, version } from "./package.json";
 
 export const APP_ID = name;
 export const APP_NAME = toTitleCase(name);
@@ -11,27 +11,29 @@ export default defineManifest({
   name: APP_NAME,
   version: APP_VERSION,
   icons: {
-    48: 'public/logo.png',
+    48: "public/logo.png",
   },
   action: {
-    default_icon: { 48: 'public/logo.png' },
-    default_popup: 'src/entrypoints/app/index.html',
+    default_icon: { 48: "public/logo.png" },
+    default_popup: "src/entrypoints/app/index.html",
     default_title: APP_NAME,
   },
   side_panel: {
-    default_path: 'src/entrypoints/app/index.html',
+    default_path: "src/entrypoints/app/index.html",
   },
   permissions: [
-    'scripting',
-    'activeTab',
-    'storage',
-    'sidePanel',
+    "scripting",
+    "activeTab",
+    "storage",
+    "sidePanel"
   ],
-  content_scripts: [{
-    js: ['src/entrypoints/content/main.tsx'],
-    matches: ['https://*/*', 'http://*/*'],
-  }],
+  content_scripts: [
+    {
+      js: ["src/entrypoints/content/main.tsx"],
+      matches: ["https://*/*", "http://*/*"],
+    },
+  ],
   sandbox: {
-    pages: ['src/entrypoints/sandbox/index.html']
-  }
-})
+    pages: ["src/entrypoints/sandbox/index.html"],
+  },
+});

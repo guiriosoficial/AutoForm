@@ -1,14 +1,10 @@
-import path from 'node:path'
-import { defineConfig } from 'vite'
-import zip from 'vite-plugin-zip-pack'
+import path from "node:path";
+import { defineConfig } from "vite";
+import zip from "vite-plugin-zip-pack";
 import tailwindcss from "@tailwindcss/vite";
-import { crx } from '@crxjs/vite-plugin'
-import react from '@vitejs/plugin-react'
-import manifest, {
-  APP_ID,
-  APP_NAME,
-  APP_VERSION,
-} from './manifest.config'
+import { crx } from "@crxjs/vite-plugin";
+import react from "@vitejs/plugin-react";
+import manifest, { APP_ID, APP_NAME, APP_VERSION } from "./manifest.config";
 
 const defineVariables = {
   __APP_ID__: JSON.stringify(APP_ID),
@@ -20,20 +16,20 @@ export default defineConfig({
   define: defineVariables,
   resolve: {
     alias: {
-      '@': `${path.resolve(import.meta.dirname, 'src')}`,
+      "@": `${path.resolve(import.meta.dirname, "src")}`,
     },
   },
   plugins: [
     react(),
     tailwindcss(),
     crx({ manifest }),
-    zip({ outDir: 'release', outFileName: `crx-${APP_ID}-${APP_VERSION}.zip` }),
+    zip({ outDir: "release", outFileName: `crx-${APP_ID}-${APP_VERSION}.zip` }),
     {
-      name: 'html-transform',
+      name: "html-transform",
       transformIndexHtml(html) {
         let transformedHtml = html;
         for (const [key, value] of Object.entries(defineVariables)) {
-          const rawValue = String(value).replaceAll(/^"|"$/gu, '')
+          const rawValue = String(value).replaceAll(/^"|"$/gu, "");
           transformedHtml = transformedHtml.replaceAll(`%${key}%`, rawValue);
         }
         return transformedHtml;
@@ -42,9 +38,7 @@ export default defineConfig({
   ],
   server: {
     cors: {
-      origin: [
-        /chrome-extension:\/\//u,
-      ],
+      origin: [/chrome-extension:\/\//u],
     },
   },
-})
+});

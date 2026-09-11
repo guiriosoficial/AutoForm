@@ -5,17 +5,17 @@ export const ToastPriority = {
   HIGH: "high",
 } as const;
 
-export type ToastPriority = typeof ToastPriority[keyof typeof ToastPriority];
+export type ToastPriority = (typeof ToastPriority)[keyof typeof ToastPriority];
 
 export const ToastTypes = {
   SUCCESS: "success",
   ERROR: "error",
   INFO: "info",
   WARNING: "warning",
-  LOADING: "loading"
+  LOADING: "loading",
 } as const;
 
-export type ToastTypes = typeof ToastTypes[keyof typeof ToastTypes];
+export type ToastTypes = (typeof ToastTypes)[keyof typeof ToastTypes];
 
 interface ToastOptions {
   title?: string;

@@ -8,14 +8,14 @@ export const ptBrTranslations = {
 
     field: "Campo",
     fields: "Campos",
-    fields_zero: "Nenhum campo" ,
-    fields_one: "{{ count }} Campo" ,
+    fields_zero: "Nenhum campo",
+    fields_one: "{{ count }} Campo",
     fields_other: "{{ count }} Campos",
 
     preset: "Preset",
     presets: "Presets",
     presets_zero: "Nenhum preset",
-    presets_one: "{{ count }} Preset" ,
+    presets_one: "{{ count }} Preset",
     presets_other: "{{ count }} Presets",
     loadedPresets_zero: "Nenhum preset carregado",
     loadedPresets_one: "{{ count }} preset carregado",
@@ -32,10 +32,10 @@ export const ptBrTranslations = {
     catalog: {
       method: {
         defaultName: "novoMetodo",
-      }
+      },
     },
     preset: {
-      defaultName: "Novo preset"
+      defaultName: "Novo preset",
     },
     theme: {
       dark: "Escuro",
@@ -58,8 +58,8 @@ export const ptBrTranslations = {
       alwaysAsk: {
         title: "Perguntar sempre",
         description: "Sempre perguntar ao importar presets",
-      }
-    }
+      },
+    },
   },
   defaults: {
     alert: {
@@ -67,7 +67,7 @@ export const ptBrTranslations = {
       description: "Tem certeza que deseja continuar?",
       confirmButton: "$t(globals.confirm)",
       cancelButton: "$t(globals.cancel)",
-    }
+    },
   },
   preferencesManager: {
     title: "Preferencias",
@@ -88,41 +88,43 @@ export const ptBrTranslations = {
         label: "Língua",
         placeholder: "Seleciona uma língua",
         empty: "Nenhuma língua encontrada",
-      }
-    }
+      },
+    },
   },
   presetsManager: {
     title: "$t(globals.presets)",
     buttons: {
       import: "$t(globals.import)",
       export: "$t(globals.export)",
-      new: "Novo"
+      new: "Novo",
     },
     alerts: {
       deletePreset: {
-        description: "Tem certeza que deseja remover o preset \"{{ presetToDelete.name }}\"?"
-      }
+        description: 'Tem certeza que deseja remover o preset "{{ presetToDelete.name }}"?',
+      },
     },
     dialogs: {
       importPreset: {
         title: "$t(globals.import)",
         description_zero: "$t(globals.loadedPresets, { 'count': {{ total }} } )",
-        description_one: "{{ count }} conflito entre $t(globals.loadedPresets, { 'count': {{ total }} })",
-        description_other: "{{ count }} conflitos entre $t(globals.loadedPresets, { 'count': {{ total }} })",
+        description_one:
+          "{{ count }} conflito entre $t(globals.loadedPresets, { 'count': {{ total }} })",
+        description_other:
+          "{{ count }} conflitos entre $t(globals.loadedPresets, { 'count': {{ total }} })",
         confirmButton: "$t(globals.import)",
         cancelButton: "$t(globals.cancel)",
         form: {
           strategyToggle: {
             label: "Estratégia",
-          }
-        }
-      }
+          },
+        },
+      },
     },
     form: {
       presetSelect: {
         placeholder: "Selecione um preset",
-        empty: "Nenhum preset encontrado"
-      }
+        empty: "Nenhum preset encontrado",
+      },
     },
     messages: {
       importPreset: {
@@ -131,10 +133,10 @@ export const ptBrTranslations = {
       },
       exportPreset: {
         failed: "Falha ao exportar presets",
-      }
-    }
+      },
+    },
   },
-  fieldsManager:  {
+  fieldsManager: {
     description: "$t(globals.fields)",
     buttons: {
       add: "Adicionar campo",
@@ -148,32 +150,32 @@ export const ptBrTranslations = {
         formatButton: "Formatar",
         caption: "Use JSON5 para configurar o gerador.",
         docUrl: "Docs",
-      }
+      },
     },
     alerts: {
       deleteCustomMethod: {
-        description: "Tem certeza que deseja apagar o gerador customizado \"{{ name }}\"?"
-      }
+        description: 'Tem certeza que deseja apagar o gerador customizado "{{ name }}"?',
+      },
     },
     form: {
       generatorSelect: {
         placeholder: "Selecione um gerador",
         empty: "Nenhum gerador encontrado",
-        addOption: "Novo gerador"
+        addOption: "Novo gerador",
       },
       selectorInput: {
         placeholder: ".class / #id / [data-test]",
       },
       presetNameInput: {
         placeholder: "Nome do preset",
-      }
+      },
     },
     messages: {
       copyValue: {
         failed: "$t(globals.failedToCopy, { 'item': 'valor' })",
         success: "$t(globals.copiedToClipboard)",
-      }
-    }
+      },
+    },
   },
   footer: {
     buttons: {
@@ -185,6 +187,6 @@ export const ptBrTranslations = {
         success: "$t(globals.copiedToClipboard)",
         failed: "$t(globals.failedToCopy, { 'item': 'JSON' })",
       },
-    }
-  }
+    },
+  },
 };

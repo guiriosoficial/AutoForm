@@ -26,8 +26,8 @@ const getFakerModuleMethods = (module: FakerModuleObject) =>
 
 export const createFakerCatalog = (locale: Locale) => {
   const fakerInstance = new Faker({
-    locale: [allLocales[locale], allLocales[LOCALE_CONFIG.DEFAULT]]
-  })
+    locale: [allLocales[locale], allLocales[LOCALE_CONFIG.DEFAULT]],
+  });
 
   const modules = getFakerModules(fakerInstance);
 

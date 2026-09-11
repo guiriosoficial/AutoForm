@@ -1,2 +1,2 @@
-export { enTranslations } from './en';
-export { ptBrTranslations } from './pt-br';
+export { enTranslations } from "./en";
+export { ptBrTranslations } from "./pt-br";

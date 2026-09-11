@@ -32,10 +32,10 @@ export const enTranslations = {
     catalog: {
       method: {
         defaultName: "newMethod",
-      }
+      },
     },
     preset: {
-      defaultName: "New preset"
+      defaultName: "New preset",
     },
     theme: {
       dark: "Dark",
@@ -58,8 +58,8 @@ export const enTranslations = {
       alwaysAsk: {
         title: "Always ask",
         description: "Always ask when importing presets",
-      }
-    }
+      },
+    },
   },
   defaults: {
     alert: {
@@ -67,7 +67,7 @@ export const enTranslations = {
       description: "Are you sure you want to continue?",
       confirmButton: "$t(globals.confirm)",
       cancelButton: "$t(globals.cancel)",
-    }
+    },
   },
   preferencesManager: {
     title: "Preferences",
@@ -88,20 +88,20 @@ export const enTranslations = {
         label: "Language",
         placeholder: "Select a language",
         empty: "No language found",
-      }
-    }
+      },
+    },
   },
   presetsManager: {
     title: "$t(globals.presets)",
     buttons: {
       import: "$t(globals.import)",
       export: "$t(globals.export)",
-      new: "New"
+      new: "New",
     },
     alerts: {
       deletePreset: {
-        description: "Are you sure you want to delete preset \"{{ presetToDelete.name }}\"?"
-      }
+        description: 'Are you sure you want to delete preset "{{ presetToDelete.name }}"?',
+      },
     },
     dialogs: {
       importPreset: {
@@ -114,15 +114,15 @@ export const enTranslations = {
         form: {
           strategyToggle: {
             label: "Strategy",
-          }
-        }
-      }
+          },
+        },
+      },
     },
     form: {
       presetSelect: {
         placeholder: "Select a preset",
-        empty: "No preset found"
-      }
+        empty: "No preset found",
+      },
     },
     messages: {
       importPreset: {
@@ -131,8 +131,8 @@ export const enTranslations = {
       },
       exportPreset: {
         failed: "Failed to export presets",
-      }
-    }
+      },
+    },
   },
   fieldsManager: {
     description: "$t(globals.fields)",
@@ -148,32 +148,32 @@ export const enTranslations = {
         formatButton: "Format",
         caption: "Use JSON5 to configure the generator.",
         docUrl: "Docs",
-      }
+      },
     },
     alerts: {
       deleteCustomMethod: {
-        description: "Are you sure you want to delete custom method \"{{ name }}\"?"
-      }
+        description: 'Are you sure you want to delete custom method "{{ name }}"?',
+      },
     },
     form: {
       generatorSelect: {
         placeholder: "Select a generator",
         empty: "No generator found",
-        addOption: "New generator"
+        addOption: "New generator",
       },
       selectorInput: {
         placeholder: ".class / #id / [data-test]",
       },
       presetNameInput: {
         placeholder: "Preset name",
-      }
+      },
     },
     messages: {
       copyValue: {
         failed: "$t(globals.failedToCopy, { 'item': 'value' })",
         success: "$t(globals.copiedToClipboard)",
-      }
-    }
+      },
+    },
   },
   footer: {
     buttons: {
@@ -185,6 +185,6 @@ export const enTranslations = {
         success: "$t(globals.copiedToClipboard)",
         failed: "$t(globals.failedToCopy, { 'item': 'JSON' })",
       },
-    }
-  }
+    },
+  },
 };

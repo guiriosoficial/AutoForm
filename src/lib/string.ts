@@ -26,5 +26,5 @@ export function createNextSequencedName<T extends object>(
 
   const nextNumber = maxNumber + 1;
   const space = options?.spaced ? " " : "";
-  return `${name}${space}${nextNumber}`
+  return `${name}${space}${nextNumber}`;
 }
