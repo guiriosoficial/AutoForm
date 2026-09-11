@@ -1,16 +1,16 @@
 import {
-  useEffect,
-  useCallback,
-  useRef,
-  useState,
-  useImperativeHandle,
-  forwardRef,
+  type FocusEvent,
+  type ForwardedRef,
   type KeyboardEvent,
   type MouseEvent,
-  type FocusEvent,
-  type ForwardedRef
+  forwardRef,
+  useCallback,
+  useEffect,
+  useImperativeHandle,
+  useRef,
+  useState
 } from "react";
-import { X, Check, PenLine } from "lucide-react";
+import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
 import { preventDefaultEscape } from "@/lib/dom";
 
@@ -24,22 +24,18 @@ export interface InlineInputRef {
   startEditing: () => void;
 }
 
-export const InlineInput = forwardRef((
+function InlineInputComponent (
   {
     value,
     placeholder,
     onSave
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>
-) => {
+) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value ?? "");
 
   const inputRef = useRef<HTMLInputElement>(null);
-
-  useEffect(() => {
-    setDraft(value ?? "");
-  }, [value]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -54,20 +50,6 @@ export const InlineInput = forwardRef((
 
     return () => cancelAnimationFrame(frame);
   }, [isEditing]);
-
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
-    preventDefaultEscape(event);
-
-    switch (event.key) {
-      case "Enter":
-        confirmEditing();
-        break;
-      case "Escape":
-        cancelEditing();
-        break;
-    }
-  };
-
 
   const confirmEditing = (event?: MouseEvent | FocusEvent) => {
     event?.preventDefault();
@@ -91,9 +73,25 @@ export const InlineInput = forwardRef((
     setIsEditing(false);
   };
 
+  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    preventDefaultEscape(event);
+
+    switch (event.key) {
+      case "Enter":
+        confirmEditing();
+        break;
+      case "Escape":
+        cancelEditing();
+        break;
+      default:
+        break;
+    }
+  };
+
   const startEditing = useCallback(() => {
+    setDraft(value)
     setIsEditing(true);
-  }, []);
+  }, [value]);
 
   useImperativeHandle(ref, () => ({
     startEditing
@@ -148,6 +146,8 @@ export const InlineInput = forwardRef((
       </span>
     </p>
   );
-});
+}
+
+export const InlineInput = forwardRef(InlineInputComponent)
 
 InlineInput.displayName = "InlineInput";

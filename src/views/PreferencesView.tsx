@@ -5,9 +5,17 @@ import { Footer } from "@/components/layouts/Footer";
 import {
   Card,
   CardContent,
-  CardTitle,
   CardHeader,
+  CardTitle,
 } from "@/components/ui/card";
+import {
+  Combobox,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxInput,
+  ComboboxItem,
+  ComboboxList
+} from "@/components/ui/combobox";
 import {
   Field,
   FieldDescription,
@@ -20,30 +28,18 @@ import {
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
+import { ImportStrategyIcons, ThemeIcons } from "@/components/shared/icons";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
+import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
 import { preventDefaultEscape } from "@/lib/dom";
 import {
-  Page,
+  ImportStrategy,
   Language,
   Locale,
+  Page,
   Theme,
-  ThemeIcons,
-  ImportStrategy,
-  ImportStrategyIcons,
 } from "@/configs";
-import {
-  Combobox,
-  ComboboxContent,
-  ComboboxEmpty,
-  ComboboxInput,
-  ComboboxItem,
-  ComboboxList
-} from "@/components/ui/combobox";
-import {
-  createLocaleDisplayNames,
-  getLocaleDisplayName
-} from "@/lib/locale";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();

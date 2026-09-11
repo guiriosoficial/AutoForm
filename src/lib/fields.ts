@@ -19,15 +19,15 @@ export type FieldErrorType = (typeof FieldErrorType)[keyof typeof FieldErrorType
 
 export class FieldError {
   constructor(
-    public type: FieldErrorType,
-    public message: string
+    readonly type: FieldErrorType,
+    readonly message: string
   ) {}
 }
 
 export class FieldResult {
   constructor(
-    public readonly value: string | undefined,
-    public readonly error: FieldError | undefined
+    readonly value: string | undefined,
+    readonly error: FieldError | undefined
   ) {}
 
   addError(type: FieldErrorType, message: string) {
@@ -72,6 +72,6 @@ export function isValidField(value: unknown): value is FieldConfig {
 export function isValidFieldArray(value: unknown): value is FieldConfig[] {
   return (
     Array.isArray(value) &&
-    value.every(isValidField)
+    value.every((item) => isValidField(item))
   );
 }

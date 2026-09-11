@@ -1,9 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { Copy, Plus, RotateCcw, X } from "lucide-react";
-import { InlineButton } from "@/components/shared/InlineButton";
-import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import {
   Combobox,
   ComboboxCollection,
@@ -16,11 +12,15 @@ import {
   ComboboxList,
   ComboboxSeparator
 } from "@/components/ui/combobox";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
+import { InlineButton } from "@/components/shared/InlineButton";
 import { useCatalog } from "@/hooks/use-catalog"
-import { preventDefaultEscape } from "@/lib/dom";
 import { cn } from "@/lib/utils";
+import { preventDefaultEscape } from "@/lib/dom";
 import { CATALOG_CONFIG } from "@/configs";
-import type { CatalogModule, CatalogMethod } from "@/lib/catalog";
+import type { CatalogMethod, CatalogModule } from "@/lib/catalog";
 import type { FieldConfig, FieldError } from "@/lib/fields";
 
 interface FieldItemProps {
@@ -107,7 +107,15 @@ export function FieldItem({
                     {group.value}
                   </ComboboxLabel>
                   <ComboboxCollection>
-                    {(item: CatalogMethod) => item.key !== CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
+                    {(item: CatalogMethod) => item.key === CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
+                      <ComboboxItem
+                        key={item.key}
+                        onClick={handleCreateCustomMethod}
+                      >
+                        <Plus />
+                        {t("fieldsManager.form.generatorSelect.addOption")}
+                      </ComboboxItem>
+                    ) : (
                       <ComboboxItem
                         key={item.key}
                         value={item}
@@ -115,14 +123,6 @@ export function FieldItem({
                         <span className="block truncate">
                           {item.label}
                         </span>
-                      </ComboboxItem>
-                    ) : (
-                      <ComboboxItem
-                        key={item.key}
-                        onClick={handleCreateCustomMethod}
-                      >
-                        <Plus />
-                        {t("fieldsManager.form.generatorSelect.addOption")}
                       </ComboboxItem>
                     )}
                   </ComboboxCollection>

@@ -1,4 +1,8 @@
-const REGIONAL_OFFSET = 0x1F1E6 - 65;
+const LOCALE_REGION_LENGTH = 2;
+const REGIONAL_INDICATOR_A = 0x1_F1_E6;
+const LATIN_CAPITAL_A = "A".codePointAt(0)!;
+const REGIONAL_OFFSET = REGIONAL_INDICATOR_A - LATIN_CAPITAL_A;
+
 
 const SPECIAL_LOCALES = {
   ku_ckb: "ckb",
@@ -13,14 +17,14 @@ export function toLocaleTag(locale: string): string {
 
   if (specialTag) return specialTag;
 
-  return locale.replace(/_/gu, "-");
+  return locale.replaceAll('_', "-");
 }
 
 export function getLocaleFlagEmoji(locale: string): string {
   try {
-    const region = new Intl.Locale(toLocaleTag(locale)).maximize().region;
-    return region?.length === 2
-      ? String.fromCodePoint(...[...region].map((c) => c.charCodeAt(0) + REGIONAL_OFFSET))
+    const { region } = new Intl.Locale(toLocaleTag(locale)).maximize();
+    return region?.length === LOCALE_REGION_LENGTH
+      ? String.fromCodePoint(...[...region].map((char) => char.codePointAt(0)! + REGIONAL_OFFSET))
       : "";
   } catch {
     return "";

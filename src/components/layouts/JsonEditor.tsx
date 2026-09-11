@@ -1,30 +1,30 @@
 import { json5 } from "codemirror-json5";
 import {
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useEffect,
-  useMemo,
-  useRef,
   useImperativeHandle,
-  type ForwardedRef
+  useMemo,
+  useRef
 } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import { jsonLinter } from "@/lib/editor";
 import {
+  EDITOR_THEME_CREATED,
   createEditorKeymap,
-  createEditorLinter
+  createEditorLinter,
+  jsonLinter
 } from "@/lib/editor"
-import { getErrorMessage } from "@/lib/errors";
-import { debounce } from "@/lib/async";
 import {
+  isPopulatedJson5,
   parseJson5,
-  stringifyJson5,
-  isPopulatedJson5
+  stringifyJson5
 } from "@/lib/json5";
+import { debounce } from "@/lib/async";
+import { getErrorMessage } from "@/lib/errors";
 import {
   EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP,
-  EDITOR_THEME_CREATED
+  EDITOR_BASIC_SETUP
 } from "@/configs";
 
 interface JsonEditorProps {
@@ -39,7 +39,7 @@ export interface JsonEditorRef {
   format: () => void;
 }
 
-export const JsonEditor = forwardRef((
+function JsonEditorComponent (
   {
     value,
     className,
@@ -48,7 +48,7 @@ export const JsonEditor = forwardRef((
     onErrorChange
   }: JsonEditorProps,
   ref: ForwardedRef<JsonEditorRef>
-) => {
+) {
   const parse = useCallback((val: string) => {
     if (!isPopulatedJson5(val)) {
       onErrorChange("");
@@ -59,8 +59,8 @@ export const JsonEditor = forwardRef((
       const parsedValue = parseJson5(val);
       onErrorChange("");
       return parsedValue;
-    } catch (err) {
-      const message = getErrorMessage(err)
+    } catch (error) {
+      const message = getErrorMessage(error)
       onErrorChange(message);
     }
   }, []);
@@ -114,4 +114,8 @@ export const JsonEditor = forwardRef((
       onChange={handleConfigChange}
     />
   );
-})
+}
+
+export const JsonEditor = forwardRef(JsonEditorComponent)
+
+JsonEditor.displayName = "JsonEditor";

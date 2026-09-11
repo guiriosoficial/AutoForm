@@ -1,8 +1,7 @@
 import browser from "webextension-polyfill";
 import { useEffect, useMemo, useState } from "react";
 import { debounce } from "@/lib/async";
-import { STORAGE_CONFIG } from "@/configs";
-import type { StorageKeys } from "@/configs";
+import { STORAGE_CONFIG, type StorageKeys } from "@/configs";
 
 const AreaName = {
   LOCAL: "local",
@@ -47,13 +46,12 @@ export function usePersistentState<T>(
   }, [key, initialState, hydrated]);
 
   // Persist
-  const persist = useMemo(() => {
-    return debounce((newState: T) => {
+  const persist = useMemo(() =>
+    debounce((newState: T) => {
       browser.storage?.local.set({
         [key]: newState,
       });
-    }, persistenceDelay);
-  }, [persistenceDelay, key]);
+    }, persistenceDelay), [persistenceDelay, key]);
 
   useEffect(() => {
     if (!hydrated) return;
@@ -61,7 +59,7 @@ export function usePersistentState<T>(
     persist(state);
 
     return () => persist.cancel();
-  }, [key, state, persistenceDelay, hydrated, persist]);
+  }, [key, state, hydrated, persist]);
 
   // Sync
   useEffect(() => {

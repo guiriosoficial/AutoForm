@@ -1,16 +1,16 @@
-import { useCallback, useMemo } from "react";
 import { useTranslation } from "react-i18next";
+import { useCallback, useMemo } from "react";
+import { usePersistentState } from "@/hooks/use-persistent-state";
+import { useCatalog } from "@/hooks/use-catalog";
 import { toast } from "@/lib/toast"
 import { isFunction } from "@/lib/guards";
 import { generateValue, fillInputElement } from "@/lib/generator";
 import {
-  createField,
-  createFieldResult,
   type FieldConfig,
-  type FieldResult
+  type FieldResult,
+  createField,
+  createFieldResult
 } from "@/lib/fields";
-import { usePersistentState } from "@/hooks/use-persistent-state";
-import { useCatalog } from "@/hooks/use-catalog";
 import { EXPORT_CONFIG, StorageKeys } from "@/configs";
 
 interface UseFormArgs {
@@ -33,9 +33,10 @@ export function useForm({
 
   const [generatedValuesByPresetId, setGeneratedValuesByPresetId] = usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
 
-  const generatedValues = useMemo(() => {
-    return generatedValuesByPresetId[presetId] ?? {};
-  }, [generatedValuesByPresetId, presetId]);
+  const generatedValues = useMemo(
+    () => generatedValuesByPresetId[presetId] ?? {},
+    [generatedValuesByPresetId, presetId]
+  );
 
   const setGeneratedValues = useCallback((
     valuesOrUpdater:
@@ -57,11 +58,10 @@ export function useForm({
     });
   }, [presetId, setGeneratedValuesByPresetId]);
 
-  const fieldsById = useMemo(() => {
-    return Object.fromEntries(
-      fields.map(f => [f.id, f])
-    );
-  }, [fields]);
+  const fieldsById = useMemo(() =>
+    Object.fromEntries(
+      fields.map(field => [field.id, field])
+    ), [fields]);
 
   const addField = useCallback(() => {
     updateFields((prev) =>
@@ -71,13 +71,13 @@ export function useForm({
 
   const removeField = useCallback((id: string) => {
     updateFields((prev) =>
-      prev.filter(f => f.id !== id)
+      prev.filter(field => field.id !== id)
     );
   }, [updateFields]);
 
   const updateField = useCallback((id: string, updated: FieldConfig) => {
     updateFields((prev) =>
-      prev.map(f => (f.id === id ? updated : f))
+      prev.map(field => (field.id === id ? updated : field))
     );
   }, [updateFields]);
 
@@ -101,7 +101,7 @@ export function useForm({
     );
 
     setGeneratedValues(values);
-  }, [fields, setGeneratedValues]);
+  }, [fields, catalogMethodsByKey, setGeneratedValues]);
 
   const regenerateValue = useCallback(async (fieldId: string) => {
     const field = fieldsById[fieldId];
@@ -119,7 +119,7 @@ export function useForm({
       [fieldId]: createFieldResult.value(generatedValue),
     }));
     await fillInputElement(field.selector, generatedValue);
-  }, [fieldsById, setGeneratedValues]);
+  }, [fieldsById, catalogMethodsByKey, setGeneratedValues]);
 
   const copyValue = useCallback(async (value: string) => {
     try {
@@ -134,13 +134,13 @@ export function useForm({
     try {
       const data: GeneratedValuesJson = {};
 
-      fields.forEach(f => {
-        const generatedValue = generatedValues[f.id];
+      for (const field of fields) {
+        const generatedValue = generatedValues[field.id];
 
-        if (!generatedValue) return;
+        if (!generatedValue) continue;
 
-        data[f.selector || f.id] = generatedValue.value
-      });
+        data[field.selector || field.id] = generatedValue.value
+      }
 
       const value = JSON.stringify(data, null, EXPORT_CONFIG.INDENT_SPACES)
       await navigator.clipboard.writeText(value);

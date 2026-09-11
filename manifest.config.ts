@@ -31,4 +31,7 @@ export default defineManifest({
     js: ['src/entrypoints/content/main.tsx'],
     matches: ['https://*/*', 'http://*/*'],
   }],
+  sandbox: {
+    pages: ['src/entrypoints/sandbox/index.html']
+  }
 })

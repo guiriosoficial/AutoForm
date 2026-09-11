@@ -56,6 +56,8 @@ export function AlertDialog({
       case 'Escape':
         onCancel?.();
         break;
+      default:
+        break;
     }
   };
 

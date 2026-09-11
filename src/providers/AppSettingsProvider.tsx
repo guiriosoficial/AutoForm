@@ -1,16 +1,22 @@
 import i18n from "@/i18n";
-import { useEffect, useContext, createContext, type ReactNode } from "react";
+import {
+  type ReactNode,
+  createContext,
+  useContext,
+  useEffect,
+  useMemo
+} from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
   LOCALE_CONFIG,
   LANGUAGE_CONFIG,
   THEME_CONFIG,
   IMPORT_CONFIG,
-  ImportStrategy,
-  Locale,
-  Language,
   StorageKeys,
   Theme,
+  type ImportStrategy,
+  type Locale,
+  type Language
 } from "@/configs";
 
 interface AppSettingsProviderProps {
@@ -30,13 +36,13 @@ interface AppSettingsProviderState {
 
 const initialState: AppSettingsProviderState = {
   theme: THEME_CONFIG.DEFAULT,
-  setTheme: () => null,
+  setTheme: () => {},
   importStrategy: IMPORT_CONFIG.STRATEGY_DEFAULT,
-  setImportStrategy: () => null,
+  setImportStrategy: () => {},
   language: LANGUAGE_CONFIG.DEFAULT,
-  setLanguage: () => null,
+  setLanguage: () => {},
   locale: LOCALE_CONFIG.DEFAULT,
-  setLocale: () => null,
+  setLocale: () => {},
 };
 
 export const AppSettingsProviderContext = createContext<AppSettingsProviderState>(initialState);
@@ -50,12 +56,12 @@ export function AppSettingsProvider({
   const [theme, setTheme] = usePersistentState<Theme>(StorageKeys.THEME, THEME_CONFIG.DEFAULT);
 
   useEffect(() => {
-    const root = window.document.documentElement;
+    const root = globalThis.document.documentElement;
 
     root.classList.remove(Theme.LIGHT, Theme.DARK);
 
     if (theme === Theme.SYSTEM) {
-      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches
+      const systemTheme = globalThis.matchMedia("(prefers-color-scheme: dark)").matches
         ? Theme.DARK
         : Theme.LIGHT;
 
@@ -67,13 +73,13 @@ export function AppSettingsProvider({
   }, [theme]);
 
   useEffect(() => {
-    const html = window.document.documentElement;
+    const html = globalThis.document.documentElement;
     html.lang = language;
 
     i18n.changeLanguage(language);
   }, [language]);
 
-  const value = {
+  const value = useMemo(() => ({
     theme,
     setTheme,
     importStrategy,
@@ -82,7 +88,7 @@ export function AppSettingsProvider({
     setLanguage,
     locale,
     setLocale
-  };
+  }), [theme, importStrategy, language, locale]);
 
   return (
     <AppSettingsProviderContext value={value}>
@@ -94,8 +100,9 @@ export function AppSettingsProvider({
 export function useAppSettings ()  {
   const context = useContext(AppSettingsProviderContext);
 
-  if (context === undefined)
+  if (context === undefined) {
     throw new Error("useAppSettings must be used within a AppSettingsProvider");
+  }
 
   return context;
 }

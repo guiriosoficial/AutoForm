@@ -4,14 +4,14 @@ import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { createNextSequencedName } from "@/lib/string";
 import { createFakerCatalog } from "@/lib/catalog/providers/faker";
-import { createBox4DevCatalog } from "@/lib/catalog/providers/box4Dev";
+import { createBox4DevCatalog } from "@/lib/catalog/providers/box-4-dev";
 import { isFunction } from "@/lib/guards";
 import {
+  type CatalogMethod,
+  createCatalogCustomFunction,
   createCatalogMethod,
   createCatalogModule,
-  createCatalogCustomFunction,
   newCustomMethodOption,
-  type CatalogMethod,
 } from "@/lib/catalog";
 import { CATALOG_CONFIG, StorageKeys } from "@/configs";
 
@@ -31,22 +31,18 @@ export function useCatalog() {
     ...createFakerCatalog(locale),
     ...createBox4DevCatalog(),
     customCatalog
-  ], [locale, customMethods]);
+  ], [locale, customCatalog]);
 
-  const catalogMethodsByKey = useMemo(() => {
-    return new Map(
-      catalogOptions
-        .flatMap(group => group.items)
-        .map((method) => [method.key, method])
-    );
-  }, [catalogOptions]);
+  const catalogMethodsByKey = useMemo(() => new Map(
+    catalogOptions
+      .flatMap(group => group.items)
+      .map((method) => [method.key, method])
+  ), [catalogOptions]);
 
-  const customMethodsByKey = useMemo(() => {
-    return new Map(
-      customMethods
-        .map((method) => [method.key, method])
-    );
-  }, [customMethods]);
+  const customMethodsByKey = useMemo(() => new Map(
+    customMethods
+      .map((method) => [method.key, method])
+  ), [customMethods]);
 
   const createCustomMethod = useCallback(() => {
     const defaultName = t("configs.catalog.method.defaultName")
@@ -71,7 +67,7 @@ export function useCatalog() {
     )
 
     return newMethod;
-  }, [customMethods]);
+  }, [customMethods, t]);
 
   const updateCustomMethod = useCallback((
     methodKey: string,

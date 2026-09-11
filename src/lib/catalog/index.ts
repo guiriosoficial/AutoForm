@@ -5,7 +5,7 @@ export interface CatalogMethod {
   key: string;
   docs?: string;
   code?: string;
-  invoke: (...args: any[]) => any;
+  invoke: (...args: never[]) => unknown;
 }
 
 export interface CatalogModule {
@@ -13,16 +13,10 @@ export interface CatalogModule {
   items: CatalogMethod[];
 }
 
-export const newCustomMethodOption = createCatalogMethod(
-  CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-  CATALOG_CONFIG.CUSTOM_NEW_METHOD_NAME,
-  () => {}
-);
-
 export function createCatalogMethod(
   moduleKey: string,
   methodKey: string,
-  invokeFn: (...args: any[]) => any,
+  invokeFn: (...args: never[]) => unknown,
   options?: {
     code?: string,
     docsUrl?: string
@@ -59,3 +53,9 @@ export function createCatalogCustomFunction() {
     }
   `
 }
+
+export const newCustomMethodOption = createCatalogMethod(
+  CATALOG_CONFIG.CUSTOM_MODULE_NAME,
+  CATALOG_CONFIG.CUSTOM_NEW_METHOD_NAME,
+  () => {}
+);

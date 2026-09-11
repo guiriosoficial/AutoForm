@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
-import { parseJson5 } from "@/lib/json5";
 import { getErrorMessage } from "@/lib/errors";
 import { isObject } from "@/lib/guards";
+import { parseJson5 } from "@/lib/json5";
 import { MessageAction } from "@/configs"
 import type { CatalogMethod } from "@/lib/catalog";
 
@@ -16,16 +16,15 @@ export interface GeneratorMessageResponse {
   error?: string;
 }
 
-// TODO: Implement Error Handling
 export function generateValue(method: CatalogMethod, optionsStr?: string): string {
   if (!method) return "";
 
-  let options;
+  let options = {};
 
   try {
     options = parseJson5(optionsStr ?? "");
   } catch {
-
+    // TODO: Implement Error Handling
   }
 
   if (Array.isArray(options)) return method.invoke(...options);
@@ -55,10 +54,10 @@ export async function fillInputElement(
     });
 
     return response as GeneratorMessageResponse;
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      error: getErrorMessage(err)
+      error: getErrorMessage(error)
     };
   }
 }
@@ -110,10 +109,10 @@ export function executeFillInputElement(selector: string, value: string | boolea
       success: false,
       error: `Unsupported element type for selector: "${selector}"`
     };
-  } catch (err) {
+  } catch (error) {
     return {
       success: false,
-      error: getErrorMessage(err)
+      error: getErrorMessage(error)
     };
   }
 }

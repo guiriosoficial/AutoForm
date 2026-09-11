@@ -1,13 +1,13 @@
 import browser from "webextension-polyfill";
 import {
-  executeFillInputElement,
+  type GeneratorMessage,
   type GeneratorMessageResponse,
-  type GeneratorMessage
+  executeFillInputElement
 } from "@/lib/generator";
 import { MessageAction } from "@/configs";
 
 browser.runtime.onMessage.addListener(
-  (rawMessage: unknown): Promise<GeneratorMessageResponse> | void => {
+  (rawMessage: unknown): Promise<GeneratorMessageResponse> | undefined => {
     const message = rawMessage as GeneratorMessage;
 
     if (message.action === MessageAction.FILL_INPUT) {

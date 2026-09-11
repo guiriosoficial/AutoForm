@@ -1,5 +1,8 @@
 export function toTitleCase(str: string) {
-  return str.replaceAll(/(^|[-_ ])(\w)/gu, (_, __, char) => char.toUpperCase())
+  return str.replaceAll(/(?:^|[-_ ])(?<char>\w)/gu, (...args) => {
+    const groups = args.pop();
+    return groups.char.toUpperCase();
+  });
 }
 
 export function createNextSequencedName<T extends object>(
@@ -8,17 +11,20 @@ export function createNextSequencedName<T extends object>(
   name: string,
   options?: { spaced?: boolean },
 ) {
-  const escapedName = name.replaceAll(/[^\w\s]/gu, "\\$&");
-  const nameRegex = RegExp(`^${escapedName}\\s*(\\d+)$`);
+  const escapedName = name.replaceAll(/[^\w\s]/gu, "$&");
+  const nameRegex = new RegExp(`^${escapedName}\\s*(\\d+)$`, "u");
+  let maxNumber = 0;
 
-  const nextNumber = list.reduce((max, item) => {
+  for (const item of list) {
     const value = String(item[key] ?? "");
     const match = value.match(nameRegex);
 
-    if (!match) return max;
+    if (!match) continue;
 
-    return Math.max(max, Number(match[1]));
-  }, 0) + 1;
+    maxNumber = Math.max(maxNumber, Number(match[1]));
+  }
 
-  return `${name}${options?.spaced ? " " : ""}${nextNumber}`
+  const nextNumber = maxNumber + 1;
+  const space = options?.spaced ? " " : "";
+  return `${name}${space}${nextNumber}`
 }

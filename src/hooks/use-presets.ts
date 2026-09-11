@@ -1,24 +1,25 @@
 import { useTranslation } from "react-i18next";
 import {
+  type RefObject,
   useCallback,
   useEffect,
   useMemo,
-  useState,
-  type RefObject
+  useState
 } from "react";
 import {
+  type Preset,
   createEmptyPreset,
   getAdjacentPreset,
-  isValidPresetArray,
-  type Preset
+  isValidPresetArray
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { createNextSequencedName } from "@/lib/string";
+import { getErrorMessage } from "@/lib/errors";
 import { isFunction } from "@/lib/guards";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
-import type { FieldConfig } from "@/lib/fields";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
+import type { FieldConfig } from "@/lib/fields";
 
 interface UsePresetsArgs {
   presetNameEditorRef: RefObject<InlineInputRef | null>;
@@ -38,15 +39,15 @@ export function usePresets({
   const [lasPresetId, setLastPresetId, , hydratedLastPresetId] = usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
   const [presets, setPresets, , hydratedPresets] = usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
-  const presetsById = useMemo(() => {
-    return Object.fromEntries(
-      presets.map(p => [p.id, p])
-    );
-  }, [presets]);
+  const presetsById = useMemo(() =>
+    Object.fromEntries(
+      presets.map(preset => [preset.id, preset])
+    ), [presets]);
 
-  const currentPreset = useMemo(() => {
-    return presetsById[currentPresetId] ?? null;
-  }, [presetsById, currentPresetId]);
+  const currentPreset = useMemo(
+    () => presetsById[currentPresetId] ?? null,
+    [presetsById, currentPresetId])
+  ;
 
   const setCurrentPreset = useCallback((preset: Preset | null) => {
     if (!preset) return;
@@ -68,11 +69,11 @@ export function usePresets({
     if (presets.length <= 1) return;
 
     presetNameEditorRef.current?.startEditing();
-  }, [presets, presetNameEditorRef, setPresets, setCurrentPreset]);
+  }, [presets, presetNameEditorRef, t, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
     setPresets((prev) =>
-      prev.filter(p => p.id !== presetId)
+      prev.filter(preset => preset.id !== presetId)
     );
 
     const isCurrent = presetId === currentPresetId;
@@ -152,11 +153,11 @@ export function usePresets({
     const url = URL.createObjectURL(blob);
 
     try {
-      const a = document.createElement("a");
-      a.download = EXPORT_CONFIG.FILE_NAME;
-      a.href = url;
-      a.click();
-      a.remove()
+      const anchor = document.createElement("a");
+      anchor.download = EXPORT_CONFIG.FILE_NAME;
+      anchor.href = url;
+      anchor.click();
+      anchor.remove()
     } catch {
       toast.error(t("presetsManager.messages.exportPreset.failed"));
     } finally {
@@ -182,8 +183,8 @@ export function usePresets({
         parsed: imported,
         duplicated,
       };
-    } catch (error: Error | any) {
-      const errorMessage = error.message ?? t("presetsManager.messages.importPreset.failed");
+    } catch (error) {
+      const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"))
 
       toast.error(errorMessage);
     }
@@ -199,13 +200,11 @@ export function usePresets({
     }
 
     setPresets(prev => {
-      const map = new Map(prev.map(p => [p.id, p]));
+      const isAppendStrategy = strategy === ImportStrategy.APPEND;
+      const map = new Map(prev.map(preset => [preset.id, preset]));
 
       for (const preset of imported) {
-        if (
-          strategy === ImportStrategy.APPEND &&
-          map.has(preset.id)
-        ) continue;
+        if (isAppendStrategy && map.has(preset.id)) continue;
 
         map.set(preset.id, preset);
       }

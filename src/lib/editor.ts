@@ -1,8 +1,8 @@
 import { createTheme } from "@uiw/codemirror-themes";
 import { json5ParseLinter } from "codemirror-json5";
-import { linter, type LintSource, type Diagnostic } from "@codemirror/lint";
+import { type Diagnostic, type LintSource, linter } from "@codemirror/lint";
 import { syntaxTree } from "@codemirror/language";
-import { keymap, EditorView } from "@codemirror/view";
+import { EditorView, keymap } from "@codemirror/view";
 import { EDITOR_CONFIG, EDITOR_SHORTCUTS, EDITOR_THEME } from "@/configs";
 
 export const createEditorTheme = () => [
@@ -26,7 +26,7 @@ export const createEditorKeymap = ({ onFormat }: { onFormat: () => void }) =>
     },
   ]);
 
-export const createEditorLinter = (lintSource: LintSource, enabled: boolean = true) =>
+export const createEditorLinter = (lintSource: LintSource, enabled = true) =>
   linter(
     (view) => (!enabled || !lintSource) ? [] : lintSource(view),
     {
@@ -56,3 +56,5 @@ export const javascriptLinter: LintSource = (view) => {
 
   return diagnostics;
 };
+
+export const EDITOR_THEME_CREATED = createEditorTheme()

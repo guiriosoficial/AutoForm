@@ -1,8 +1,6 @@
-import {useRef, useState} from "react";
+import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Settings2, ExternalLink, Trash } from "lucide-react";
-import { PopoverRoot } from "@base-ui/react";
-import { AlertDialog } from "@/components/shared/AlertDialog";
+import { ExternalLink, Settings2, Trash } from "lucide-react";
 import {
   Button,
   buttonVariants
@@ -20,13 +18,15 @@ import {
   TabsList,
   TabsTrigger
 } from "@/components/ui/tabs";
-import {JsonEditor, JsonEditorRef} from "@/components/layouts/JsonEditor";
-import {JavascriptEditor, JavascriptEditorRef} from "@/components/layouts/JavascriptEditor";
+import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts/JavascriptEditor";
+import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
+import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/hooks/use-catalog";
-import { preventDefaultEscape } from "@/lib/dom";
-import { isPopulatedJson5 } from "@/lib/json5";
 import { cn } from "@/lib/utils";
+import { isPopulatedJson5 } from "@/lib/json5";
+import { preventDefaultEscape } from "@/lib/dom";
 import { EditorTabs } from "@/configs";
+import type { PopoverRoot } from "@base-ui/react";
 import type { CatalogMethod } from "@/lib/catalog";
 
 interface FieldOptionsPopoverProps {
@@ -80,14 +80,14 @@ export function FieldOptionsPopover({
     )
   }
 
-  const handleConfirmDeleteMethod = (methodKey: string) => {
-    removeCustomMethod(methodKey)
+  const handleConfirmDeleteMethod = (key: string) => {
+    removeCustomMethod(key)
 
     setDeleteMethodAlertOpen(false)
     setOpen(false)
   }
 
-  const handlePopoverOpenChange = async (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
+  const handlePopoverOpenChange = (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
     const isClosingByClickOnAlert =
       !isOpening &&
       deleteMethodAlertOpen &&
@@ -101,7 +101,7 @@ export function FieldOptionsPopover({
     setOpen(isOpening);
   };
 
-  const handleFormatClick = async () => {
+  const handleFormatClick = () => {
     if (activeTab === EditorTabs.OPTIONS) {
       jsonEditorRef.current?.format();
     } else {

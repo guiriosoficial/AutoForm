@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
 import { useState } from "react";
-import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogClose,
@@ -25,14 +24,12 @@ import {
   ToggleGroup,
   ToggleGroupItem
 } from "@/components/ui/toggle-group";
+import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
+import { ImportStrategyIcons } from "@/components/shared/icons"
 import { preventDefaultEscape } from "@/lib/dom";
-import {
-  IMPORT_CONFIG,
-  ImportStrategy,
-  ImportStrategyIcons
-} from "@/configs";
+import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 
@@ -63,10 +60,10 @@ export function ImportPresetsDialog({
     total: parsed.length
   });
 
-  const handleChangeImportStrategy = (strategy: string[]) => {
-    if (strategy.length === 0) return
+  const handleChangeImportStrategy = (newStrategy: string[]) => {
+    if (newStrategy.length === 0) return
 
-    setStrategy(strategy[0] as ImportStrategy)
+    setStrategy(newStrategy[0] as ImportStrategy)
   };
 
   return (

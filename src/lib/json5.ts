@@ -11,7 +11,7 @@ type JsonValue =
 
 interface StringifyOptions {
   replacer?:
-    | ((this: any, key: string, value: any) => any)
+    | ((this: unknown, key: string, value: unknown) => unknown)
     | (string | number)[]
     | null;
   space?: string | number | null;
@@ -30,7 +30,7 @@ export function stringifyJson5(
 }
 
 
-export function parseJson5<T = any>(text: string): T {
+export function parseJson5<T = unknown>(text: string): T {
   return JSON5.parse(text);
 }
 
@@ -43,6 +43,6 @@ export function isPopulatedJson5(input: string | undefined) {
     !!trimmed &&
     !/^\{\s*\}$/u.test(trimmed) &&
     !/^\[\s*\]$/u.test(trimmed) &&
-    !/^(['"]) *\1$/u.test(trimmed)
+    !/^(?<quote>['"]) *\k<quote>$/u.test(trimmed)
   );
 }

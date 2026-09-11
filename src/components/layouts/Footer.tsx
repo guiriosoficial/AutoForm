@@ -14,6 +14,17 @@ interface FooterProps {
   hideCredits?: boolean;
 }
 
+const creditsTranslationComponents = {
+  author: (
+    <a
+      href={APP_AUTHOR_URL}
+      target="_blank"
+      rel="noreferrer"
+      className={buttonVariants({ variant: "link" })}
+    />
+  )
+}
+
 export function Footer({
   primaryButonText,
   primaryButtonIcon: PrimaryButtonIcon,
@@ -56,16 +67,7 @@ export function Footer({
         <span className="text-sm text-center text-muted-foreground">
           <Trans
             i18nKey="globals.credits"
-            components={{
-              author: (
-                <a
-                  href={APP_AUTHOR_URL}
-                  target="_blank"
-                  rel="noreferrer"
-                  className={buttonVariants({ variant: "link" })}
-                />
-              )
-            }}
+            components={creditsTranslationComponents}
           />
         </span>
       )}

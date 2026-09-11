@@ -1,7 +1,6 @@
 import babel from "prettier/plugins/babel";
 import estree from "prettier/plugins/estree";
 import { tags as t } from "@lezer/highlight";
-import {createEditorTheme} from "@/lib/editor.ts";
 
 export const EditorTabs = {
   OPTIONS: "options",
@@ -79,5 +78,3 @@ export const EDITOR_THEME = {
     }
   }
 };
-
-export const EDITOR_THEME_CREATED = createEditorTheme();

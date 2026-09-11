@@ -7,7 +7,7 @@ import { AppSettingsProvider } from "@/providers/AppSettingsProvider";
 import '@/assets/styles/globals.css';
 import '@/i18n';
 
-createRoot(document.getElementById('root')!)
+createRoot(document.querySelector('#root')!)
   .render(
     <StrictMode>
       <NavigationProvider>

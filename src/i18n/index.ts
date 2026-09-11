@@ -7,6 +7,7 @@ import {
   ptBrTranslations
 } from '@/i18n/locales';
 
+// oxlint-disable-next-line import/no-named-as-default-member
 i18n
   .use(detector)
   .use(initReactI18next)

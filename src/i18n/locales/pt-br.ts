@@ -1,6 +1,6 @@
 import { APP_NAME, APP_AUTHOR_USER } from "@/configs";
 
-export default {
+export const ptBrTranslations = {
   globals: {
     appTitle: APP_NAME,
     appDescription: "Preencha formulários automaticamente com dados aleatórios",

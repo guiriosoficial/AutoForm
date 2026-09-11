@@ -1,5 +1,11 @@
-import { useState, useContext, createContext, type ReactNode } from "react";
-import { PAGE_CONFIG, Page } from "@/configs";
+import {
+  type ReactNode,
+  createContext,
+  useContext,
+  useMemo,
+  useState
+} from "react";
+import { PAGE_CONFIG, type Page } from "@/configs";
 
 interface NavigationProviderProps {
   children: ReactNode;
@@ -12,7 +18,7 @@ interface NavigationProviderState {
 
 const initialState: NavigationProviderState = {
   activePage: PAGE_CONFIG.DEFAULT,
-  setActivePage: () => null,
+  setActivePage: () => {},
 };
 
 export const NavigationProviderContext = createContext<NavigationProviderState>(initialState);
@@ -22,10 +28,10 @@ export function NavigationProvider({
 }: NavigationProviderProps) {
   const [activePage, setActivePage] = useState<Page>(PAGE_CONFIG.DEFAULT);
 
-  const value = {
+  const value = useMemo(() => ({
     activePage,
     setActivePage,
-  };
+  }), [activePage])
 
   return (
     <NavigationProviderContext value={value}>
@@ -37,8 +43,9 @@ export function NavigationProvider({
 export function useNavigation ()  {
   const context = useContext(NavigationProviderContext);
 
-  if (context === undefined)
+  if (context === undefined) {
     throw new Error("useNavigation must be used within a NavigationProvider");
+  }
 
   return context;
 }

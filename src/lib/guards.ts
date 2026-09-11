@@ -21,7 +21,7 @@ export function isPositiveNumber(value: unknown): value is number {
 export function isTimestamp(value: unknown): value is number {
   return (
     isPositiveNumber(value) &&
-    !isNaN(new Date(value).getTime())
+    !Number.isNaN(new Date(value).getTime())
   );
 }
 

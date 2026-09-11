@@ -1,28 +1,31 @@
-import prettier from "prettier/standalone";
 import { parse as babelParse } from "@babel/parser";
-import { javascript } from "@codemirror/lang-javascript";
+import { format as prettierFormat } from "prettier/standalone";
 import {
+  type ForwardedRef,
   forwardRef,
   useCallback,
   useEffect,
+  useImperativeHandle,
   useMemo,
   useRef,
-  useImperativeHandle,
-  type ForwardedRef
 } from "react";
-import ReactCodeMirror from "@uiw/react-codemirror";
 import { Input } from "@/components/ui/input";
-import { createEditorKeymap, createEditorLinter } from "@/lib/editor"
+import { javascript } from "@codemirror/lang-javascript";
+import ReactCodeMirror from "@uiw/react-codemirror";
+import {
+  EDITOR_THEME_CREATED,
+  createEditorKeymap,
+  createEditorLinter,
+  javascriptLinter
+} from "@/lib/editor"
 import { debounce } from "@/lib/async";
-import { javascriptLinter } from "@/lib/editor";
 import { getErrorMessage } from "@/lib/errors";
+import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
   EDITOR_BASIC_SETUP,
-  EDITOR_THEME_CREATED,
   EDITOR_PRETTIER_FORMAT_OPTIONS
 } from "@/configs";
-import type { CatalogMethod } from "@/lib/catalog";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;
@@ -35,7 +38,7 @@ export interface JavascriptEditorRef {
   format: () => void;
 }
 
-export const JavascriptEditor = forwardRef((
+function JavascriptEditorComponent (
   {
     value,
     className,
@@ -81,9 +84,9 @@ export const JavascriptEditor = forwardRef((
       const arrowFunction = statement.expression;
 
       if (arrowFunction.body.type === "BlockStatement") {
-        const hasValidReturn = arrowFunction.body.body.some((node) => {
-          return node.type === "ReturnStatement" && node.argument !== null;
-        });
+        const hasValidReturn = arrowFunction.body.body.some((node) =>
+          node.type === "ReturnStatement" && node.argument !== null
+        );
 
         if (!hasValidReturn) {
           onErrorChange("A função precisa conter uma instrução 'return'.");
@@ -102,13 +105,13 @@ export const JavascriptEditor = forwardRef((
     if (!value.code) return;
 
     try {
-      const formattedCode = await prettier.format(
+      const formattedCode = await prettierFormat(
         value.code,
         EDITOR_PRETTIER_FORMAT_OPTIONS
       );
       onChange("code", formattedCode);
-    } catch (err) {
-      console.log(err)
+    } catch {
+      // TODO: Handle this error
     }
   }, [value, onChange]);
 
@@ -165,4 +168,8 @@ export const JavascriptEditor = forwardRef((
       />
     </div>
   );
-})
+}
+
+export const JavascriptEditor = forwardRef(JavascriptEditorComponent)
+
+JavascriptEditor.displayName = "JavascriptEditor";

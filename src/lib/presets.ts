@@ -1,5 +1,5 @@
-import { createField, isValidFieldArray, type FieldConfig } from "@/lib/fields";
-import { isPopulatedString, isTimestamp, isObject } from "@/lib/guards";
+import { type FieldConfig, createField, isValidFieldArray } from "@/lib/fields";
+import { isObject, isPopulatedString, isTimestamp } from "@/lib/guards";
 
 export interface Preset {
   id: string;
@@ -29,13 +29,13 @@ export function isValidPreset(value: unknown): value is Preset {
 export function isValidPresetArray(value: unknown): value is Preset[] {
   return (
     Array.isArray(value) &&
-    value.every(isValidPreset)
+    value.every((item) => isValidPreset(item))
   );
 }
 
 
 export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
-  const presetIndex = presets.findIndex(p => p.id === currentPresetId);
+  const presetIndex = presets.findIndex(preset => preset.id === currentPresetId);
 
   if (presetIndex === -1) return null;
 

@@ -1,6 +1,6 @@
 import { APP_NAME, APP_AUTHOR_USER } from "@/configs";
 
-export default {
+export const enTranslations = {
   globals: {
     appTitle: APP_NAME,
     appDescription: "Fill forms automatically with random data",

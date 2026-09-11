@@ -2,8 +2,9 @@ import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
 import { Button }  from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
+import { PageIcons } from "@/components/shared/icons";
 import { useNavigation } from "@/providers/NavigationProvider";
-import { Page, PageIcons } from "@/configs";
+import { Page } from "@/configs";
 
 export function Header() {
   const { activePage, setActivePage } = useNavigation();

@@ -1,8 +1,8 @@
-export function debounce<T extends (...args: any[]) => void>(
+export function debounce<T extends (...args: never[]) => void>(
   callback: T,
   delay: number,
 ) {
-  let timeoutId: ReturnType<typeof setTimeout> | undefined;
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
   const debounced = (...args: Parameters<T>) => {
     if (timeoutId) {
@@ -17,7 +17,7 @@ export function debounce<T extends (...args: any[]) => void>(
   debounced.cancel = () => {
     if (timeoutId) {
       clearTimeout(timeoutId);
-      timeoutId = undefined;
+      timeoutId = null;
     }
   };
 

@@ -1,10 +1,6 @@
 import { useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, Zap } from "lucide-react";
-import { InlineInput, type InlineInputRef } from "@/components/shared/InlineInput";
-import { Footer } from "@/components/layouts/Footer";
-import { PresetsManager } from "@/components/PresetsManager";
-import { FieldsManager } from "@/components/FieldsManager";
 import {
   Card,
   CardAction,
@@ -13,8 +9,12 @@ import {
   CardHeader,
   CardTitle
 } from "@/components/ui/card";
-import { usePresets } from "@/hooks/use-presets";
+import { InlineInput, type InlineInputRef } from "@/components/shared/InlineInput";
+import { Footer } from "@/components/layouts/Footer";
+import { FieldsManager } from "@/components/FieldsManager";
+import { PresetsManager } from "@/components/PresetsManager";
 import { useForm } from "@/hooks/use-form";
+import { usePresets } from "@/hooks/use-presets";
 
 export function HomeView(){
   const { t } = useTranslation();
