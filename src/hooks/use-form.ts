@@ -26,7 +26,8 @@ export function useForm({
   const { t } = useTranslation();
   const { catalogMethodsByKey } = useCatalog();
 
-  const [generatedValuesByPresetId, setGeneratedValuesByPresetId] = usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
+  const [generatedValuesByPresetId, setGeneratedValuesByPresetId] =
+    usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
 
   const generatedValues = useMemo(
     () => generatedValuesByPresetId[presetId] ?? {},

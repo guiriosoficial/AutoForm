@@ -29,9 +29,12 @@ export function usePresets({
 }: UsePresetsArgs) {
   const { t } = useTranslation();
 
-  const [currentPresetId, setCurrentPresetId] = useState<string>("");
-  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] = usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
-  const [presets, setPresets, , hydratedPresets] = usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
+  const [currentPresetId, setCurrentPresetId] =
+    useState<string>("");
+  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] =
+    usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
+  const [presets, setPresets, , hydratedPresets] =
+    usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
   const presetsById = useMemo(() =>
     new Map(presets.map((preset) => [preset.id, preset])

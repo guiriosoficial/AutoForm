@@ -16,7 +16,8 @@ import {
 import { CATALOG_CONFIG, StorageKeys } from "@/configs";
 
 export function useCatalog() {
-  const [customMethods, setCustomMethods] = usePersistentState<CatalogMethod[]>(StorageKeys.CUSTOM_METHODS, []);
+  const [customMethods, setCustomMethods] =
+    usePersistentState<CatalogMethod[]>(StorageKeys.CUSTOM_METHODS, []);
 
   const { t } = useTranslation();
 
