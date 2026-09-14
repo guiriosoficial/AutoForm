@@ -9,7 +9,7 @@ interface DynamicIconProps {
 export function DynamicIcon({
   icon: Icon,
   size,
-  className
+  className,
 }: DynamicIconProps) {
   return Icon
     ? (

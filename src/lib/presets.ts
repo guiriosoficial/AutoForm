@@ -33,9 +33,8 @@ export function isValidPresetArray(value: unknown): value is Preset[] {
   );
 }
 
-
 export function getAdjacentPreset(presets: Preset[], currentPresetId: string) {
-  const presetIndex = presets.findIndex(preset => preset.id === currentPresetId);
+  const presetIndex = presets.findIndex((preset) => preset.id === currentPresetId);
 
   if (presetIndex === -1) return null;
 

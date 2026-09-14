@@ -1,4 +1,4 @@
-import _ from "lodash"
+import _ from "lodash";
 
 export function debounce<T extends (...args: never[]) => void>(
   callback: T,

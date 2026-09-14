@@ -2,19 +2,10 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { useCatalog } from "@/hooks/use-catalog";
-import { toast } from "@/lib/toast"
+import { toast } from "@/lib/toast";
 import { isFunction } from "@/lib/guards";
-import {
-  type GeneratorValue,
-  generateValue,
-  fillInputElement
-} from "@/lib/generator";
-import {
-  type FieldConfig,
-  type FieldResult,
-  createField,
-  createFieldResult
-} from "@/lib/fields";
+import { type GeneratorValue, generateValue, fillInputElement } from "@/lib/generator";
+import { type FieldConfig, type FieldResult, createField, createFieldResult } from "@/lib/fields";
 import { EXPORT_CONFIG, StorageKeys } from "@/configs";
 
 interface UseFormArgs {
@@ -23,14 +14,14 @@ interface UseFormArgs {
   updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
 }
 
-export type GeneratedValuesJson = Record<string, GeneratorValue>
+export type GeneratedValuesJson = Record<string, GeneratorValue>;
 export type GeneratedValues = Record<string, FieldResult>;
 export type ValuesByPresetId = Record<string, GeneratedValues>;
 
 export function useForm({
   presetId,
   fields,
-  updateFields
+  updateFields,
 }: UseFormArgs) {
   const { t } = useTranslation();
   const { catalogMethodsByKey } = useCatalog();
@@ -39,7 +30,7 @@ export function useForm({
 
   const generatedValues = useMemo(
     () => generatedValuesByPresetId[presetId] ?? {},
-    [generatedValuesByPresetId, presetId]
+    [generatedValuesByPresetId, presetId],
   );
 
   const setGeneratedValues = useCallback((
@@ -50,17 +41,16 @@ export function useForm({
     setGeneratedValuesByPresetId(prev => {
       const currentValues = prev[presetId] ?? {};
 
-      const values =
-        isFunction(valuesOrUpdater)
+        const values = isFunction(valuesOrUpdater)
           ? valuesOrUpdater(currentValues)
           : valuesOrUpdater;
 
-      return {
-        ...prev,
-        [presetId]: values,
-      };
-    });
-  }, [presetId, setGeneratedValuesByPresetId]);
+        return {
+          ...prev,
+          [presetId]: values,
+        };
+      });
+    }, [presetId, setGeneratedValuesByPresetId]);
 
   const fieldsById = useMemo(() =>
     Object.fromEntries(
@@ -68,15 +58,11 @@ export function useForm({
     ), [fields]);
 
   const addField = useCallback(() => {
-    updateFields((prev) =>
-      [...prev, createField()]
-    );
+    updateFields((prev) => [...prev, createField()]);
   }, [updateFields]);
 
   const removeField = useCallback((id: string) => {
-    updateFields((prev) =>
-      prev.filter(field => field.id !== id)
-    );
+    updateFields((prev) => prev.filter(field => field.id !== id));
   }, [updateFields]);
 
   const updateField = useCallback((id: string, updated: FieldConfig) => {
@@ -101,7 +87,7 @@ export function useForm({
         values[field.id] = createFieldResult.value(generatedValue);
 
         await fillInputElement(field.selector, generatedValue);
-      })
+      }),
     );
 
     setGeneratedValues(values);
@@ -143,10 +129,10 @@ export function useForm({
 
         if (!generatedValue) continue;
 
-        data[field.selector || field.id] = generatedValue.value
+        data[field.selector || field.id] = generatedValue.value;
       }
 
-      const value = JSON.stringify(data, null, EXPORT_CONFIG.INDENT_SPACES)
+      const value = JSON.stringify(data, null, EXPORT_CONFIG.INDENT_SPACES);
       await navigator.clipboard.writeText(value);
       toast.success(t("footer.messages.copyJson.success"));
     } catch {
@@ -162,6 +148,6 @@ export function useForm({
     generateValues,
     regenerateValue,
     copyValue,
-    copyFormAsJSON
+    copyFormAsJSON,
   };
 }

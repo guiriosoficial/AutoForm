@@ -45,27 +45,25 @@ export function useCatalog() {
   ), [customMethods]);
 
   const createCustomMethod = useCallback(() => {
-    const defaultName = t("configs.catalog.method.defaultName")
+    const defaultName = t("configs.catalog.method.defaultName");
     const nextCatalogName = createNextSequencedName<CatalogMethod>(
       customMethods,
       "label",
       defaultName,
-      { spaced: true }
-    )
+      { spaced: true },
+    );
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
-      generateUniqueId: true
-    }
+      generateUniqueId: true,
+    };
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
       nextCatalogName,
       undefined,
-      newCustomMethodOptions
-    )
+      newCustomMethodOptions,
+    );
 
-    setCustomMethods((prev) =>
-      [...prev, newMethod]
-    )
+    setCustomMethods((prev) => [...prev, newMethod]);
 
     return newMethod;
   }, [customMethods, t]);
@@ -75,7 +73,7 @@ export function useCatalog() {
     updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
   ) => {
     setCustomMethods((prev) =>
-      prev.map(method => {
+      prev.map((method) => {
         if (method.key !== methodKey) return method;
 
         const updated =
@@ -83,19 +81,19 @@ export function useCatalog() {
             ? updater(method)
             : updater;
 
-        return {
-          ...method,
-          ...updated,
-        };
-      })
-    )
-  }, [setCustomMethods])
+          return {
+            ...method,
+            ...updated,
+          };
+        }),
+      );
+    }, [setCustomMethods]);
 
   const removeCustomMethod = useCallback((methodKey: string) => {
     setCustomMethods((prev) =>
       prev.filter(method => method.key !== methodKey)
-    )
-  }, [setCustomMethods])
+    );
+  }, [setCustomMethods]);
 
   return {
     customMethods,
@@ -104,6 +102,6 @@ export function useCatalog() {
     customMethodsByKey,
     createCustomMethod,
     updateCustomMethod,
-    removeCustomMethod
+    removeCustomMethod,
   };
 }

@@ -1,7 +1,7 @@
 export const APP_CONFIG = {
   id: __APP_ID__,
   name: __APP_NAME__,
-  version: __APP_VERSION__
+  version: __APP_VERSION__,
 } as const;
 
 export const APP_ID = APP_CONFIG.id;

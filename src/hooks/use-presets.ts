@@ -1,16 +1,10 @@
 import { useTranslation } from "react-i18next";
-import {
-  type RefObject,
-  useCallback,
-  useEffect,
-  useMemo,
-  useState
-} from "react";
+import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
 import {
   type Preset,
   createEmptyPreset,
   getAdjacentPreset,
-  isValidPresetArray
+  isValidPresetArray,
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { createNextSequencedName } from "@/lib/string";
@@ -31,7 +25,7 @@ export interface ParsePresetsResult {
 }
 
 export function usePresets({
-  presetNameEditorRef
+  presetNameEditorRef,
 }: UsePresetsArgs) {
   const { t } = useTranslation();
 
@@ -41,13 +35,13 @@ export function usePresets({
 
   const presetsById = useMemo(() =>
     Object.fromEntries(
-      presets.map(preset => [preset.id, preset])
+      presets.map((preset) => [preset.id, preset])
     ), [presets]);
 
   const currentPreset = useMemo(
     () => presetsById[currentPresetId] ?? null,
-    [presetsById, currentPresetId])
-  ;
+    [presetsById, currentPresetId],
+  );
 
   const setCurrentPreset = useCallback((preset: Preset | null) => {
     if (!preset) return;
@@ -57,13 +51,11 @@ export function usePresets({
   }, [setCurrentPresetId, setLastPresetId]);
 
   const createPreset = useCallback(() => {
-    const defaultName = t("configs.preset.defaultName")
+    const defaultName = t("configs.preset.defaultName");
     const nextPresetNumber = createNextSequencedName<Preset>(presets, "name", defaultName);
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
-    setPresets((prev) =>
-      [...prev, emptyPreset]
-    );
+    setPresets((prev) => [...prev, emptyPreset]);
     setCurrentPreset(emptyPreset);
 
     if (presets.length <= 1) return;
@@ -72,9 +64,7 @@ export function usePresets({
   }, [presets, presetNameEditorRef, t, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
-    setPresets((prev) =>
-      prev.filter(preset => preset.id !== presetId)
-    );
+    setPresets((prev) => prev.filter((preset) => preset.id !== presetId));
 
     const isCurrent = presetId === currentPresetId;
 
@@ -88,33 +78,30 @@ export function usePresets({
     presetId: string,
     updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)
   ) => {
-    setPresets(prev =>
-      prev.map(preset => {
+    setPresets((prev) =>
+      prev.map((preset) => {
         if (preset.id !== presetId) return preset;
 
-        const updated =
-          isFunction(updater)
-            ? updater(preset)
-            : updater;
+        const updated = isFunction(updater)
+          ? updater(preset)
+          : updater;
 
         return {
           ...preset,
           ...updated,
         };
-      })
+      }),
     );
   }, [setPresets]);
 
-  const updateCurrentPreset = useCallback((
-    updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)
-  ) => {
+  const updateCurrentPreset = useCallback((updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)) => {
     if (!currentPreset) return;
 
     updatePreset(currentPreset.id, updater);
   }, [currentPreset, updatePreset]);
 
   const updateCurrentPresetFields = useCallback((updater: (fields: FieldConfig[]) => FieldConfig[]) => {
-    updateCurrentPreset(preset => ({
+    updateCurrentPreset((preset) => ({
       fields: updater(preset.fields),
     }));
   }, [updateCurrentPreset]);
@@ -144,7 +131,7 @@ export function usePresets({
       return;
     }
 
-    createPreset()
+    createPreset();
   }, [presets, currentPreset, presetsById, lasPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
   const exportPresets = useCallback(() => {
@@ -157,7 +144,7 @@ export function usePresets({
       anchor.download = EXPORT_CONFIG.FILE_NAME;
       anchor.href = url;
       anchor.click();
-      anchor.remove()
+      anchor.remove();
     } catch {
       toast.error(t("presetsManager.messages.exportPreset.failed"));
     } finally {
@@ -173,18 +160,16 @@ export function usePresets({
         throw new Error(t("presetsManager.messages.importPreset.invalid"));
       }
 
-      const existingIds = new Set(presets.map(preset => preset.id));
+      const existingIds = new Set(presets.map((preset) => preset.id));
 
-      const duplicated = imported.filter(preset =>
-        existingIds.has(preset.id)
-      );
+      const duplicated = imported.filter((preset) => existingIds.has(preset.id));
 
       return {
         parsed: imported,
         duplicated,
       };
     } catch (error) {
-      const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"))
+      const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"),);
 
       toast.error(errorMessage);
     }
@@ -199,9 +184,9 @@ export function usePresets({
       return;
     }
 
-    setPresets(prev => {
+    setPresets((prev) => {
       const isAppendStrategy = strategy === ImportStrategy.APPEND;
-      const map = new Map(prev.map(preset => [preset.id, preset]));
+      const map = new Map(prev.map((preset) => [preset.id, preset]));
 
       for (const preset of imported) {
         if (isAppendStrategy && map.has(preset.id)) continue;

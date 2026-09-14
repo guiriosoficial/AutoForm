@@ -17,13 +17,13 @@ export function InlineButton({
   persistent,
   destructive,
   className,
-  onClick
+  onClick,
 }: InlineButtonProps) {
   const buttonClasses = cn(
     "text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all",
     destructive && "hover:text-destructive",
     persistent && "opacity-100",
-    className
+    className,
   );
 
   return (
@@ -33,5 +33,5 @@ export function InlineButton({
     >
       <Icon size={size} />
     </button>
-  )
+  );
 }

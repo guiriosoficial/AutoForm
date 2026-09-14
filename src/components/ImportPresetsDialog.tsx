@@ -7,23 +7,11 @@ import {
   DialogDescription,
   DialogFooter,
   DialogHeader,
-  DialogTitle
+  DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Field,
-  FieldDescription,
-  FieldLabel
-} from "@/components/ui/field";
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemTitle
-} from "@/components/ui/item";
-import {
-  ToggleGroup,
-  ToggleGroupItem
-} from "@/components/ui/toggle-group";
+import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
@@ -47,23 +35,23 @@ export function ImportPresetsDialog({
   open,
   presetsToImport,
   onOpenChange,
-  onImport
+  onImport,
 }: ImportPresetsDialogProps) {
   const [strategy, setStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
   const { t } = useTranslation();
 
-  const { parsed, duplicated } = presetsToImport
+  const { parsed, duplicated } = presetsToImport;
 
   const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicated.length,
-    total: parsed.length
+    total: parsed.length,
   });
 
   const handleChangeImportStrategy = (newStrategy: string[]) => {
-    if (newStrategy.length === 0) return
+    if (newStrategy.length === 0) return;
 
-    setStrategy(newStrategy[0] as ImportStrategy)
+    setStrategy(newStrategy[0] as ImportStrategy);
   };
 
   return (
@@ -96,7 +84,7 @@ export function ImportPresetsDialog({
                   {preset.name}
                 </ItemTitle>
                 <ItemDescription>
-                  {t('globals.fields', { count: preset.fields.length })}
+                  {t("globals.fields", { count: preset.fields.length })}
                 </ItemDescription>
               </ItemContent>
             </Item>

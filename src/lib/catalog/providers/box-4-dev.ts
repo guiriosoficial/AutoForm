@@ -10,10 +10,10 @@ type Box4DevModuleObject = Record<string, Box4DevMethod>;
 type Box4DevInstance = Record<string, Box4DevMethod | Box4DevModuleObject>;
 type Box4DevEntry = [string, Box4DevMethod];
 
-const MODULE_NAME = 'gerador-br';
+const MODULE_NAME = "gerador-br";
 
 const createBox4DevDocUrl = (method: string) =>
-  `https://box4.dev/${i18n.language}/pacotes-npm/gerador-br/docs#${method}`
+  `https://box4.dev/${i18n.language}/pacotes-npm/gerador-br/docs#${method}`;
 
 const getBox4DevMethods = () =>
   Object.entries(gerar as unknown as Box4DevInstance)
@@ -25,8 +25,8 @@ const getBox4DevMethods = () =>
         .map(([nestedKey, nestedValue]) => [
           `${key}${toTitleCase(nestedKey)}`,
           nestedValue,
-          ]);
-    })
+        ]);
+  });
 
 export const createBox4DevCatalog = () => [
   createCatalogModule(
@@ -37,7 +37,7 @@ export const createBox4DevCatalog = () => [
         methodKey,
         methodValue.bind(methodValue),
         { docsUrl: createBox4DevDocUrl(methodKey) }
-      )
-    )
-  )
-]
+      ),
+    ),
+  ),
+];

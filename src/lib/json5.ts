@@ -1,4 +1,4 @@
-import JSON5 from 'json5';
+import JSON5 from "json5";
 import { EDITOR_CONFIG } from "@/configs";
 
 export type JsonValue =
@@ -24,11 +24,10 @@ const defaultStringifyOptions: StringifyOptions = {
 
 export function stringifyJson5(
   json: JsonValue,
-  options: StringifyOptions = defaultStringifyOptions
+  options: StringifyOptions = defaultStringifyOptions,
 ) {
   return JSON5.stringify(json, options);
 }
-
 
 export function parseJson5<T = unknown>(text: string): T {
   return JSON5.parse(text);

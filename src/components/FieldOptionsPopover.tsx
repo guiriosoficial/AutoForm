@@ -1,23 +1,16 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { ExternalLink, Settings2, Trash } from "lucide-react";
-import {
-  Button,
-  buttonVariants
-} from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import {
   Popover,
   PopoverContent,
   PopoverDescription,
   PopoverHeader,
   PopoverTitle,
-  PopoverTrigger
+  PopoverTrigger,
 } from "@/components/ui/popover";
-import {
-  Tabs, TabsContent,
-  TabsList,
-  TabsTrigger
-} from "@/components/ui/tabs";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts/JavascriptEditor";
 import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
@@ -40,7 +33,7 @@ export function FieldOptionsPopover({
   methodKey,
   value,
   docUrl,
-  onChange
+  onChange,
 }: FieldOptionsPopoverProps) {
   const [open, setOpen] = useState(false);
   const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
@@ -49,7 +42,7 @@ export function FieldOptionsPopover({
   const {
     removeCustomMethod,
     updateCustomMethod,
-    customMethodsByKey
+    customMethodsByKey,
   } = useCatalog()
   const { t } = useTranslation();
 
@@ -60,32 +53,31 @@ export function FieldOptionsPopover({
     ? jsonError
     : javascriptError;
 
-  const jsonEditorRef = useRef<JsonEditorRef>(null)
-  const javascriptEditorRef = useRef<JavascriptEditorRef>(null)
+  const jsonEditorRef = useRef<JsonEditorRef>(null);
+  const javascriptEditorRef = useRef<JavascriptEditorRef>(null);
 
   const currentCustomMethod = customMethodsByKey.get(methodKey) ?? null;
   const isCustomMethod = currentCustomMethod !== null;
   const hasConfig = isPopulatedJson5(value);
 
-
   const handleChangeCustomMethod = <K extends keyof CatalogMethod>(
     key: K,
-    newValue: CatalogMethod[K]
+    newValue: CatalogMethod[K],
   ) => {
-    if (!isCustomMethod) return
+    if (!isCustomMethod) return;
 
     updateCustomMethod(
       currentCustomMethod?.key,
       { [key]: newValue }
     )
-  }
+  };
 
   const handleConfirmDeleteMethod = (key: string) => {
-    removeCustomMethod(key)
+    removeCustomMethod(key);
 
-    setDeleteMethodAlertOpen(false)
-    setOpen(false)
-  }
+    setDeleteMethodAlertOpen(false);
+    setOpen(false);
+  };
 
   const handlePopoverOpenChange = (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
     const isClosingByClickOnAlert =
@@ -107,7 +99,7 @@ export function FieldOptionsPopover({
     } else {
       javascriptEditorRef.current?.format();
     }
-  }
+  };
 
   const triggerButtonClasses = cn(
     "relative",
@@ -116,15 +108,15 @@ export function FieldOptionsPopover({
   );
   const triggerBadgeClasses = cn(
     "absolute -top-0.5 -right-0.5 h-2 w-2 rounded-full",
-    error ? "bg-destructive": "bg-primary"
+    error ? "bg-destructive" : "bg-primary",
   );
   const editorClasses = cn(
     "border-border border rounded-md *:outline-none! *:h-48 *:p-2 overflow-y-auto scrollbar-thin",
-    error && "border-destructive"
+    error && "border-destructive",
   );
   const descriptionClasses = cn(
     "text-xs text-muted-foreground flex items-start justify-between gap-1",
-    error && "text-destructive"
+    error && "text-destructive",
   );
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
@@ -235,7 +227,7 @@ export function FieldOptionsPopover({
         </PopoverContent>
       </Popover>
 
-      {(deleteMethodAlertOpen && isCustomMethod) && (
+      {deleteMethodAlertOpen && isCustomMethod && (
         <AlertDialog
           destructive
           open={deleteMethodAlertOpen}

@@ -4,5 +4,5 @@ import { Page } from "@/configs";
 export const PageIcons: Record<Page, LucideIcon> = {
   [Page.SPONSOR]: Heart,
   [Page.HOME]: ArrowLeft,
-  [Page.PREFERENCES]: Settings2
+  [Page.PREFERENCES]: Settings2,
 } as const;

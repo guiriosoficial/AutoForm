@@ -22,7 +22,7 @@ export function FieldsManager({
   onRemoveField,
   onUpdateField,
   onRegenerateValue,
-  onCopyValue
+  onCopyValue,
 }: FieldsManagerProps) {
   const { t } = useTranslation();
 

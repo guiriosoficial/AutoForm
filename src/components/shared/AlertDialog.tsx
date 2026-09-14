@@ -34,7 +34,7 @@ export function AlertDialog({
   destructive,
   onOpenChange,
   onConfirm,
-  onCancel
+  onCancel,
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
@@ -43,17 +43,17 @@ export function AlertDialog({
   const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
   const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 
-  const variant = destructive ? 'destructive' : 'default';
+  const variant = destructive ? "destructive" : "default";
 
   const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
     preventDefaultEscape(event);
     event.stopPropagation();
 
     switch (event.key) {
-      case 'Enter':
+      case "Enter":
         onConfirm?.();
         break;
-      case 'Escape':
+      case "Escape":
         onCancel?.();
         break;
       default:
@@ -96,5 +96,5 @@ export function AlertDialog({
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialogPrimitive>
-  )
+  );
 }

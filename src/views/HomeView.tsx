@@ -7,7 +7,7 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle
+  CardTitle,
 } from "@/components/ui/card";
 import { InlineInput, type InlineInputRef } from "@/components/shared/InlineInput";
 import { Footer } from "@/components/layouts/Footer";
@@ -16,7 +16,7 @@ import { PresetsManager } from "@/components/PresetsManager";
 import { useForm } from "@/hooks/use-form";
 import { usePresets } from "@/hooks/use-presets";
 
-export function HomeView(){
+export function HomeView() {
   const { t } = useTranslation();
 
   const presetNameEditorRef = useRef<InlineInputRef>(null);
@@ -31,9 +31,9 @@ export function HomeView(){
     deletePreset,
     exportPresets,
     importPresets,
-    parsePresets
+    parsePresets,
   } = usePresets({
-    presetNameEditorRef
+    presetNameEditorRef,
   });
 
   const fields = currentPreset?.fields ?? [];
@@ -50,7 +50,7 @@ export function HomeView(){
   } = useForm({
     fields,
     updateFields: updateCurrentPresetFields,
-    presetId: currentPreset?.id ?? ""
+    presetId: currentPreset?.id ?? "",
   });
 
   return (

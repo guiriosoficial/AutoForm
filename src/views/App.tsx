@@ -4,7 +4,7 @@ import { PreferencesView } from "@/views/PreferencesView";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { Page } from "@/configs";
 
-export function App ()  {
+export function App() {
   const { activePage } = useNavigation();
 
   return (
@@ -14,5 +14,5 @@ export function App ()  {
       {activePage === Page.HOME && <HomeView />}
       {activePage === Page.PREFERENCES && <PreferencesView />}
     </div>
-  )
+  );
 }

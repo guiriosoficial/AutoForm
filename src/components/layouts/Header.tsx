@@ -1,6 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { Zap } from "lucide-react";
-import { Button }  from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { PageIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";

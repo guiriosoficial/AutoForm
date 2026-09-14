@@ -1,13 +1,13 @@
-import { createRoot } from 'react-dom/client';
-import { StrictMode } from 'react';
-import { App } from '@/views/App';
+import { createRoot } from "react-dom/client";
+import { StrictMode } from "react";
+import { App } from "@/views/App";
 import { Toaster } from "@/components/ui/toast";
 import { NavigationProvider } from "@/providers/NavigationProvider";
 import { AppSettingsProvider } from "@/providers/AppSettingsProvider";
-import '@/assets/styles/globals.css';
-import '@/i18n';
+import "@/assets/styles/globals.css";
+import "@/i18n";
 
-createRoot(document.querySelector('#root')!)
+createRoot(document.querySelector("#root")!)
   .render(
     <StrictMode>
       <NavigationProvider>

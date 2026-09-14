@@ -8,7 +8,7 @@ import {
   useEffect,
   useImperativeHandle,
   useRef,
-  useState
+  useState,
 } from "react";
 import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
@@ -89,7 +89,7 @@ function InlineInputComponent (
   };
 
   const startEditing = useCallback(() => {
-    setDraft(value)
+    setDraft(value);
     setIsEditing(true);
   }, [value]);
 
@@ -148,6 +148,6 @@ function InlineInputComponent (
   );
 }
 
-export const InlineInput = forwardRef(InlineInputComponent)
+export const InlineInput = forwardRef(InlineInputComponent);
 
 InlineInput.displayName = "InlineInput";

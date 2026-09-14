@@ -1,7 +1,7 @@
 import { APP_ID } from "./app";
 
 export const STORAGE_CONFIG = {
-  PERSISTENCE_DELAY_MS: 500
+  PERSISTENCE_DELAY_MS: 500,
 } as const;
 
 export const StorageKeys = {

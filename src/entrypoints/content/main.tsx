@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import {
   type GeneratorMessage,
   type GeneratorMessageResponse,
-  executeFillInputElement
+  executeFillInputElement,
 } from "@/lib/generator";
 import { MessageAction } from "@/configs";
 
@@ -14,5 +14,5 @@ browser.runtime.onMessage.addListener(
       const response = executeFillInputElement(message.selector, message.value);
       return Promise.resolve(response);
     }
-  }
+  },
 );

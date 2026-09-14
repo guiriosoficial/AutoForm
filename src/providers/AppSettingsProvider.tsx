@@ -1,11 +1,5 @@
 import i18n from "@/i18n";
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useEffect,
-  useMemo
-} from "react";
+import { type ReactNode, createContext, useContext, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import {
   LOCALE_CONFIG,
@@ -16,7 +10,7 @@ import {
   Theme,
   type ImportStrategy,
   type Locale,
-  type Language
+  type Language,
 } from "@/configs";
 
 interface AppSettingsProviderProps {
@@ -97,7 +91,7 @@ export function AppSettingsProvider({
   );
 }
 
-export function useAppSettings ()  {
+export function useAppSettings() {
   const context = useContext(AppSettingsProviderContext);
 
   if (context === undefined) {

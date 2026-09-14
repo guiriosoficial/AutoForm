@@ -52,6 +52,7 @@ npm run build
 - Popup UI should be placed in `src/popup/`
 
 ## TODOs
+
 - Criar Preferência de erros (Ignorar, Preencher, Gerar...)
 - Tratar error ao gerar dados
 - Personalizar melhor Editor de JS
@@ -62,9 +63,9 @@ npm run build
 - Reorganizar pasta lib (lib/generator/executeFillInputElement para lib/dom, presets, fields, editor, catalog, generator para para /domains)
 - Finalizar sandbox para executar código gerador do usuário
 - Configurar lint
-- 
+-
 - ========================== BONUS ==============================
-- 
+-
 - Escrever testes
 - Criar página e links de feedback/discussions/issues/backlog/roadmap/changelog
 

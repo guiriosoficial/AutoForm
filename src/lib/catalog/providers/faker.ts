@@ -42,8 +42,8 @@ export const createFakerCatalog = (locale: Locale) => {
             methodKey,
             methodValue.bind(moduleValue),
             { docsUrl: createFakerDocUrl(moduleKey, methodKey) }
-          )
-        )
-    )
+          ),
+        ),
+    ),
   );
 };

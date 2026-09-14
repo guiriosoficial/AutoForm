@@ -1,11 +1,11 @@
 export const Theme = {
   DARK: "dark",
   LIGHT: "light",
-  SYSTEM: "system"
+  SYSTEM: "system",
 } as const;
 
 export type Theme = (typeof Theme)[keyof typeof Theme];
 
 export const THEME_CONFIG = {
-  DEFAULT: Theme.SYSTEM
+  DEFAULT: Theme.SYSTEM,
 };

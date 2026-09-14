@@ -16,16 +16,12 @@ import {
   EDITOR_THEME_CREATED,
   createEditorKeymap,
   createEditorLinter,
-  javascriptLinter
-} from "@/lib/editor"
+  javascriptLinter,
+} from "@/lib/editor";
 import { debounce } from "@/lib/async";
 import { getErrorMessage } from "@/lib/errors";
 import type { CatalogMethod } from "@/lib/catalog";
-import {
-  EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP,
-  EDITOR_PRETTIER_FORMAT_OPTIONS
-} from "@/configs";
+import { EDITOR_CONFIG, EDITOR_BASIC_SETUP, EDITOR_PRETTIER_FORMAT_OPTIONS } from "@/configs";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;
@@ -48,7 +44,7 @@ function JavascriptEditorComponent (
   ref: ForwardedRef<JavascriptEditorRef>
 ) {
   const parse = useCallback((code: string) => {
-    if (!code) return
+    if (!code) return;
 
     const trimmed = code.trim();
 
@@ -70,14 +66,11 @@ function JavascriptEditorComponent (
 
       const [statement] = ast.program.body;
 
-
       if (
         statement.type !== "ExpressionStatement" ||
         statement.expression.type !== "ArrowFunctionExpression"
       ) {
-        onErrorChange(
-          "O código deve ser uma arrow function (ex: (x) => { return x; }).",
-        );
+        onErrorChange("O código deve ser uma arrow function (ex: (x) => { return x; }).");
         return;
       }
 
@@ -121,9 +114,9 @@ function JavascriptEditorComponent (
   )).current;
 
   const handleChangeMethod = (newValue: string) => {
-    onChange("code", newValue)
+    onChange("code", newValue);
 
-    debouncedParse(newValue)
+    debouncedParse(newValue);
   };
 
   const handleChangeName = (newValue: string) => {
@@ -137,7 +130,7 @@ function JavascriptEditorComponent (
 
     return () => {
       debouncedParse.cancel();
-    }
+    };
   }, []);
 
   const editorExtension = useMemo(() => [
@@ -170,6 +163,6 @@ function JavascriptEditorComponent (
   );
 }
 
-export const JavascriptEditor = forwardRef(JavascriptEditorComponent)
+export const JavascriptEditor = forwardRef(JavascriptEditorComponent);
 
 JavascriptEditor.displayName = "JavascriptEditor";

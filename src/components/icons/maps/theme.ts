@@ -4,5 +4,5 @@ import { Theme } from "@/configs";
 export const ThemeIcons: Record<Theme, LucideIcon> = {
   [Theme.LIGHT]: Sun,
   [Theme.DARK]: MoonStar,
-  [Theme.SYSTEM]: MonitorDot
+  [Theme.SYSTEM]: MonitorDot,
 } as const;

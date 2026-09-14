@@ -6,27 +6,19 @@ import {
   useEffect,
   useImperativeHandle,
   useMemo,
-  useRef
+  useRef,
 } from "react";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import {
   EDITOR_THEME_CREATED,
   createEditorKeymap,
   createEditorLinter,
-  jsonLinter
-} from "@/lib/editor"
-import {
-  type JsonValue,
-  isPopulatedJson5,
-  parseJson5,
-  stringifyJson5,
-} from "@/lib/json5";
+  jsonLinter,
+} from "@/lib/editor";
+import { type JsonValue, isPopulatedJson5, parseJson5, stringifyJson5 } from "@/lib/json5";
 import { debounce } from "@/lib/async";
 import { getErrorMessage } from "@/lib/errors";
-import {
-  EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP
-} from "@/configs";
+import { EDITOR_CONFIG, EDITOR_BASIC_SETUP } from "@/configs";
 
 interface JsonEditorProps {
   value: string | undefined;
@@ -61,7 +53,7 @@ function JsonEditorComponent (
       onErrorChange(null);
       return parsedValue;
     } catch (error) {
-      const message = getErrorMessage(error)
+      const message = getErrorMessage(error);
       onErrorChange(message);
     }
   }, []);
@@ -75,7 +67,7 @@ function JsonEditorComponent (
 
     const formattedValue = stringifyJson5(parsedValue);
 
-    onChange(formattedValue)
+    onChange(formattedValue);
   }, [value, onChange, parse]);
 
   const debouncedParse = useRef(debounce(
@@ -94,7 +86,7 @@ function JsonEditorComponent (
 
     return () => {
       debouncedParse.cancel();
-    }
+    };
   }, []);
 
   const editorExtension = useMemo(() => [
@@ -119,6 +111,6 @@ function JsonEditorComponent (
   );
 }
 
-export const JsonEditor = forwardRef(JsonEditorComponent)
+export const JsonEditor = forwardRef(JsonEditorComponent);
 
 JsonEditor.displayName = "JsonEditor";

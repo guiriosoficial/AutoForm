@@ -2,30 +2,17 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
 import { Footer } from "@/components/layouts/Footer";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Combobox,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
-  ComboboxList
+  ComboboxList,
 } from "@/components/ui/combobox";
-import {
-  Field,
-  FieldDescription,
-  FieldGroup,
-  FieldLabel,
-} from "@/components/ui/field"
-import {
-  ToggleGroup,
-  ToggleGroupItem
-} from "@/components/ui/toggle-group";
+import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
@@ -33,13 +20,7 @@ import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
 import { preventDefaultEscape } from "@/lib/dom";
-import {
-  ImportStrategy,
-  Language,
-  Locale,
-  Page,
-  Theme,
-} from "@/configs";
+import { ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
@@ -54,7 +35,7 @@ export function PreferencesView() {
     locale,
     setLocale,
     language,
-    setLanguage
+    setLanguage,
   } = useAppSettings();
 
   const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), [i18n.language]);
@@ -224,5 +205,5 @@ export function PreferencesView() {
         onPrimaryButtonClick={() => setActivePage(Page.HOME)}
       />
     </>
-  )
+  );
 }

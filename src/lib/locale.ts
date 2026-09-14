@@ -3,7 +3,6 @@ const REGIONAL_INDICATOR_A = 0x1_F1_E6;
 const LATIN_CAPITAL_A = "A".codePointAt(0)!;
 const REGIONAL_OFFSET = REGIONAL_INDICATOR_A - LATIN_CAPITAL_A;
 
-
 const SPECIAL_LOCALES = {
   ku_ckb: "ckb",
   ku_kmr_latin: "ku-Latn",
@@ -17,7 +16,7 @@ export function toLocaleTag(locale: string): string {
 
   if (specialTag) return specialTag;
 
-  return locale.replaceAll('_', "-");
+  return locale.replaceAll("_", "-");
 }
 
 export function getLocaleFlagEmoji(locale: string): string {
@@ -41,7 +40,7 @@ export function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayN
 
 export function getLocaleDisplayName(
   locale: string,
-  displayNames: Intl.DisplayNames | null
+  displayNames: Intl.DisplayNames | null,
 ): string {
   const tag = toLocaleTag(locale);
   const flag = getLocaleFlagEmoji(locale);

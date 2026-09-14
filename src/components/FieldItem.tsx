@@ -10,13 +10,13 @@ import {
   ComboboxItem,
   ComboboxLabel,
   ComboboxList,
-  ComboboxSeparator
+  ComboboxSeparator,
 } from "@/components/ui/combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { useCatalog } from "@/hooks/use-catalog"
+import { useCatalog } from "@/hooks/use-catalog";
 import { cn } from "@/lib/utils";
 import { preventDefaultEscape } from "@/lib/dom";
 import { CATALOG_CONFIG } from "@/configs";
@@ -41,13 +41,13 @@ export function FieldItem({
   onRemove,
   onUpdate,
   onCopyValue,
-  onRegenerateValue
+  onRegenerateValue,
 }: FieldItemProps) {
   const { t } = useTranslation();
   const {
     catalogMethodsByKey,
     catalogOptions,
-    createCustomMethod
+    createCustomMethod,
   } = useCatalog();
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
@@ -61,15 +61,15 @@ export function FieldItem({
 
     onUpdate(field.id, {
       ...field,
-      [key]: newValue
-    })
+      [key]: newValue,
+    });
   };
 
   const handleCreateCustomMethod = () => {
-    const newMethod = createCustomMethod()
+    const newMethod = createCustomMethod();
 
-    handleUpdateField("generator", newMethod.key)
-  }
+    handleUpdateField("generator", newMethod.key);
+  };
 
   const resultClasses = "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group border-primary/30 text-primary";
   const resultErrorClasses = cn(resultClasses, "border-destructive/30 text-destructive");

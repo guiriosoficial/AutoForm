@@ -22,8 +22,8 @@ const creditsTranslationComponents = {
       rel="noreferrer"
       className={buttonVariants({ variant: "link" })}
     />
-  )
-}
+  ),
+};
 
 export function Footer({
   primaryButonText,
@@ -33,7 +33,7 @@ export function Footer({
   secondaryButtonIcon: SecondaryButtonIcon,
   onSecondaryButtonClick,
   hideSecondaryButton,
-  hideCredits
+  hideCredits,
 }: FooterProps) {
   const showSecondaryButton =
     !!onSecondaryButtonClick &&
@@ -72,5 +72,5 @@ export function Footer({
         </span>
       )}
     </>
-  )
+  );
 }

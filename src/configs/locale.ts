@@ -7,14 +7,11 @@ type LocaleMap = {
 export const Locale = Object.fromEntries(
   Object.keys(allLocales)
     .filter((locale) => locale !== "base")
-    .map((locale) => [
-      locale.toUpperCase(),
-      locale
-    ]),
+    .map((locale) => [locale.toUpperCase(), locale]),
 ) as LocaleMap;
 
 export type Locale = (typeof Locale)[keyof typeof Locale];
 
 export const LOCALE_CONFIG = {
-  DEFAULT: Locale.EN
+  DEFAULT: Locale.EN,
 };

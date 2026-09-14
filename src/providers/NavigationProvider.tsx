@@ -40,7 +40,7 @@ export function NavigationProvider({
   );
 }
 
-export function useNavigation ()  {
+export function useNavigation() {
   const context = useContext(NavigationProviderContext);
 
   if (context === undefined) {

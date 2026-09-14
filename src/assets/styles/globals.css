@@ -7,7 +7,7 @@
 
 @theme inline {
   --font-heading: var(--font-sans);
-  --font-sans: 'Inter Variable', sans-serif;
+  --font-sans: "Inter Variable", sans-serif;
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -62,7 +62,7 @@
   --syntax-number: oklch(0.443 0.233 299.614);
   --syntax-property: oklch(0.58 0.17 250);
   --syntax-definition: oklch(0.58 0.17 250);
-  --syntax-keyword: oklch(0.55 0.20 350);
+  --syntax-keyword: oklch(0.55 0.2 350);
   --editor-selection: oklch(0.951 0.013 262.379);
   --editor-line-highlight: oklch(0.985 0 0);
   --editor-bracket-highlight: oklch(0.989 0.052 108.484);
@@ -84,7 +84,7 @@
   --muted-foreground: oklch(0.708 0 0);
   --accent: oklch(0.269 0 0);
   --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.52 0.20 28);
+  --destructive: oklch(0.52 0.2 28);
   --destructive-foreground: oklch(0.985 0 0);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
@@ -111,6 +111,5 @@
   }
   html {
     @apply font-sans;
-
   }
 }

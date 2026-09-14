@@ -1,7 +1,6 @@
 import { CATALOG_CONFIG } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";
 
-
 export interface CatalogMethod {
   label: string;
   key: string;
@@ -20,10 +19,10 @@ export function createCatalogMethod(
   methodKey: string,
   invokeFn?: (...args: unknown[]) => GeneratorValue,
   options?: {
-    code?: string,
-    docsUrl?: string
-    generateUniqueId?: boolean
-  }
+    code?: string;
+    docsUrl?: string;
+    generateUniqueId?: boolean;
+  },
 ): CatalogMethod {
   const uniqueKey = options?.generateUniqueId
     ? crypto.randomUUID()
@@ -53,7 +52,7 @@ export function createCatalogCustomFunction() {
     (name = "Joh Doe") => {
       return "Hello " + name
     }
-  `
+  `;
 }
 
 export const newCustomMethodOption = createCatalogMethod(

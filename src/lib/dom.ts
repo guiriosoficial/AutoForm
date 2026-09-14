@@ -26,10 +26,10 @@ export function createSandboxRunner() {
         { targetOrigin: event.origin }
       );
     } catch (error) {
-      const message = getErrorMessage(error)
+      const message = getErrorMessage(error);
       event.source?.postMessage(
         { id, success: false, error: message },
-        { targetOrigin: event.origin }
+        { targetOrigin: event.origin },
       );
     }
   });
@@ -37,7 +37,7 @@ export function createSandboxRunner() {
 
 export function executeInSandbox<T = unknown>(
   code: string,
-  scope: Record<string, unknown> = {}
+  scope: Record<string, unknown> = {},
 ): Promise<T> {
   return new Promise((resolve, reject) => {
     const id = crypto.randomUUID();
@@ -78,4 +78,3 @@ export function executeInSandbox<T = unknown>(
     }
   });
 }
-

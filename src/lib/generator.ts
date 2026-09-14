@@ -3,7 +3,7 @@ import { executeInSandbox } from "@/lib/dom";
 import { getErrorMessage } from "@/lib/errors";
 import { isArray } from "@/lib/guards";
 import { parseJson5 } from "@/lib/json5";
-import { MessageAction } from "@/configs"
+import { MessageAction } from "@/configs";
 import type { CatalogMethod } from "@/lib/catalog";
 
 export type GeneratorPrimitive =
@@ -30,7 +30,10 @@ export interface GeneratorMessageResponse {
   error?: string;
 }
 
-export async function generateValue(method: CatalogMethod, optionsStr?: string): Promise<GeneratorValue> {
+export async function generateValue(
+  method: CatalogMethod,
+  optionsStr?: string,
+): Promise<GeneratorValue> {
   if (!method) return "";
 
   let options = {};
@@ -52,16 +55,16 @@ export async function generateValue(method: CatalogMethod, optionsStr?: string):
 
 export async function fillInputElement(
   selector: string,
-  value: GeneratorValue
-): Promise<GeneratorMessageResponse | null> {
-  if (!selector) return null;
+  value: GeneratorValue,
+): Promise<GeneratorMessageResponse | undefined> {
+  if (!selector) return;
 
   const [tab] = await browser.tabs.query({
     active: true,
-    currentWindow: true
+    currentWindow: true,
   });
 
-  if (!tab?.id) return null;
+  if (!tab?.id) return;
 
   try {
     const response = await browser.tabs.sendMessage(tab.id, {
@@ -74,18 +77,21 @@ export async function fillInputElement(
   } catch (error) {
     return {
       success: false,
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     };
   }
 }
 
-export function executeFillInputElement(selector: string, value: GeneratorValue): GeneratorMessageResponse {
+export function executeFillInputElement(
+  selector: string,
+  value: GeneratorValue,
+): GeneratorMessageResponse {
   const element = document.querySelector(selector);
 
   if (!element) {
     return {
       success: false,
-      error: `Element not found: "${selector}"`
+      error: `Element not found: "${selector}"`,
     };
   }
 
@@ -124,12 +130,12 @@ export function executeFillInputElement(selector: string, value: GeneratorValue)
 
     return {
       success: false,
-      error: `Unsupported element type for selector: "${selector}"`
+      error: `Unsupported element type for selector: "${selector}"`,
     };
   } catch (error) {
     return {
       success: false,
-      error: getErrorMessage(error)
+      error: getErrorMessage(error),
     };
   }
 }

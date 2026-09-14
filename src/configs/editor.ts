@@ -11,11 +11,11 @@ export type EditorTabs = (typeof EditorTabs)[keyof typeof EditorTabs];
 
 export const EDITOR_CONFIG = {
   INDENT_SPACES: 2,
-  LINT_DELAY_MS: 1200
+  LINT_DELAY_MS: 1200,
 } as const;
 
 export const EDITOR_SHORTCUTS = {
-  FORMAT: "Mod-Shift-f"
+  FORMAT: "Mod-Shift-f",
 } as const;
 
 export const EDITOR_BASIC_SETUP = {
@@ -32,14 +32,14 @@ export const EDITOR_BASIC_SETUP = {
   closeBrackets: true,
   autocompletion: false,
   searchKeymap: false,
-  lintKeymap: false
+  lintKeymap: false,
 };
 
 export const EDITOR_PRETTIER_FORMAT_OPTIONS = {
   plugins: [babel, estree],
   parser: "babel",
   semi: true,
-  singleQuote: true
+  singleQuote: true,
 };
 
 export const EDITOR_THEME = {
@@ -48,7 +48,7 @@ export const EDITOR_THEME = {
     foreground: "var(--card-foreground)",
     caret: "var(--foreground)",
     selection: "var(--editor-selection)",
-    lineHighlight: "var(--editor-line-highlight)"
+    lineHighlight: "var(--editor-line-highlight)",
   },
   syntax: [
     { tag: t.comment, color: "var(--muted-foreground)" },
@@ -61,7 +61,7 @@ export const EDITOR_THEME = {
     { tag: t.operator, color: "var(--syntax-operator)" },
     { tag: t.variableName, color: "var(--syntax-variable)" },
     { tag: t.function(t.variableName), color: "var(--syntax-function)" },
-    { tag: t.definition(t.variableName), color: "var(--syntax-definition)" }
+    { tag: t.definition(t.variableName), color: "var(--syntax-definition)" },
   ],
   overrides: {
     ".cm-scroller:has(.cm-selectionBackground) .cm-activeLine": {
@@ -75,6 +75,6 @@ export const EDITOR_THEME = {
     },
     ".cm-lintRange-error": {
       textDecoration: "underline wavy var(--destructive) !important",
-    }
-  }
+    },
+  },
 };

@@ -1,43 +1,26 @@
 import { useTranslation } from "react-i18next";
-import {
-  type ChangeEvent,
-  type MouseEvent,
-  useRef,
-  useState
-} from "react";
-import {
-  Download,
-  EllipsisVertical,
-  Plus,
-  Trash,
-  Upload
-} from "lucide-react";
+import { type ChangeEvent, type MouseEvent, useRef, useState } from "react";
+import { Download, EllipsisVertical, Plus, Trash, Upload } from "lucide-react";
 import {
   Combobox,
   ComboboxContent,
   ComboboxEmpty,
   ComboboxInput,
   ComboboxItem,
-  ComboboxList
+  ComboboxList,
 } from "@/components/ui/combobox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuTrigger
+  DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Item,
-  ItemActions,
-  ItemContent,
-  ItemDescription,
-  ItemTitle
-} from "@/components/ui/item";
+import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { preventDefaultEscape } from "@/lib/dom"
+import { preventDefaultEscape } from "@/lib/dom";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
@@ -61,7 +44,7 @@ export function PresetsManager({
   onDeletePreset,
   onExportPresets,
   onImportPresets,
-  onLoadFile
+  onLoadFile,
 }: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
   const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
@@ -77,7 +60,7 @@ export function PresetsManager({
     event.stopPropagation();
 
     setIsPresetSelectorOpen(false);
-    setPresetToDelete(preset)
+    setPresetToDelete(preset);
   };
 
   const handleConfirmDeletePreset = (presetId: string) => {
@@ -104,13 +87,13 @@ export function PresetsManager({
       return;
     }
 
-    setPresetsToImport(loaded)
+    setPresetsToImport(loaded);
   };
 
   const handleImportPresets = (imported: Preset[], strategy: ImportStrategy) => {
-    onImportPresets(imported, strategy)
+    onImportPresets(imported, strategy);
 
-    setPresetsToImport(null)
+    setPresetsToImport(null);
   };
 
   return (
@@ -119,8 +102,8 @@ export function PresetsManager({
         open={isPresetSelectorOpen}
         value={selectedPreset}
         items={presets}
-        itemToStringLabel={preset => preset.name}
-        itemToStringValue={preset => preset.id}
+        itemToStringLabel={(preset) => preset.name}
+        itemToStringValue={(preset) => preset.id}
         onValueChange={onSelectPreset}
         onOpenChange={setIsPresetSelectorOpen}
       >

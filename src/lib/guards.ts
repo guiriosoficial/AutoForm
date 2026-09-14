@@ -29,5 +29,5 @@ export function isFunction(value: unknown): value is (...args: never[]) => unkno
 }
 
 export function isArray(value: unknown): value is unknown[] {
-  return _.isArray(value)
+  return _.isArray(value);
 }

@@ -21,14 +21,14 @@ export type FieldErrorType = (typeof FieldErrorType)[keyof typeof FieldErrorType
 export class FieldError {
   constructor(
     readonly type: FieldErrorType,
-    readonly message: string
+    readonly message: string,
   ) {}
 }
 
 export class FieldResult {
   constructor(
     readonly value: GeneratorValue,
-    readonly error: FieldError | undefined
+    readonly error: FieldError | undefined,
   ) {}
 
   addError(type: FieldErrorType, message: string) {
@@ -57,7 +57,6 @@ export const createField = (): FieldConfig => ({
   selector: "",
   generator: "",
 });
-
 
 export function isValidField(value: unknown): value is FieldConfig {
   if (!isObject(value)) return false;

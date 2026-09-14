@@ -27,15 +27,12 @@ export const createEditorKeymap = ({ onFormat }: { onFormat: () => void }) =>
   ]);
 
 export const createEditorLinter = (lintSource: LintSource, enabled = true) =>
-  linter(
-    (view) => (!enabled || !lintSource) ? [] : lintSource(view),
-    {
-      delay: EDITOR_CONFIG.LINT_DELAY_MS,
-      tooltipFilter: () => []
-    }
-  );
+  linter((view) => (!enabled || !lintSource ? [] : lintSource(view)), {
+    delay: EDITOR_CONFIG.LINT_DELAY_MS,
+    tooltipFilter: () => [],
+  });
 
-export const jsonLinter: LintSource = json5ParseLinter()
+export const jsonLinter: LintSource = json5ParseLinter();
 
 export const javascriptLinter: LintSource = (view) => {
   const diagnostics: Diagnostic[] = [];
@@ -49,12 +46,12 @@ export const javascriptLinter: LintSource = (view) => {
         from: node.from,
         to: Math.max(node.to, node.from + 1),
         severity: "error",
-        message: "Invalid JavaScript syntax"
+        message: "Invalid JavaScript syntax",
       });
-    }
+    },
   });
 
   return diagnostics;
 };
 
-export const EDITOR_THEME_CREATED = createEditorTheme()
+export const EDITOR_THEME_CREATED = createEditorTheme();
