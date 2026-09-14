@@ -4,7 +4,11 @@ import { usePersistentState } from "@/hooks/use-persistent-state";
 import { useCatalog } from "@/hooks/use-catalog";
 import { toast } from "@/lib/toast"
 import { isFunction } from "@/lib/guards";
-import { generateValue, fillInputElement } from "@/lib/generator";
+import {
+  type GeneratorValue,
+  generateValue,
+  fillInputElement
+} from "@/lib/generator";
 import {
   type FieldConfig,
   type FieldResult,
@@ -19,7 +23,7 @@ interface UseFormArgs {
   updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
 }
 
-export type GeneratedValuesJson = Record<string, string | undefined>
+export type GeneratedValuesJson = Record<string, GeneratorValue>
 export type GeneratedValues = Record<string, FieldResult>;
 export type ValuesByPresetId = Record<string, GeneratedValues>;
 
@@ -90,7 +94,7 @@ export function useForm({
 
         if (!method) return;
 
-        const generatedValue = generateValue(method, field.options);
+        const generatedValue = await generateValue(method, field.options);
 
         if (!generatedValue) return;
 
@@ -110,7 +114,7 @@ export function useForm({
 
     if (!method) return;
 
-    const generatedValue = generateValue(method, field.options);
+    const generatedValue = await generateValue(method, field.options);
 
     if (!generatedValue) return;
 

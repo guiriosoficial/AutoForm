@@ -16,9 +16,10 @@ import {
   jsonLinter
 } from "@/lib/editor"
 import {
+  type JsonValue,
   isPopulatedJson5,
   parseJson5,
-  stringifyJson5
+  stringifyJson5,
 } from "@/lib/json5";
 import { debounce } from "@/lib/async";
 import { getErrorMessage } from "@/lib/errors";
@@ -58,6 +59,7 @@ function JsonEditorComponent (
     try {
       const parsedValue = parseJson5(val);
       onErrorChange("");
+      const parsedValue = parseJson5<JsonValue>(val);
       return parsedValue;
     } catch (error) {
       const message = getErrorMessage(error)
@@ -65,10 +67,12 @@ function JsonEditorComponent (
     }
   }, []);
 
-  const format = useCallback(async () => {
+  const format = useCallback(() => {
     if (!value) return;
 
-    const parsedValue = await parse(value);
+    const parsedValue = parse(value);
+
+    if (!parsedValue) return;
 
     const formattedValue = stringifyJson5(parsedValue);
 

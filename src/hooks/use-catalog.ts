@@ -52,14 +52,15 @@ export function useCatalog() {
       defaultName,
       { spaced: true }
     )
+    const newCustomMethodOptions = {
+      code: createCatalogCustomFunction(),
+      generateUniqueId: true
+    }
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
       nextCatalogName,
-      () => {},
-      {
-        code: createCatalogCustomFunction(),
-        generateUniqueId: true
-      }
+      undefined,
+      newCustomMethodOptions
     )
 
     setCustomMethods((prev) =>

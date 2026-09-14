@@ -1,4 +1,5 @@
-import { isObject, isOptionalString, isPopulatedString } from "@/lib/guards";
+import { isArray, isObject, isOptionalString, isPopulatedString } from "@/lib/guards";
+import type { GeneratorValue } from "@/lib/generator";
 
 export interface FieldConfig {
   id: string;
@@ -26,7 +27,7 @@ export class FieldError {
 
 export class FieldResult {
   constructor(
-    readonly value: string | undefined,
+    readonly value: GeneratorValue,
     readonly error: FieldError | undefined
   ) {}
 
@@ -39,7 +40,7 @@ export class FieldResult {
 }
 
 export const createFieldResult = {
-  value(value: string) {
+  value(value: GeneratorValue) {
     return new FieldResult(value, undefined);
   },
 
@@ -71,7 +72,7 @@ export function isValidField(value: unknown): value is FieldConfig {
 
 export function isValidFieldArray(value: unknown): value is FieldConfig[] {
   return (
-    Array.isArray(value) &&
+    isArray(value) &&
     value.every((item) => isValidField(item))
   );
 }

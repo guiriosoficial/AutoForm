@@ -3,8 +3,9 @@ import { gerar } from "@box4dev/gerador-br";
 import { isFunction } from "@/lib/guards";
 import { toTitleCase } from "@/lib/string";
 import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
+import type { GeneratorValue } from "@/lib/generator";
 
-type Box4DevMethod = (...args: never[]) => unknown;
+type Box4DevMethod = (...args: unknown[]) => GeneratorValue;
 type Box4DevModuleObject = Record<string, Box4DevMethod>;
 type Box4DevInstance = Record<string, Box4DevMethod | Box4DevModuleObject>;
 type Box4DevEntry = [string, Box4DevMethod];

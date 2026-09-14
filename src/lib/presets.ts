@@ -1,5 +1,5 @@
 import { type FieldConfig, createField, isValidFieldArray } from "@/lib/fields";
-import { isObject, isPopulatedString, isTimestamp } from "@/lib/guards";
+import { isArray, isObject, isPopulatedString, isTimestamp } from "@/lib/guards";
 
 export interface Preset {
   id: string;
@@ -28,7 +28,7 @@ export function isValidPreset(value: unknown): value is Preset {
 
 export function isValidPresetArray(value: unknown): value is Preset[] {
   return (
-    Array.isArray(value) &&
+    isArray(value) &&
     value.every((item) => isValidPreset(item))
   );
 }

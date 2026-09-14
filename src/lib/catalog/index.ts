@@ -1,11 +1,13 @@
 import { CATALOG_CONFIG } from "@/configs";
+import type { GeneratorValue } from "@/lib/generator";
+
 
 export interface CatalogMethod {
   label: string;
   key: string;
   docs?: string;
   code?: string;
-  invoke: (...args: never[]) => unknown;
+  invoke?: (...args: unknown[]) => GeneratorValue;
 }
 
 export interface CatalogModule {
@@ -16,7 +18,7 @@ export interface CatalogModule {
 export function createCatalogMethod(
   moduleKey: string,
   methodKey: string,
-  invokeFn: (...args: never[]) => unknown,
+  invokeFn?: (...args: unknown[]) => GeneratorValue,
   options?: {
     code?: string,
     docsUrl?: string
@@ -57,5 +59,4 @@ export function createCatalogCustomFunction() {
 export const newCustomMethodOption = createCatalogMethod(
   CATALOG_CONFIG.CUSTOM_MODULE_NAME,
   CATALOG_CONFIG.CUSTOM_NEW_METHOD_NAME,
-  () => {}
 );

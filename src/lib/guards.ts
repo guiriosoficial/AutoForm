@@ -27,3 +27,7 @@ export function isObject(value: unknown): value is Record<string, unknown> {
 export function isFunction(value: unknown): value is (...args: never[]) => unknown {
   return _.isFunction(value);
 }
+
+export function isArray(value: unknown): value is unknown[] {
+  return _.isArray(value)
+}

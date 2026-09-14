@@ -22,11 +22,12 @@ import { preventDefaultEscape } from "@/lib/dom";
 import { CATALOG_CONFIG } from "@/configs";
 import type { CatalogMethod, CatalogModule } from "@/lib/catalog";
 import type { FieldConfig, FieldError } from "@/lib/fields";
+import type { GeneratorValue } from "@/lib/generator";
 
 interface FieldItemProps {
   field: FieldConfig;
   error: FieldError | undefined;
-  value: string | undefined;
+  value: GeneratorValue;
   onRemove: (fieldId: string) => void;
   onUpdate: (fieldId: string, newValue: FieldConfig) => void;
   onRegenerateValue: (fieldId: string) => void;
@@ -174,7 +175,7 @@ export function FieldItem({
           />
           <InlineButton
             icon={Copy}
-            onClick={() => onCopyValue(value)}
+            onClick={() => onCopyValue(String(value))}
           />
         </div>
       )}

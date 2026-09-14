@@ -97,6 +97,8 @@ function JavascriptEditorComponent (
       onErrorChange("");
     } catch (err) {
       const message = getErrorMessage(err);
+    } catch (error) {
+      const message = getErrorMessage(error);
       onErrorChange(message);
     }
   }, []);

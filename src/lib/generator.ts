@@ -1,9 +1,23 @@
 import browser from "webextension-polyfill";
+import { executeInSandbox } from "@/lib/dom";
 import { getErrorMessage } from "@/lib/errors";
-import { isObject } from "@/lib/guards";
+import { isArray } from "@/lib/guards";
 import { parseJson5 } from "@/lib/json5";
 import { MessageAction } from "@/configs"
 import type { CatalogMethod } from "@/lib/catalog";
+
+export type GeneratorPrimitive =
+  | string
+  | number
+  | boolean
+  | Date
+  | null
+  | undefined;
+
+export type GeneratorValue =
+  | GeneratorPrimitive
+  | GeneratorValue[]
+  | { [key: string]: GeneratorValue };
 
 export interface GeneratorMessage {
   action: typeof MessageAction.FILL_INPUT;
@@ -16,7 +30,7 @@ export interface GeneratorMessageResponse {
   error?: string;
 }
 
-export function generateValue(method: CatalogMethod, optionsStr?: string): string {
+export async function generateValue(method: CatalogMethod, optionsStr?: string): Promise<GeneratorValue> {
   if (!method) return "";
 
   let options = {};
@@ -27,15 +41,18 @@ export function generateValue(method: CatalogMethod, optionsStr?: string): strin
     // TODO: Implement Error Handling
   }
 
-  if (Array.isArray(options)) return method.invoke(...options);
-  if (isObject(options)) return method.invoke(options);
+  if (method.code) return await executeInSandbox<GeneratorValue>(method.code, options);
 
-  return method.invoke();
+  if (!method.invoke) return;
+
+  if (isArray(options)) return method.invoke(...options);
+
+  return method.invoke(options);
 }
 
 export async function fillInputElement(
   selector: string,
-  value: string | boolean
+  value: GeneratorValue
 ): Promise<GeneratorMessageResponse | null> {
   if (!selector) return null;
 
@@ -62,7 +79,7 @@ export async function fillInputElement(
   }
 }
 
-export function executeFillInputElement(selector: string, value: string | boolean): GeneratorMessageResponse {
+export function executeFillInputElement(selector: string, value: GeneratorValue): GeneratorMessageResponse {
   const element = document.querySelector(selector);
 
   if (!element) {

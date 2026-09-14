@@ -2,8 +2,9 @@ import { Faker, allLocales } from "@faker-js/faker";
 import { isFunction, isObject } from "@/lib/guards";
 import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
 import { LOCALE_CONFIG, type Locale } from "@/configs";
+import type { GeneratorValue } from "@/lib/generator";
 
-type FakerMethodFn = (...args: never[]) => unknown;
+type FakerMethodFn = (...args: unknown[]) => GeneratorValue;
 type FakerModuleObject = Record<string, FakerMethodFn>;
 type FakerInstance = Record<string, FakerModuleObject>;
 
@@ -45,4 +46,4 @@ export const createFakerCatalog = (locale: Locale) => {
         )
     )
   );
-}
+};
