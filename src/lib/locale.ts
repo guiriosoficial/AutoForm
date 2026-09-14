@@ -30,17 +30,17 @@ export function getLocaleFlagEmoji(locale: string): string {
   }
 }
 
-export function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayNames | null {
+export function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayNames | undefined {
   try {
     return new Intl.DisplayNames([toLocaleTag(currentLanguage)], { type: "language" });
   } catch {
-    return null;
+    // TODO: Catch error
   }
 }
 
 export function getLocaleDisplayName(
   locale: string,
-  displayNames: Intl.DisplayNames | null,
+  displayNames: Intl.DisplayNames | undefined,
 ): string {
   const tag = toLocaleTag(locale);
   const flag = getLocaleFlagEmoji(locale);

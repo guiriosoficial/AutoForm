@@ -21,7 +21,7 @@ export function isTimestamp(value: unknown): value is number {
 }
 
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return _.isPlainObject(value);
+  return _.isObjectLike(value);
 }
 
 export function isFunction(value: unknown): value is (...args: never[]) => unknown {

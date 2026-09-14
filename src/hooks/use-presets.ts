@@ -34,12 +34,11 @@ export function usePresets({
   const [presets, setPresets, , hydratedPresets] = usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
   const presetsById = useMemo(() =>
-    Object.fromEntries(
-      presets.map((preset) => [preset.id, preset])
-    ), [presets]);
+    new Map(presets.map((preset) => [preset.id, preset])
+  ), [presets]);
 
   const currentPreset = useMemo(
-    () => presetsById[currentPresetId] ?? null,
+    () => presetsById.get(currentPresetId) ?? null,
     [presetsById, currentPresetId],
   );
 
@@ -52,15 +51,22 @@ export function usePresets({
 
   const createPreset = useCallback(() => {
     const defaultName = t("configs.preset.defaultName");
-    const nextPresetNumber = createNextSequencedName<Preset>(presets, "name", defaultName);
+    const nextPresetNumber = createNextSequencedName<Preset>(
+      presets,
+      "name",
+      defaultName,
+      { spaced: true }
+    );
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
     setPresets((prev) => [...prev, emptyPreset]);
     setCurrentPreset(emptyPreset);
 
-    if (presets.length <= 1) return;
+    if (presets.length + 1 <= 1) return;
 
-    presetNameEditorRef.current?.startEditing();
+    requestAnimationFrame(() => {
+      presetNameEditorRef.current?.startEditing();
+    })
   }, [presets, presetNameEditorRef, t, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
@@ -119,7 +125,7 @@ export function usePresets({
       currentPreset
     ) return;
 
-    const lastPreset = presetsById[lasPresetId];
+    const lastPreset = presetsById.get(lasPresetId);
 
     if (lastPreset) {
       setCurrentPreset(lastPreset);

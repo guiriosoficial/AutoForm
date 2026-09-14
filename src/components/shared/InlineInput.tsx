@@ -30,7 +30,7 @@ function InlineInputComponent (
     placeholder,
     onSave
   }: InlineInputProps,
-  ref: ForwardedRef<InlineInputRef>
+  ref: ForwardedRef<InlineInputRef>,
 ) {
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value ?? "");

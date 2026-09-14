@@ -39,15 +39,15 @@ export function FieldOptionsPopover({
   const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
 
+  const [jsonError, setJsonError] = useState<string | null>(null);
+  const [javascriptError, setJavascriptError] = useState<string | null>(null);
+
+  const { t } = useTranslation();
   const {
     removeCustomMethod,
     updateCustomMethod,
     customMethodsByKey,
   } = useCatalog()
-  const { t } = useTranslation();
-
-  const [jsonError, setJsonError] = useState<string | null>(null);
-  const [javascriptError, setJavascriptError] = useState<string | null>(null);
 
   const error = activeTab === EditorTabs.OPTIONS
     ? jsonError

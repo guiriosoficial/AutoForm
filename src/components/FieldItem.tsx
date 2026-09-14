@@ -26,8 +26,8 @@ import type { GeneratorValue } from "@/lib/generator";
 
 interface FieldItemProps {
   field: FieldConfig;
-  error: FieldError | undefined;
   value: GeneratorValue;
+  error: FieldError | undefined;
   onRemove: (fieldId: string) => void;
   onUpdate: (fieldId: string, newValue: FieldConfig) => void;
   onRegenerateValue: (fieldId: string) => void;

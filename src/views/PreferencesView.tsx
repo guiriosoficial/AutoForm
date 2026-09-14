@@ -21,6 +21,7 @@ import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
 import { preventDefaultEscape } from "@/lib/dom";
 import { ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
+import { toTitleCase } from "@/lib/string.ts";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
@@ -135,7 +136,7 @@ export function PreferencesView() {
               <Combobox
                 value={locale}
                 items={Object.values(Locale)}
-                itemToStringLabel={localeDisplayName}
+                itemToStringLabel={(value) => toTitleCase(localeDisplayName(value))}
                 onValueChange={handleChangeLocale}
               >
                 <ComboboxInput
@@ -169,7 +170,7 @@ export function PreferencesView() {
               <Combobox
                 value={language}
                 items={Object.values(Language)}
-                itemToStringLabel={localeDisplayName}
+                itemToStringLabel={(value) => toTitleCase(localeDisplayName(value))}
                 onValueChange={handleChangeLanguage}
               >
                 <ComboboxInput

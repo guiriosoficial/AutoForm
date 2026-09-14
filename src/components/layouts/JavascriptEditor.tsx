@@ -41,7 +41,7 @@ function JavascriptEditorComponent (
     onChange,
     onErrorChange
   }: JavascriptEditorProps,
-  ref: ForwardedRef<JavascriptEditorRef>
+  ref: ForwardedRef<JavascriptEditorRef>,
 ) {
   const parse = useCallback((code: string) => {
     if (!code) return;

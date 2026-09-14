@@ -50,7 +50,6 @@ export function useCatalog() {
       customMethods,
       "label",
       defaultName,
-      { spaced: true },
     );
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
