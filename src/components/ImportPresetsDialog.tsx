@@ -27,7 +27,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
-import { ImportStrategyIcons } from "@/components/shared/icons"
+import { ImportStrategyIcons } from "@/components/icons/maps";
 import { preventDefaultEscape } from "@/lib/dom";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";

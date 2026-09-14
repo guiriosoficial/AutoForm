@@ -28,7 +28,7 @@ import {
 } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
-import { ImportStrategyIcons, ThemeIcons } from "@/components/shared/icons";
+import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
