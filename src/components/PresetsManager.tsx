@@ -137,6 +137,7 @@ export function PresetsManager({
                   <ItemActions>
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
+                      type="button"
                       onClick={(event) => handleStartDeletePreset(event, preset)}
                     >
                       <Trash />

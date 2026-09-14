@@ -29,6 +29,7 @@ export function InlineButton({
   return (
     <button
       className={buttonClasses}
+      type="button"
       onClick={onClick}
     >
       <Icon size={size} />
