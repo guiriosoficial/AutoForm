@@ -1,7 +1,7 @@
 import JSON5 from 'json5';
 import { EDITOR_CONFIG } from "@/configs";
 
-type JsonValue =
+export type JsonValue =
   | string
   | number
   | boolean

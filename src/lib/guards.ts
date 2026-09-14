@@ -1,34 +1,29 @@
+import _ from "lodash";
+
 export function isString(value: unknown): value is string {
-  return typeof value === "string";
+  return _.isString(value);
 }
 
 export function isOptionalString(value: unknown): value is string | null | undefined {
-  return value === undefined || value === null || isString(value);
+  return isString(value) || _.isNil(value);
 }
 
 export function isPopulatedString(value: unknown): value is string {
-  return isString(value) && value.trim().length > 0;
+  return isString(value) && _.trim(value).length > 0;
 }
 
 export function isNumber(value: unknown): value is number {
-  return typeof value === "number" && Number.isFinite(value);
-}
-
-export function isPositiveNumber(value: unknown): value is number {
-  return isNumber(value) && value > 0;
+  return _.isFinite(value);
 }
 
 export function isTimestamp(value: unknown): value is number {
-  return (
-    isPositiveNumber(value) &&
-    !Number.isNaN(new Date(value).getTime())
-  );
+  return isNumber(value) && !_.isNaN(new Date(value).getTime());
 }
 
 export function isObject(value: unknown): value is Record<string, unknown> {
-  return value !== null && typeof value === "object";
+  return _.isPlainObject(value);
 }
 
 export function isFunction(value: unknown): value is (...args: never[]) => unknown {
-  return typeof value === "function";
+  return _.isFunction(value);
 }

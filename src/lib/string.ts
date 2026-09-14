@@ -1,8 +1,7 @@
+import _ from "lodash";
+
 export function toTitleCase(str: string) {
-  return str.replaceAll(/(?:^|[-_ ])(?<char>\w)/gu, (...args) => {
-    const groups = args.pop();
-    return groups.char.toUpperCase();
-  });
+  return _.startCase(str);
 }
 
 export function createNextSequencedName<T extends object>(
