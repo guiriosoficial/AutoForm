@@ -149,7 +149,7 @@ function JavascriptEditorComponent (
         value={value.label}
         className="bg-card dark:bg-card"
         placeholder="Method Name"
-        onChange={(e) => handleChangeName(e.target.value)}
+        onChange={(evt) => handleChangeName(evt.target.value)}
       />
       <ReactCodeMirror
         value={value.code}

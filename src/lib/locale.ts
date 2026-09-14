@@ -1,3 +1,5 @@
+// oxlint-disable typescript/no-non-null-assertion
+
 const LOCALE_REGION_LENGTH = 2;
 const REGIONAL_INDICATOR_A = 0x1_F1_E6;
 const LATIN_CAPITAL_A = "A".codePointAt(0)!;

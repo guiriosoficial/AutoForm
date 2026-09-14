@@ -7,6 +7,7 @@ import { AppSettingsProvider } from "@/providers/AppSettingsProvider";
 import "@/assets/styles/globals.css";
 import "@/i18n";
 
+// oxlint-disable-next-line typescript/no-non-null-assertion
 createRoot(document.querySelector("#root")!)
   .render(
     <StrictMode>

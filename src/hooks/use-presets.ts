@@ -42,7 +42,7 @@ export function usePresets({
     [presetsById, currentPresetId],
   );
 
-  const setCurrentPreset = useCallback((preset: Preset | null) => {
+  const setCurrentPreset = useCallback((preset: Preset | null | undefined) => {
     if (!preset) return;
 
     setCurrentPresetId(preset.id);

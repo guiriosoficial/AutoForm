@@ -80,7 +80,7 @@ export function FieldItem({
         <Input
           value={field.selector}
           placeholder={t("fieldsManager.form.selectorInput.placeholder")}
-          onChange={(e) => handleUpdateField("selector", e.target.value)}
+          onChange={(evt) => handleUpdateField("selector", evt.target.value)}
         />
 
         <Combobox

@@ -15,7 +15,7 @@ import { InlineButton } from "@/components/shared/InlineButton";
 import { preventDefaultEscape } from "@/lib/dom";
 
 interface InlineInputProps {
-  value: string;
+  value: string | undefined;
   placeholder?: string;
   onSave: (newValue: string) => void;
 }
@@ -26,14 +26,14 @@ export interface InlineInputRef {
 
 function InlineInputComponent (
   {
-    value,
+    value = "",
     placeholder,
     onSave
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>,
 ) {
   const [isEditing, setIsEditing] = useState(false);
-  const [draft, setDraft] = useState(value ?? "");
+  const [draft, setDraft] = useState(value);
 
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -107,7 +107,7 @@ function InlineInputComponent (
           className="flex-1 pr-1 outline-none"
           onKeyDown={handleKeyDown}
           onBlur={confirmEditing}
-          onChange={(e) => setDraft(e.target.value)}
+          onChange={(evt) => setDraft(evt.target.value)}
         />
         <InlineButton
           icon={Check}
@@ -126,8 +126,7 @@ function InlineInputComponent (
     );
   }
 
-  const safeValue = value ?? "";
-  const words = safeValue.split(" ");
+  const words = value.split(" ");
   const lastWord = words.pop();
   const restantWords = words.join(" ");
 
