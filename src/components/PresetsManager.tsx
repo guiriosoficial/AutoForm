@@ -50,7 +50,7 @@ interface PresetsManagerProps {
   onCreatePreset: () => void;
   onExportPresets: () => void;
   onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
-  onLoadFile: (json: string) => ParsePresetsResult | void;
+  onLoadFile: (json: string) => ParsePresetsResult | undefined;
 }
 
 export function PresetsManager({

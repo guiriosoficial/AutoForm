@@ -33,7 +33,7 @@ interface JsonEditorProps {
   className?: string;
   hasConfig: boolean;
   onChange: (value: string) => void;
-  onErrorChange: (error: string) => void;
+  onErrorChange: (error: string | null) => void;
 }
 
 export interface JsonEditorRef {
@@ -52,14 +52,13 @@ function JsonEditorComponent (
 ) {
   const parse = useCallback((val: string) => {
     if (!isPopulatedJson5(val)) {
-      onErrorChange("");
+      onErrorChange(null);
       return;
     }
 
     try {
-      const parsedValue = parseJson5(val);
-      onErrorChange("");
       const parsedValue = parseJson5<JsonValue>(val);
+      onErrorChange(null);
       return parsedValue;
     } catch (error) {
       const message = getErrorMessage(error)

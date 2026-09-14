@@ -31,7 +31,7 @@ interface JavascriptEditorProps {
   value: CatalogMethod;
   className?: string;
   onChange: <K extends keyof CatalogMethod>(key: K, newValue: CatalogMethod[K]) => void;
-  onErrorChange: (error: string) => void;
+  onErrorChange: (error: string | null) => void;
 }
 
 export interface JavascriptEditorRef {
@@ -46,14 +46,14 @@ function JavascriptEditorComponent (
     onErrorChange
   }: JavascriptEditorProps,
   ref: ForwardedRef<JavascriptEditorRef>
-) => {
+) {
   const parse = useCallback((code: string) => {
     if (!code) return
 
     const trimmed = code.trim();
 
     if (!trimmed) {
-      onErrorChange("");
+      onErrorChange(null);
       return;
     }
 
@@ -94,9 +94,7 @@ function JavascriptEditorComponent (
         }
       }
 
-      onErrorChange("");
-    } catch (err) {
-      const message = getErrorMessage(err);
+      onErrorChange(null);
     } catch (error) {
       const message = getErrorMessage(error);
       onErrorChange(message);
