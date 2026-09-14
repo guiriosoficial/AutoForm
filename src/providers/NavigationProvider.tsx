@@ -1,10 +1,4 @@
-import {
-  type ReactNode,
-  createContext,
-  useContext,
-  useMemo,
-  useState
-} from "react";
+import { type ReactNode, createContext, useContext, useMemo, useState } from "react";
 import { PAGE_CONFIG, type Page } from "@/configs";
 
 interface NavigationProviderProps {
@@ -31,7 +25,7 @@ export function NavigationProvider({
   const value = useMemo(() => ({
     activePage,
     setActivePage,
-  }), [activePage])
+  }), [activePage]);
 
   return (
     <NavigationProviderContext value={value}>

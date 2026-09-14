@@ -39,7 +39,7 @@ export function createCatalogMethod(
 
 export function createCatalogModule(
   moduleKey: string,
-  items: CatalogMethod[]
+  items: CatalogMethod[],
 ): CatalogModule {
   return {
     value: moduleKey,

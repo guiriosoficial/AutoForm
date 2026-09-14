@@ -34,7 +34,7 @@ export class FieldResult {
   addError(type: FieldErrorType, message: string) {
     return new FieldResult(
       this.value,
-      new FieldError(type, message)
+      new FieldError(type, message),
     );
   }
 }
@@ -47,7 +47,7 @@ export const createFieldResult = {
   error(type: FieldErrorType, message: string) {
     return new FieldResult(
       undefined,
-      new FieldError(type, message)
+      new FieldError(type, message),
     );
   }
 };

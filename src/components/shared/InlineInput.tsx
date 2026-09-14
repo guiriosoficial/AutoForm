@@ -28,7 +28,7 @@ function InlineInputComponent (
   {
     value = "",
     placeholder,
-    onSave
+    onSave,
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>,
 ) {
@@ -94,7 +94,7 @@ function InlineInputComponent (
   }, [value]);
 
   useImperativeHandle(ref, () => ({
-    startEditing
+    startEditing,
   }), [startEditing])
 
   if (isEditing) {

@@ -55,7 +55,7 @@ export function FieldItem({
 
   const handleUpdateField = (
     key: keyof FieldConfig,
-    newValue: string | undefined
+    newValue: string | undefined,
   ) => {
     if (newValue === undefined) return;
 

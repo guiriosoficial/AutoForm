@@ -24,13 +24,13 @@ export function useCatalog() {
 
   const customCatalog = useMemo(() => createCatalogModule(
     CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-    [...customMethods, newCustomMethodOption]
-  ), [customMethods])
+    [...customMethods, newCustomMethodOption],
+  ), [customMethods]);
 
   const catalogOptions = useMemo(() => [
     ...createFakerCatalog(locale),
     ...createBox4DevCatalog(),
-    customCatalog
+    customCatalog,
   ], [locale, customCatalog]);
 
   const catalogMethodsByKey = useMemo(() => new Map(
@@ -69,16 +69,15 @@ export function useCatalog() {
 
   const updateCustomMethod = useCallback((
     methodKey: string,
-    updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
+    updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>),
   ) => {
     setCustomMethods((prev) =>
       prev.map((method) => {
         if (method.key !== methodKey) return method;
 
-        const updated =
-          isFunction(updater)
-            ? updater(method)
-            : updater;
+        const updated = isFunction(updater)
+          ? updater(method)
+          : updater;
 
           return {
             ...method,

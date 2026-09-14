@@ -158,14 +158,13 @@ export function PresetsManager({
       </Button>
 
       <DropdownMenu>
-        <DropdownMenuTrigger render={
-          <Button
-            variant="outline"
-            size="icon"
-          >
-            <EllipsisVertical />
-          </Button>
-        } />
+        <DropdownMenuTrigger
+          render={
+            <Button variant="outline" size="icon">
+              <EllipsisVertical />
+            </Button>
+          }
+        />
         <DropdownMenuContent onKeyDown={preventDefaultEscape}>
           <DropdownMenuItem onClick={onExportPresets}>
             <Download />

@@ -26,10 +26,9 @@ interface ToastOptions {
 
 function createToast(type: ToastTypes) {
   return (options: ToastOptions | string) => {
-    const data =
-      typeof options === "string"
-        ? { title: options }
-        : options;
+    const data = typeof options === "string"
+      ? { title: options }
+      : options;
 
     return baseToast.add({
       priority: ToastPriority.HIGH,

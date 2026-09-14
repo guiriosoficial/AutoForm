@@ -55,7 +55,7 @@ export function usePresets({
       presets,
       "name",
       defaultName,
-      { spaced: true }
+      { spaced: true },
     );
     const emptyPreset = createEmptyPreset(nextPresetNumber);
 
@@ -66,7 +66,7 @@ export function usePresets({
 
     requestAnimationFrame(() => {
       presetNameEditorRef.current?.startEditing();
-    })
+    });
   }, [presets, presetNameEditorRef, t, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
@@ -82,7 +82,7 @@ export function usePresets({
 
   const updatePreset = useCallback((
     presetId: string,
-    updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>)
+    updater: Partial<Preset> | ((preset: Preset) => Partial<Preset>),
   ) => {
     setPresets((prev) =>
       prev.map((preset) => {
@@ -183,7 +183,7 @@ export function usePresets({
 
   const importPresets = useCallback((
     imported: Preset[],
-    strategy: ImportStrategy = ImportStrategy.OVERWRITE
+    strategy: ImportStrategy = ImportStrategy.OVERWRITE,
   ) => {
     if (strategy === ImportStrategy.REPLACE_ALL) {
       setPresets(imported);

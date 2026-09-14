@@ -24,7 +24,8 @@ export function usePersistentState<T>(
 
     let cancelled = false;
 
-    browser.storage.local.get(key)
+    browser.storage.local
+      .get(key)
       .then((result) => {
         if (cancelled) return;
 

@@ -25,7 +25,7 @@ export default defineManifest({
     "scripting",
     "activeTab",
     "storage",
-    "sidePanel"
+    "sidePanel",
   ],
   content_scripts: [
     {

@@ -23,7 +23,7 @@ export function createSandboxRunner() {
 
       event.source?.postMessage(
         { id, success: true, result },
-        { targetOrigin: event.origin }
+        { targetOrigin: event.origin },
       );
     } catch (error) {
       const message = getErrorMessage(error);

@@ -78,7 +78,6 @@ export function PreferencesView() {
 
         <CardContent onKeyDown={preventDefaultEscape}>
           <FieldGroup>
-
             <Field>
               <FieldLabel>
                 {t("preferencesManager.form.themeToggle.label")}

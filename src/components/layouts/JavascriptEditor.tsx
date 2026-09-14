@@ -39,7 +39,7 @@ function JavascriptEditorComponent (
     value,
     className,
     onChange,
-    onErrorChange
+    onErrorChange,
   }: JavascriptEditorProps,
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
@@ -100,7 +100,7 @@ function JavascriptEditorComponent (
     try {
       const formattedCode = await prettierFormat(
         value.code,
-        EDITOR_PRETTIER_FORMAT_OPTIONS
+        EDITOR_PRETTIER_FORMAT_OPTIONS,
       );
       onChange("code", formattedCode);
     } catch {
@@ -110,7 +110,7 @@ function JavascriptEditorComponent (
 
   const debouncedParse = useRef(debounce(
     (code: string) => parse(code),
-    EDITOR_CONFIG.LINT_DELAY_MS
+    EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
   const handleChangeMethod = (newValue: string) => {
@@ -136,11 +136,11 @@ function JavascriptEditorComponent (
   const editorExtension = useMemo(() => [
     javascript(),
     createEditorLinter(javascriptLinter),
-    createEditorKeymap({ onFormat: format })
+    createEditorKeymap({ onFormat: format }),
   ], [format]);
 
   useImperativeHandle(ref, () => ({
-    format
+    format,
   }), [format])
 
   return (

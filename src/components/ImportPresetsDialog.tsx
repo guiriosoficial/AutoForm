@@ -118,11 +118,13 @@ export function ImportPresetsDialog({
         </Field>
 
         <DialogFooter>
-          <DialogClose render={
-            <Button variant="outline">
-              {t("presetsManager.dialogs.importPreset.cancelButton")}
-            </Button>
-          } />
+          <DialogClose
+            render={
+              <Button variant="outline">
+                {t("presetsManager.dialogs.importPreset.cancelButton")}
+              </Button>
+            }
+          />
           <Button onClick={() => onImport(presetsToImport.parsed, strategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>

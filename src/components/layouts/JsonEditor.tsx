@@ -38,9 +38,9 @@ function JsonEditorComponent (
     className,
     hasConfig,
     onChange,
-    onErrorChange
+    onErrorChange,
   }: JsonEditorProps,
-  ref: ForwardedRef<JsonEditorRef>
+  ref: ForwardedRef<JsonEditorRef>,
 ) {
   const parse = useCallback((val: string) => {
     if (!isPopulatedJson5(val)) {
@@ -72,7 +72,7 @@ function JsonEditorComponent (
 
   const debouncedParse = useRef(debounce(
     (text: string) => parse(text),
-    EDITOR_CONFIG.LINT_DELAY_MS
+    EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
   const handleConfigChange = (newValue: string) => {
@@ -92,11 +92,11 @@ function JsonEditorComponent (
   const editorExtension = useMemo(() => [
     json5(),
     createEditorLinter(jsonLinter, hasConfig),
-    createEditorKeymap({ onFormat: format })
+    createEditorKeymap({ onFormat: format }),
   ], [hasConfig, format]);
 
   useImperativeHandle(ref, () => ({
-    format
+    format,
   }), [format])
 
   return (
