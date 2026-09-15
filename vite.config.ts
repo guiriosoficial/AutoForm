@@ -1,44 +1,44 @@
 import path from "node:path";
-import { defineConfig } from "vite";
+import { defineConfig, loadEnv } from "vite";
 import zip from "vite-plugin-zip-pack";
 import tailwindcss from "@tailwindcss/vite";
 import { crx } from "@crxjs/vite-plugin";
 import react from "@vitejs/plugin-react";
-import manifest, { APP_ID, APP_NAME, APP_VERSION } from "./manifest.config";
+import manifest from "./manifest.config";
 
-const defineVariables = {
-  __APP_ID__: JSON.stringify(APP_ID),
-  __APP_NAME__: JSON.stringify(APP_NAME),
-  __APP_VERSION__: JSON.stringify(APP_VERSION),
-};
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, process.cwd());
 
-export default defineConfig({
-  define: defineVariables,
-  resolve: {
-    alias: {
-      "@": `${path.resolve(import.meta.dirname, "src")}`,
-    },
-  },
-  plugins: [
-    react(),
-    tailwindcss(),
-    crx({ manifest }),
-    zip({ outDir: "release", outFileName: `crx-${APP_ID}-${APP_VERSION}.zip` }),
-    {
-      name: "html-transform",
-      transformIndexHtml(html) {
-        let transformedHtml = html;
-        for (const [key, value] of Object.entries(defineVariables)) {
-          const rawValue = String(value).replaceAll(/^"|"$/gu, "");
-          transformedHtml = transformedHtml.replaceAll(`%${key}%`, rawValue);
-        }
-        return transformedHtml;
+  return {
+    resolve: {
+      alias: {
+        "@": `${path.resolve(import.meta.dirname, "src")}`,
       },
     },
-  ],
-  server: {
-    cors: {
-      origin: [/chrome-extension:\/\//u],
+    plugins: [
+      react(),
+      tailwindcss(),
+      crx({ manifest }),
+      zip({ outDir: "release", outFileName: `crx-${env.VITE_APP_ID}-${env.VITE_APP_VERSION}.zip` }),
+    ],
+    server: {
+      cors: {
+        origin: [/chrome-extension:\/\//u],
+      },
     },
-  },
+    build: {
+      rollupOptions: {
+        input: {
+          app: path.resolve(
+            import.meta.dirname,
+            "src/entrypoints/app/index.html",
+          ),
+          sandbox: path.resolve(
+            import.meta.dirname,
+            "src/entrypoints/sandbox/index.html",
+          ),
+        },
+      },
+    },
+  }
 });

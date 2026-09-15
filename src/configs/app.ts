@@ -1,7 +1,7 @@
 export const APP_CONFIG = {
-  id: __APP_ID__,
-  name: __APP_NAME__,
-  version: __APP_VERSION__,
+  id: import.meta.env.VITE_APP_ID,
+  name: import.meta.env.VITE_APP_NAME,
+  version: import.meta.env.VITE_APP_VERSION,
 } as const;
 
 export const APP_ID = APP_CONFIG.id;

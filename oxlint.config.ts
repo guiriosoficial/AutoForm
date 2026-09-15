@@ -32,7 +32,7 @@ export default defineConfig({
     node: true,
   },
   globals: { ...GLOBALS_VARIABLES },
-  ignorePatterns: ["src/components/ui/**", "src/@types/**"],
+  ignorePatterns: ["src/components/ui/**"],
 
   rules: {
     "max-params": ["error", { max: 4 }],
