@@ -20,7 +20,7 @@ import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { preventDefaultEscape } from "@/lib/dom";
+import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";

@@ -1,8 +1,6 @@
 import browser from "webextension-polyfill";
-import { executeInSandbox } from "@/lib/dom";
-import { getErrorMessage } from "@/lib/errors";
-import { isArray } from "@/lib/guards";
-import { parseJson5 } from "@/lib/json5";
+import { executeInSandbox } from "@/lib/sandbox";
+import { getErrorMessage, isArray, parseJson5 } from "@/lib/utils";
 import { MessageAction } from "@/configs";
 import type { CatalogMethod } from "@/lib/catalog";
 

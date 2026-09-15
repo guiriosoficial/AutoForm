@@ -1,7 +1,6 @@
 import i18n from "@/i18n";
 import { gerar } from "@box4dev/gerador-br";
-import { isFunction } from "@/lib/guards";
-import { toTitleCase } from "@/lib/string";
+import { isFunction, toTitleCase } from "@/lib/utils";
 import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
 import type { GeneratorValue } from "@/lib/generator";
 

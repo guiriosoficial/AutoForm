@@ -10,7 +10,7 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { preventDefaultEscape } from "@/lib/dom";
+import { preventDefaultEscape } from "@/lib/utils";
 import type { KeyboardEvent } from "react";
 
 interface AlertDialogProps {

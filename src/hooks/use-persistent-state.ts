@@ -1,6 +1,6 @@
 import browser from "webextension-polyfill";
 import { useEffect, useMemo, useState } from "react";
-import { debounce } from "@/lib/async";
+import { debounce } from "@/lib/utils";
 import { STORAGE_CONFIG, type StorageKeys } from "@/configs";
 
 const AreaName = {

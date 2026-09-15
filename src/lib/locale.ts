@@ -13,7 +13,7 @@ const SPECIAL_LOCALES = {
 
 type SpecialLocaleKey = keyof typeof SPECIAL_LOCALES;
 
-export function toLocaleTag(locale: string): string {
+function toLocaleTag(locale: string): string {
   const specialTag = SPECIAL_LOCALES[locale as SpecialLocaleKey];
 
   if (specialTag) return specialTag;
@@ -21,7 +21,7 @@ export function toLocaleTag(locale: string): string {
   return locale.replaceAll("_", "-");
 }
 
-export function getLocaleFlagEmoji(locale: string): string {
+function getLocaleFlagEmoji(locale: string): string {
   try {
     const { region } = new Intl.Locale(toLocaleTag(locale)).maximize();
     return region?.length === LOCALE_REGION_LENGTH

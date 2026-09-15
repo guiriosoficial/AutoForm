@@ -19,9 +19,8 @@ import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
-import { preventDefaultEscape } from "@/lib/dom";
+import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
 import { ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
-import { toTitleCase } from "@/lib/string.ts";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();

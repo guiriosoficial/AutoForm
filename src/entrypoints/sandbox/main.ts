@@ -1,3 +1,3 @@
-import { createSandboxRunner } from "@/lib/dom";
+import { createSandboxRunner } from "@/lib/sandbox";
 
 createSandboxRunner();

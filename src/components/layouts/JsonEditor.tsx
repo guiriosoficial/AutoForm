@@ -15,9 +15,14 @@ import {
   createEditorLinter,
   jsonLinter,
 } from "@/lib/editor";
-import { type JsonValue, isPopulatedJson5, parseJson5, stringifyJson5 } from "@/lib/json5";
-import { debounce } from "@/lib/async";
-import { getErrorMessage } from "@/lib/errors";
+import {
+  type JsonValue,
+  debounce,
+  isPopulatedJson5,
+  stringifyJson5,
+  parseJson5,
+  getErrorMessage,
+} from "@/lib/utils";
 import { EDITOR_CONFIG, EDITOR_BASIC_SETUP } from "@/configs";
 
 interface JsonEditorProps {

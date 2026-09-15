@@ -1,5 +1,5 @@
 import { Faker, allLocales } from "@faker-js/faker";
-import { isFunction, isObject } from "@/lib/guards";
+import { isFunction, isObject } from "@/lib/utils";
 import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
 import { LOCALE_CONFIG, type Locale } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";

@@ -7,9 +7,7 @@ import {
   isValidPresetArray,
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { createNextSequencedName } from "@/lib/string";
-import { getErrorMessage } from "@/lib/errors";
-import { isFunction } from "@/lib/guards";
+import { getErrorMessage, isFunction, createNextSequencedName } from "@/lib/utils";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
@@ -166,7 +164,8 @@ export function usePresets({
       const imported: Preset[] = JSON.parse(json);
 
       if (!isValidPresetArray(imported)) {
-        throw new Error(t("presetsManager.messages.importPreset.invalid"));
+        toast.error(t("presetsManager.messages.importPreset.invalid"));
+        return;
       }
 
       const existingIds = new Set(presets.map((preset) => preset.id));

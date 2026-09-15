@@ -24,10 +24,23 @@ export function isObject(value: unknown): value is Record<string, unknown> {
   return _.isObjectLike(value);
 }
 
+export function isArray(value: unknown): value is unknown[] {
+  return _.isArray(value);
+}
+
 export function isFunction(value: unknown): value is (...args: never[]) => unknown {
   return _.isFunction(value);
 }
 
-export function isArray(value: unknown): value is unknown[] {
-  return _.isArray(value);
+export function isPopulatedJson5(input: string | undefined) {
+  if (!input) return false;
+
+  const trimmed = input.trim();
+
+  return (
+    !!trimmed &&
+    !/^\{\s*\}$/u.test(trimmed) &&
+    !/^\[\s*\]$/u.test(trimmed) &&
+    !/^(?<quote>['"]) *\k<quote>$/u.test(trimmed)
+  );
 }

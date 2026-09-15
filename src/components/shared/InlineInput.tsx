@@ -12,7 +12,7 @@ import {
 } from "react";
 import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { preventDefaultEscape } from "@/lib/dom";
+import { preventDefaultEscape } from "@/lib/utils";
 
 interface InlineInputProps {
   value: string | undefined;

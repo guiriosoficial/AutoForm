@@ -15,9 +15,7 @@ import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts
 import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/hooks/use-catalog";
-import { cn } from "@/lib/utils";
-import { isPopulatedJson5 } from "@/lib/json5";
-import { preventDefaultEscape } from "@/lib/dom";
+import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
 import { EditorTabs } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
 import type { CatalogMethod } from "@/lib/catalog";

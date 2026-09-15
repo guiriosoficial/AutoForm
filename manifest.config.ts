@@ -1,5 +1,5 @@
 import { defineManifest } from "@crxjs/vite-plugin";
-import { toTitleCase } from "./src/lib/string";
+import { toTitleCase } from "./src/lib/utils";
 import { name, version } from "./package.json";
 
 export const APP_ID = name;

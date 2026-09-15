@@ -1,12 +1,5 @@
 import browser from "webextension-polyfill";
-import { getErrorMessage } from "@/lib/errors";
-import type { KeyboardEvent } from "react";
-
-export function preventDefaultEscape(event: KeyboardEvent) {
-  if (event.key === "Escape") {
-    event.preventDefault();
-  }
-}
+import { getErrorMessage } from "@/lib/utils";
 
 export function createSandboxRunner() {
   window.addEventListener("message", async (event) => {

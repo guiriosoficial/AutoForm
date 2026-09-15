@@ -1,4 +1,4 @@
-import { isArray, isObject, isOptionalString, isPopulatedString } from "@/lib/guards";
+import { isArray, isObject, isOptionalString, isPopulatedString } from "@/lib/utils";
 import type { GeneratorValue } from "@/lib/generator";
 
 export interface FieldConfig {

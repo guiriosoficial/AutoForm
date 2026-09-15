@@ -18,8 +18,7 @@ import {
   createEditorLinter,
   javascriptLinter,
 } from "@/lib/editor";
-import { debounce } from "@/lib/async";
-import { getErrorMessage } from "@/lib/errors";
+import { debounce, getErrorMessage } from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
 import { EDITOR_CONFIG, EDITOR_BASIC_SETUP, EDITOR_PRETTIER_FORMAT_OPTIONS } from "@/configs";
 

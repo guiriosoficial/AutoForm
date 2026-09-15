@@ -2,10 +2,9 @@ import { useTranslation } from "react-i18next";
 import { useCallback, useMemo } from "react";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { createNextSequencedName } from "@/lib/string";
 import { createFakerCatalog } from "@/lib/catalog/providers/faker";
 import { createBox4DevCatalog } from "@/lib/catalog/providers/box-4-dev";
-import { isFunction } from "@/lib/guards";
+import { isFunction, createNextSequencedName } from "@/lib/utils";
 import {
   type CatalogMethod,
   createCatalogCustomFunction,

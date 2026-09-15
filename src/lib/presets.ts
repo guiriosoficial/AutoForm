@@ -1,5 +1,5 @@
 import { type FieldConfig, createField, isValidFieldArray } from "@/lib/fields";
-import { isArray, isObject, isPopulatedString, isTimestamp } from "@/lib/guards";
+import { isArray, isObject, isPopulatedString, isTimestamp } from "@/lib/utils";
 
 export interface Preset {
   id: string;
