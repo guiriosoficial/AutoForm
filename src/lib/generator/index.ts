@@ -18,7 +18,7 @@ export type GeneratorValue =
   | { [key: string]: GeneratorValue };
 
 export interface GeneratorMessage {
-  action: typeof MessageAction.FILL_INPUT;
+  action: typeof MessageAction.FILL_INPUT_IN_CONTENT;
   selector: string;
   value: string | boolean;
 }
@@ -66,7 +66,7 @@ export async function fillInputElement(
 
   try {
     const response = await browser.tabs.sendMessage(tab.id, {
-      action: MessageAction.FILL_INPUT,
+      action: MessageAction.FILL_INPUT_IN_CONTENT,
       selector,
       value,
     });

@@ -1,10 +1,10 @@
-import { getErrorMessage } from "@/lib/utils";
+import { MessageAction } from "@/configs";
 
 export function createSandboxRunner() {
   window.addEventListener("message", async (event) => {
-    const { id, code, scope } = event.data;
+    const { action, id, code, scope } = event.data;
 
-    if (!id) return;
+    if (!id || action !== MessageAction.EXECUTE_IN_SANDBOX) return;
 
     try {
       // oxlint-disable-next-line no-new-func
@@ -12,13 +12,12 @@ export function createSandboxRunner() {
       const result = await userFn(...scope);
 
       event.source?.postMessage(
-        { id, success: true, result },
+        { id, action, result, success: true },
         { targetOrigin: event.origin },
       );
     } catch (error) {
-      const message = getErrorMessage(error);
       event.source?.postMessage(
-        { id, success: false, error: message },
+        { id, action, error, success: false },
         { targetOrigin: event.origin },
       );
     }

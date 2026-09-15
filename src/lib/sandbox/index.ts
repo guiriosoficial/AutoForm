@@ -1,4 +1,5 @@
 import browser from "webextension-polyfill";
+import { MessageAction } from "@/configs";
 
 export function executeInSandbox<T = unknown>(
   code: string,
@@ -19,22 +20,28 @@ export function executeInSandbox<T = unknown>(
     }
 
     const handleMessage = (event: MessageEvent) => {
-      if (event.data?.id !== id) return;
+      const { id: dataId, action, success, result, error } = event.data ?? {};
+
+      if (dataId !== id || action !== MessageAction.EXECUTE_IN_SANDBOX) return;
 
       window.removeEventListener("message", handleMessage);
 
-      if (event.data.success) {
-        resolve(event.data.result);
+      if (success) {
+        resolve(result);
       } else {
-        reject(new Error(event.data.error));
+        reject(error);
       }
-
     };
 
     window.addEventListener("message", handleMessage);
 
     const send = () => {
-      iframe.contentWindow?.postMessage({ id, code, scope }, "*");
+      iframe.contentWindow?.postMessage({
+        action: MessageAction.EXECUTE_IN_SANDBOX,
+        id,
+        code,
+        scope
+      }, "*");
     };
 
     if (iframe.contentWindow) {
