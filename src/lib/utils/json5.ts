@@ -16,4 +16,3 @@ export function stringifyJson5(json: JsonValue) {
 export function parseJson5<T = unknown>(text: string): T {
   return JSON5.parse(text);
 }
-

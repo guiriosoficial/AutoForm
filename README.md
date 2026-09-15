@@ -57,15 +57,16 @@ npm run build
 - Tratar error ao gerar dados
 - Personalizar melhor Editor de JS
 - Tratar presets/metodos com nomes iguais
+- Tratar delete de Custom Method já utilizado
 - Criar presets iniciais prontos
+- Revisar códigos de dom (runners em lib)
+- Ajustar opção de Novo Método selecionado sempre
 
 - ====================== EM ANDAMENTO ==========================
-- Reorganizar pasta lib (lib/generator/executeFillInputElement para lib/dom, presets, fields, editor, catalog, generator para para /domains)
-- Finalizar sandbox para executar código gerador do usuário
-- Configurar lint
--
+- Reorganizar pasta lib
+- Corrigir erros de Lint (plugin react)
+
 - ========================== BONUS ==============================
--
 - Escrever testes
 - Criar página e links de feedback/discussions/issues/backlog/roadmap/changelog
 

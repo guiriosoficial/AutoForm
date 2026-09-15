@@ -5,7 +5,12 @@ import { useCatalog } from "@/hooks/use-catalog";
 import { toast } from "@/lib/toast";
 import { isFunction } from "@/lib/utils";
 import { type GeneratorValue, generateValue, fillInputElement } from "@/lib/generator";
-import { type FieldConfig, type FieldResult, createField, createFieldResult } from "@/lib/fields";
+import {
+  type FieldConfig,
+  type FieldResult,
+  createField,
+  createFieldResult,
+} from "@/lib/fields";
 import { EXPORT_CONFIG, StorageKeys } from "@/configs";
 
 interface UseFormArgs {

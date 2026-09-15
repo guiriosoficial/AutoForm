@@ -2,11 +2,6 @@
 
 import { defineConfig } from "oxlint";
 
-const ALLOWED_UNDERSCORE_DANGLE_VARIABLES = ["__APP_NAME__", "__APP_VERSION__", "__APP_ID__"];
-const GLOBALS_VARIABLES = Object.fromEntries(
-  ALLOWED_UNDERSCORE_DANGLE_VARIABLES.map((key) => [key, "readonly" as const])
-);
-
 export default defineConfig({
   categories: {
     correctness: "error",
@@ -31,7 +26,6 @@ export default defineConfig({
     browser: true,
     node: true,
   },
-  globals: { ...GLOBALS_VARIABLES },
   ignorePatterns: ["src/components/ui/**"],
 
   rules: {
@@ -54,10 +48,6 @@ export default defineConfig({
     "no-implicit-coercion": ["error", { boolean: false }],
     "no-magic-numbers": ["error", { ignore: [-1, 0, 1], ignoreDefaultValues: true }],
     "no-empty-function": ["error", { allow: ["arrowFunctions"] }],
-    "no-underscore-dangle": ["error", { allow: ALLOWED_UNDERSCORE_DANGLE_VARIABLES }],
-    "no-inline-comments": "error",
-    "capitalized-comments": "error",
-
 
     "react/react-in-jsx-scope": "off",
     "react/jsx-filename-extension": ["error", { extensions: ["tsx"] }],

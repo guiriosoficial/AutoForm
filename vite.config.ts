@@ -19,26 +19,15 @@ export default defineConfig(({ mode }) => {
       react(),
       tailwindcss(),
       crx({ manifest }),
-      zip({ outDir: "release", outFileName: `crx-${env.VITE_APP_ID}-${env.VITE_APP_VERSION}.zip` }),
+      zip({
+        outDir: "release",
+        outFileName: `crx-${env.VITE_APP_ID}-${env.VITE_APP_VERSION}.zip`,
+      }),
     ],
     server: {
       cors: {
         origin: [/chrome-extension:\/\//u],
       },
     },
-    build: {
-      rollupOptions: {
-        input: {
-          app: path.resolve(
-            import.meta.dirname,
-            "src/entrypoints/app/index.html",
-          ),
-          sandbox: path.resolve(
-            import.meta.dirname,
-            "src/entrypoints/sandbox/index.html",
-          ),
-        },
-      },
-    },
-  }
+  };
 });

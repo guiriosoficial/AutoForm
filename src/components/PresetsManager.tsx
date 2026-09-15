@@ -15,7 +15,13 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import { Item, ItemActions, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import {
+  Item,
+  ItemActions,
+  ItemContent,
+  ItemDescription,
+  ItemTitle,
+} from "@/components/ui/item";
 import { Button } from "@/components/ui/button";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { ImportPresetsDialog } from "@/components/ImportPresetsDialog";
@@ -161,7 +167,10 @@ export function PresetsManager({
       <DropdownMenu>
         <DropdownMenuTrigger
           render={
-            <Button variant="outline" size="icon">
+            <Button
+              variant="outline"
+              size="icon"
+            >
               <EllipsisVertical />
             </Button>
           }

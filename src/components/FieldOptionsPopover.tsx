@@ -125,18 +125,18 @@ export function FieldOptionsPopover({
         open={open}
         onOpenChange={handlePopoverOpenChange}
       >
-        <PopoverTrigger render={
-          <Button
-            variant="ghost"
-            size="icon"
-            className={triggerButtonClasses}
-          >
-            <Settings2 size={16} />
-            {hasConfig && (
-              <span className={triggerBadgeClasses} />
-            )}
-          </Button>
-        } />
+        <PopoverTrigger
+          render={
+            <Button
+              variant="ghost"
+              size="icon"
+              className={triggerButtonClasses}
+            >
+              <Settings2 size={16} />
+              {hasConfig && <span className={triggerBadgeClasses} />}
+            </Button>
+          }
+        />
 
         <PopoverContent
           side="left"

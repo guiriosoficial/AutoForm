@@ -20,7 +20,11 @@ import {
 } from "@/lib/editor";
 import { debounce, getErrorMessage } from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
-import { EDITOR_CONFIG, EDITOR_BASIC_SETUP, EDITOR_PRETTIER_FORMAT_OPTIONS } from "@/configs";
+import {
+  EDITOR_CONFIG,
+  EDITOR_BASIC_SETUP,
+  EDITOR_PRETTIER_FORMAT_OPTIONS,
+} from "@/configs";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;

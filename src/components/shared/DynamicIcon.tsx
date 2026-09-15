@@ -11,12 +11,10 @@ export function DynamicIcon({
   size,
   className,
 }: DynamicIconProps) {
-  return Icon
-    ? (
-      <Icon
-        size={size}
-        className={className}
-      />
-    )
-    : null;
+  return Icon ? (
+    <Icon
+      size={size}
+      className={className}
+    />
+  ) : null;
 }
