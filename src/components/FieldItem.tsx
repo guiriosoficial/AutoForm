@@ -1,3 +1,4 @@
+import { memo, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { Copy, Plus, RotateCcw, X } from "lucide-react";
 import {
@@ -14,11 +15,11 @@ import {
 } from "@/components/ui/combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { FieldOptionsPopover } from "@/components/FieldOptionsPopover";
+import { type FieldOptionsPopoverRef, FieldOptionsPopover } from "@/components/FieldOptionsPopover";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { useCatalog } from "@/hooks/use-catalog";
+import { useCatalog } from "@/providers/CatalogProvider";
 import { cn, preventDefaultEscape } from "@/lib/utils";
-import { CATALOG_CONFIG } from "@/configs";
+import { CATALOG_CONFIG, EditorTabs } from "@/configs";
 import type { CatalogMethod, CatalogModule } from "@/lib/catalog";
 import type { FieldConfig, FieldError } from "@/lib/fields";
 import type { GeneratorValue } from "@/lib/generator";
@@ -33,7 +34,7 @@ interface FieldItemProps {
   onCopyValue: (value: string) => void;
 }
 
-export function FieldItem({
+function FieldItemComponent({
   field,
   value,
   error,
@@ -44,10 +45,12 @@ export function FieldItem({
 }: FieldItemProps) {
   const { t } = useTranslation();
   const {
+    createCustomMethod,
     catalogMethodsByKey,
     catalogOptions,
-    createCustomMethod,
   } = useCatalog();
+
+  const fieldOptionsPopoverRef = useRef<FieldOptionsPopoverRef>(null)
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
   const hasValue = value !== undefined;
@@ -56,7 +59,7 @@ export function FieldItem({
     key: keyof FieldConfig,
     newValue: string | undefined,
   ) => {
-    if (newValue === undefined) return;
+    if (!newValue) return;
 
     onUpdate(field.id, {
       ...field,
@@ -68,6 +71,8 @@ export function FieldItem({
     const newMethod = createCustomMethod();
 
     handleUpdateField("generator", newMethod.key);
+
+    fieldOptionsPopoverRef.current?.startEditing(EditorTabs.METHOD);
   };
 
   const resultClasses = "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group border-primary/30 text-primary";
@@ -108,14 +113,17 @@ export function FieldItem({
                   </ComboboxLabel>
                   <ComboboxCollection>
                     {(item: CatalogMethod) => item.key === CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
-                      <ComboboxItem
+                      <Button
                         key={item.key}
+                        variant="ghost"
+                        size="sm"
+                        className="w-full justify-between"
                         onClick={handleCreateCustomMethod}
                       >
-                        <Plus />
                         {t("fieldsManager.form.generatorSelect.addOption")}
-                      </ComboboxItem>
-                    ) : (
+                        <Plus size={14} />
+                      </Button>
+                      ) : (
                       <ComboboxItem
                         key={item.key}
                         value={item}
@@ -135,6 +143,7 @@ export function FieldItem({
         </Combobox>
 
         <FieldOptionsPopover
+          ref={fieldOptionsPopoverRef}
           value={field.options}
           methodKey={field.generator}
           docUrl={selectedMethod?.docs}
@@ -181,3 +190,7 @@ export function FieldItem({
     </div>
   );
 }
+
+export const FieldItem = memo(FieldItemComponent)
+
+FieldItem.displayName = "FieldItem";

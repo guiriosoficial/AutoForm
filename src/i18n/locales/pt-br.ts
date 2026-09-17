@@ -155,6 +155,7 @@ export const ptBrTranslations = {
     alerts: {
       deleteCustomMethod: {
         description: 'Tem certeza que deseja apagar o gerador customizado "{{ name }}"?',
+        usesCounter: "Este método está sendo usado em $t(globals.fields, { 'count': fieldsUseCount }) em $t(globals.presets, { 'count': presetsUseCount }) e será removido de todos eles."
       },
     },
     form: {

@@ -45,6 +45,8 @@ export default defineConfig({
     "no-undefined": "allow", // Resolved in "unicorn/no-useless-undefined"
     "no-redeclare": "allow", // TODO: Review config
     "no-shadow": "allow", // TODO: Review config
+    "no-nested-ternary": "allow", // TODO: Review config
+    "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
     "no-implicit-coercion": ["error", { boolean: false }],
     "no-magic-numbers": ["error", { ignore: [-1, 0, 1], ignoreDefaultValues: true }],
     "no-empty-function": ["error", { allow: ["arrowFunctions"] }],

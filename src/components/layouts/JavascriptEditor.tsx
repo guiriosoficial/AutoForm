@@ -18,13 +18,14 @@ import {
   createEditorLinter,
   javascriptLinter,
 } from "@/lib/editor";
-import { debounce, getErrorMessage } from "@/lib/utils";
+import { cn, debounce, getErrorMessage } from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
   EDITOR_BASIC_SETUP,
   EDITOR_PRETTIER_FORMAT_OPTIONS,
 } from "@/configs";
+import { useCatalog } from "@/providers/CatalogProvider";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;
@@ -46,6 +47,8 @@ function JavascriptEditorComponent (
   }: JavascriptEditorProps,
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
+  const { isDuplicatedLabel } = useCatalog();
+
   const parse = useCallback((code: string) => {
     if (!code) return;
 
@@ -146,11 +149,16 @@ function JavascriptEditorComponent (
     format,
   }), [format])
 
+  const inputClasses = cn(
+    "bg-card dark:bg-card",
+    isDuplicatedLabel(value.label, value.key) && "text-destructive border-destructive! focus-visible:ring-destructive/50"
+  )
+
   return (
     <div className="space-y-2">
       <Input
         value={value.label}
-        className="bg-card dark:bg-card"
+        className={inputClasses}
         placeholder="Method Name"
         onChange={(evt) => handleChangeName(evt.target.value)}
       />

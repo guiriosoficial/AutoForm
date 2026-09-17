@@ -56,11 +56,10 @@ npm run build
 - Criar Preferência de erros (Ignorar, Preencher, Gerar...)
 - Tratar error ao gerar dados
 - Personalizar melhor Editor de JS
-- Tratar presets/metodos com nomes iguais
-- Tratar delete de Custom Method já utilizado
+- Tratar presets/metodos com nomes iguais****
+- Tratar delete de Custom Method já utilizado****
 - Criar presets iniciais prontos
 - Revisar códigos de dom (runners em lib)
-- Ajustar opção de Novo Método selecionado sempre
 
 - ====================== EM ANDAMENTO ==========================
 - Reorganizar pasta lib

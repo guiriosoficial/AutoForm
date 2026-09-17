@@ -10,13 +10,13 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { preventDefaultEscape } from "@/lib/utils";
+import { isArray, preventDefaultEscape } from "@/lib/utils";
 import type { KeyboardEvent } from "react";
 
 interface AlertDialogProps {
   open: boolean;
   title?: string;
-  description?: string;
+  description?: string | (string | null)[];
   confirmButtonText?: string;
   cancelButtonText?: string;
   destructive?: boolean;
@@ -39,7 +39,10 @@ export function AlertDialog({
   const { t } = useTranslation();
 
   const translatedTitle = title ?? t("defaults.alert.title");
-  const translatedDescription = description ?? t("defaults.alert.description");
+  const translatedDescription = description
+    ? (isArray(description) ? description.filter((item) => item !== null) : [description])
+    : [t("defaults.alert.description")]
+
   const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
   const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 
@@ -76,7 +79,11 @@ export function AlertDialog({
             {translatedTitle}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {translatedDescription}
+            {translatedDescription.map((text, index) => (
+              <p key={index}>
+                {text}
+              </p>
+            ))}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

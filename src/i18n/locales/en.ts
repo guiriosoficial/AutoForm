@@ -106,9 +106,9 @@ export const enTranslations = {
     dialogs: {
       importPreset: {
         title: "$t(globals.import)",
-        description_zero: "$t(globals.presets, { 'count': total }) to import",
-        description_one: "{{ count }} conflict among $t(globals.presets, { 'count': total })",
-        description_other: "{{ count }} conflicts among $t(globals.presets, { 'count': total })",
+        description_zero: "$t(globals.presets, { 'count': {{ total }} }) to import",
+        description_one: "{{ count }} conflict among $t(globals.presets, { 'count': {{ total }} })",
+        description_other: "{{ count }} conflicts among $t(globals.presets, { 'count': {{ total }} })",
         confirmButton: "$t(globals.import)",
         cancelButton: "$t(globals.cancel)",
         form: {
@@ -152,7 +152,8 @@ export const enTranslations = {
     },
     alerts: {
       deleteCustomMethod: {
-        description: 'Are you sure you want to delete custom method "{{ name }}"?',
+        description: "Are you sure you want to delete custom method \"{{ name }}\"?",
+        usesCounter: "This method is currently used in $t(globals.fields, { 'count': {{ fieldsUseCount }} }) across $t(globals.presets, { 'count': {{ presetsUseCount }} }) and will be removed from all of them."
       },
     },
     form: {

@@ -35,8 +35,8 @@ interface PresetsManagerProps {
   presets: Preset[];
   selectedPreset: Preset | null;
   onSelectPreset: (preset: Preset | null) => void;
-  onDeletePreset: (presetId: string) => void;
   onCreatePreset: () => void;
+  onDeletePreset: (presetId: string) => void;
   onExportPresets: () => void;
   onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
   onLoadFile: (json: string) => ParsePresetsResult | undefined;

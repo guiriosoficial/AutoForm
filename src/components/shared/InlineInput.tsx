@@ -12,11 +12,12 @@ import {
 } from "react";
 import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { preventDefaultEscape } from "@/lib/utils";
+import { cn, isFunction, preventDefaultEscape } from "@/lib/utils";
 
 interface InlineInputProps {
   value: string | undefined;
   placeholder?: string;
+  error?: string | boolean | ((draft: string) => string | boolean);
   onSave: (newValue: string) => void;
 }
 
@@ -28,6 +29,7 @@ function InlineInputComponent (
   {
     value = "",
     placeholder,
+    error,
     onSave,
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>,
@@ -36,6 +38,7 @@ function InlineInputComponent (
   const [draft, setDraft] = useState(value);
 
   const inputRef = useRef<HTMLInputElement>(null);
+  const hasError = isFunction(error) ? error(draft) : error;
 
   useEffect(() => {
     if (!isEditing) return;
@@ -52,6 +55,9 @@ function InlineInputComponent (
   }, [isEditing]);
 
   const confirmEditing = (event?: MouseEvent | FocusEvent) => {
+    // TODO: Decidir se apenas bloqueia ou se volta ao estado anterior
+    if (hasError) return;
+
     event?.preventDefault();
 
     const nextValue = draft.trim();
@@ -97,6 +103,8 @@ function InlineInputComponent (
     startEditing,
   }), [startEditing])
 
+  const inputClasses = cn("flex-1 pr-1 outline-none", hasError && "text-destructive");
+
   if (isEditing) {
     return (
       <div className="flex gap-1">
@@ -104,7 +112,7 @@ function InlineInputComponent (
           ref={inputRef}
           value={draft}
           placeholder={placeholder}
-          className="flex-1 pr-1 outline-none"
+          className={inputClasses}
           onKeyDown={handleKeyDown}
           onBlur={confirmEditing}
           onChange={(evt) => setDraft(evt.target.value)}

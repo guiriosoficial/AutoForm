@@ -13,6 +13,7 @@ import { InlineInput, type InlineInputRef } from "@/components/shared/InlineInpu
 import { Footer } from "@/components/layouts/Footer";
 import { FieldsManager } from "@/components/FieldsManager";
 import { PresetsManager } from "@/components/PresetsManager";
+import { CatalogProvider } from "@/providers/CatalogProvider";
 import { useForm } from "@/hooks/use-form";
 import { usePresets } from "@/hooks/use-presets";
 
@@ -27,6 +28,8 @@ export function HomeView() {
     setCurrentPreset,
     updateCurrentPresetName,
     updateCurrentPresetFields,
+    detachGeneratorFromPresets,
+    isDuplicatedPresetName,
     createPreset,
     deletePreset,
     exportPresets,
@@ -82,6 +85,7 @@ export function HomeView() {
               ref={presetNameEditorRef}
               value={currentPreset?.name}
               placeholder={t("fieldsManager.form.presetNameInput.placeholder")}
+              error={(draft: string) => isDuplicatedPresetName(draft, currentPreset?.id)}
               onSave={updateCurrentPresetName}
             />
           </CardTitle>
@@ -92,15 +96,20 @@ export function HomeView() {
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-2">
-          <FieldsManager
-            fields={fields}
-            values={generatedValues}
-            onUpdateField={updateField}
-            onAddField={addField}
-            onRemoveField={removeField}
-            onCopyValue={copyValue}
-            onRegenerateValue={regenerateValue}
-          />
+          <CatalogProvider
+            presets={presets}
+            onRemoveCustomMethod={detachGeneratorFromPresets}
+          >
+            <FieldsManager
+              fields={fields}
+              values={generatedValues}
+              onUpdateField={updateField}
+              onAddField={addField}
+              onRemoveField={removeField}
+              onRegenerateValue={regenerateValue}
+              onCopyValue={copyValue}
+            />
+          </CatalogProvider>
         </CardContent>
       </Card>
 

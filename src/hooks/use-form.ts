@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { useCatalog } from "@/hooks/use-catalog";
+import { useCatalog } from "@/providers/CatalogProvider";
 import { toast } from "@/lib/toast";
 import { isFunction } from "@/lib/utils";
 import { type GeneratorValue, generateValue, fillInputElement } from "@/lib/generator";
@@ -125,6 +125,10 @@ export function useForm({
       toast.error(t("fieldsManager.messages.copyValue.failed"));
     }
   }, [t]);
+
+  useEffect(() => {
+    if (presetId && fields.length === 0) addField()
+  }, [fields, presetId]);
 
   const copyFormAsJSON = useCallback(async () => {
     try {

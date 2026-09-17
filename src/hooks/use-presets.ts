@@ -117,7 +117,27 @@ export function usePresets({
     updateCurrentPreset(() => ({
       name,
     }));
-  }, [updateCurrentPreset]);
+  }, [presets, currentPresetId, updateCurrentPreset]);
+
+  const detachGeneratorFromPresets = useCallback((generatorToRemove: string) => {
+    setPresets((prevPresets) =>
+      prevPresets.map((preset) => {
+        const hasFieldWithGenerator = preset.fields
+          .some((field) => field.generator === generatorToRemove);
+
+        if (!hasFieldWithGenerator) return preset;
+
+        return {
+          ...preset,
+          fields: preset.fields.map((field) =>
+            field.generator === generatorToRemove
+              ? { ...field, generator: "" }
+              : field
+          ),
+        };
+      })
+    );
+  }, [setPresets]);
 
   useEffect(() => {
     if (
@@ -206,6 +226,10 @@ export function usePresets({
     });
   }, [setPresets]);
 
+  const isDuplicatedPresetName = useCallback((name: string, presetId?: string) => (
+    presets.some((preset) => preset.name === name && preset.id !== presetId)
+  ), [presets])
+
   return {
     presets,
     currentPreset,
@@ -214,6 +238,8 @@ export function usePresets({
     updateCurrentPreset,
     updateCurrentPresetName,
     updateCurrentPresetFields,
+    detachGeneratorFromPresets,
+    isDuplicatedPresetName,
     deletePreset,
     exportPresets,
     importPresets,

@@ -1,4 +1,11 @@
-import { useRef, useState } from "react";
+import {
+  type ForwardedRef,
+  forwardRef,
+  useCallback,
+  useImperativeHandle,
+  useRef,
+  useState,
+} from "react";
 import { useTranslation } from "react-i18next";
 import { ExternalLink, Settings2, Trash } from "lucide-react";
 import { Button, buttonVariants } from "@/components/ui/button";
@@ -14,7 +21,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts/JavascriptEditor";
 import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
-import { useCatalog } from "@/hooks/use-catalog";
+import { useCatalog } from "@/providers/CatalogProvider";
 import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
 import { EditorTabs } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
@@ -27,12 +34,19 @@ interface FieldOptionsPopoverProps {
   onChange: (value: string) => void;
 }
 
-export function FieldOptionsPopover({
-  methodKey,
-  value,
-  docUrl,
-  onChange,
-}: FieldOptionsPopoverProps) {
+export interface FieldOptionsPopoverRef {
+  startEditing: (tab: EditorTabs) => void;
+}
+
+function FieldOptionsPopoverComponent(
+  {
+    methodKey,
+    value,
+    docUrl,
+    onChange,
+  }: FieldOptionsPopoverProps,
+  ref: ForwardedRef<FieldOptionsPopoverRef>
+) {
   const [open, setOpen] = useState(false);
   const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
@@ -42,9 +56,10 @@ export function FieldOptionsPopover({
 
   const { t } = useTranslation();
   const {
-    removeCustomMethod,
-    updateCustomMethod,
     customMethodsByKey,
+    updateCustomMethod,
+    removeCustomMethod,
+    getMethodUsageCount,
   } = useCatalog()
 
   const error = activeTab === EditorTabs.OPTIONS
@@ -62,7 +77,7 @@ export function FieldOptionsPopover({
     key: K,
     newValue: CatalogMethod[K],
   ) => {
-    if (!isCustomMethod) return;
+    if (!isCustomMethod || !newValue) return;
 
     updateCustomMethod(
       currentCustomMethod?.key,
@@ -99,6 +114,15 @@ export function FieldOptionsPopover({
     }
   };
 
+  const startEditing = useCallback((tab: EditorTabs) => {
+    setActiveTab(tab);
+    setOpen(true);
+  }, [])
+
+  useImperativeHandle(ref, () => ({
+    startEditing,
+  }), [startEditing])
+
   const triggerButtonClasses = cn(
     "relative",
     hasConfig && "bg-primary/5 hover:bg-primary/15! aria-expanded:bg-primary/15 text-primary hover:text-primary aria-expanded:text-primary",
@@ -118,6 +142,15 @@ export function FieldOptionsPopover({
   );
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
+
+  const customMethodUsageCount = getMethodUsageCount(currentCustomMethod?.key)
+
+  const deleteAlertDescription = [
+    customMethodUsageCount?.fieldsUseCount
+      ? t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount)
+      : null,
+    t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.label }),
+  ]
 
   return (
     <>
@@ -225,11 +258,11 @@ export function FieldOptionsPopover({
         </PopoverContent>
       </Popover>
 
-      {deleteMethodAlertOpen && isCustomMethod && (
+      {(deleteMethodAlertOpen && isCustomMethod) && (
         <AlertDialog
           destructive
           open={deleteMethodAlertOpen}
-          description={t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.label })}
+          description={deleteAlertDescription}
           onConfirm={() => handleConfirmDeleteMethod(currentCustomMethod.key)}
           onCancel={() => setDeleteMethodAlertOpen(false)}
         />
@@ -237,3 +270,7 @@ export function FieldOptionsPopover({
     </>
   );
 }
+
+export const FieldOptionsPopover = forwardRef(FieldOptionsPopoverComponent)
+
+FieldOptionsPopover.displayName = "FieldOptionsPopover";
