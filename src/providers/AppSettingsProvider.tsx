@@ -6,11 +6,13 @@ import {
   LANGUAGE_CONFIG,
   THEME_CONFIG,
   IMPORT_CONFIG,
+  CATALOG_CONFIG,
   StorageKeys,
   Theme,
   type ImportStrategy,
   type Locale,
   type Language,
+  type Catalogs,
 } from "@/configs";
 
 interface AppSettingsProviderProps {
@@ -26,6 +28,8 @@ interface AppSettingsProviderState {
   setLanguage: (language: Language) => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
+  hiddenCatalogs: Catalogs[];
+  setHiddenCatalogs: (catalogs: Catalogs[]) => void;
 }
 
 const initialState: AppSettingsProviderState = {
@@ -37,6 +41,8 @@ const initialState: AppSettingsProviderState = {
   setLanguage: () => {},
   locale: LOCALE_CONFIG.DEFAULT,
   setLocale: () => {},
+  hiddenCatalogs: CATALOG_CONFIG.DEFAULT_HIDDEN,
+  setHiddenCatalogs: () => {},
 };
 
 export const AppSettingsProviderContext =
@@ -61,6 +67,10 @@ export function AppSettingsProvider({
     StorageKeys.THEME,
     THEME_CONFIG.DEFAULT,
   );
+  const [hiddenCatalogs, setHiddenCatalogs] = usePersistentState<Catalogs[]>(
+    StorageKeys.HIDDEN_CATALOGS,
+    CATALOG_CONFIG.DEFAULT_HIDDEN
+  )
 
   useEffect(() => {
     const root = globalThis.document.documentElement;
@@ -94,7 +104,9 @@ export function AppSettingsProvider({
     language,
     setLanguage,
     locale,
-    setLocale
+    setLocale,
+    hiddenCatalogs,
+    setHiddenCatalogs,
   }), [theme, importStrategy, language, locale]);
 
   return (

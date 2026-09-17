@@ -14,8 +14,10 @@ import {
   newCustomMethodOption,
 } from "@/lib/catalog";
 import {
-  StorageKeys,
   CATALOG_CONFIG,
+  StorageKeys,
+  Catalogs,
+  type Locale,
 } from "@/configs";
 import type { Preset } from "@/lib/presets";
 
@@ -65,18 +67,25 @@ export function CatalogProvider({
 
   const { t } = useTranslation();
 
-  const { locale } = useAppSettings();
+  const { locale, hiddenCatalogs } = useAppSettings();
 
   const customCatalog = useMemo(() => createCatalogModule(
     CATALOG_CONFIG.CUSTOM_MODULE_NAME,
     [...customMethods, newCustomMethodOption],
   ), [customMethods]);
 
-  const catalogOptions = useMemo(() => [
-    ...createFakerCatalog(locale),
-    ...createBox4DevCatalog(),
-    customCatalog,
-  ], [locale, customCatalog]);
+  const catalogFactories: Record<Catalogs, (locale: Locale) => CatalogModule[]> = useMemo(() => ({
+    [Catalogs.FAKER]: createFakerCatalog,
+    [Catalogs.BOX_4_DEV]: createBox4DevCatalog,
+    [Catalogs.CUSTOM]: () => [customCatalog],
+  }), [customCatalog])
+
+  const catalogOptions = useMemo(
+    () => Object.entries(catalogFactories)
+      .filter(([key]) => !hiddenCatalogs.includes(key as Catalogs))
+      .flatMap(([, factory]) => factory(locale)),
+   [locale, customCatalog]
+  );
 
   const catalogMethodsByKey = useMemo(() => new Map(
     catalogOptions
