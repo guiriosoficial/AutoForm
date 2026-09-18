@@ -13,6 +13,7 @@ import {
   type Locale,
   type Language,
   type Catalogs,
+  EDITOR_CONFIG,
 } from "@/configs";
 
 interface AppSettingsProviderProps {
@@ -28,8 +29,10 @@ interface AppSettingsProviderState {
   setLanguage: (language: Language) => void;
   locale: Locale;
   setLocale: (locale: Locale) => void;
-  hiddenCatalogs: Catalogs[];
-  setHiddenCatalogs: (catalogs: Catalogs[]) => void;
+  availableCatalogs: Catalogs[];
+  setAvailableCatalogs: (catalogs: Catalogs[]) => void;
+  autoFormat: boolean;
+  setAutoFormat: (autoFormat: boolean) => void;
 }
 
 const initialState: AppSettingsProviderState = {
@@ -41,8 +44,10 @@ const initialState: AppSettingsProviderState = {
   setLanguage: () => {},
   locale: LOCALE_CONFIG.DEFAULT,
   setLocale: () => {},
-  hiddenCatalogs: CATALOG_CONFIG.DEFAULT_HIDDEN,
-  setHiddenCatalogs: () => {},
+  availableCatalogs: CATALOG_CONFIG.DEFAULT_AVAILABLE,
+  setAvailableCatalogs: () => {},
+  autoFormat: EDITOR_CONFIG.DEFAULT_AUTO_FORMAT,
+  setAutoFormat: () => {},
 };
 
 export const AppSettingsProviderContext =
@@ -67,9 +72,13 @@ export function AppSettingsProvider({
     StorageKeys.THEME,
     THEME_CONFIG.DEFAULT,
   );
-  const [hiddenCatalogs, setHiddenCatalogs] = usePersistentState<Catalogs[]>(
-    StorageKeys.HIDDEN_CATALOGS,
-    CATALOG_CONFIG.DEFAULT_HIDDEN
+  const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
+    StorageKeys.AVAILABLE_CATALOGS,
+    CATALOG_CONFIG.DEFAULT_AVAILABLE
+  )
+  const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
+    StorageKeys.AUTO_FORMAT,
+    EDITOR_CONFIG.DEFAULT_AUTO_FORMAT
   )
 
   useEffect(() => {
@@ -105,9 +114,11 @@ export function AppSettingsProvider({
     setLanguage,
     locale,
     setLocale,
-    hiddenCatalogs,
-    setHiddenCatalogs,
-  }), [theme, importStrategy, language, locale]);
+    availableCatalogs,
+    setAvailableCatalogs,
+    autoFormat,
+    setAutoFormat
+  }), [theme, importStrategy, autoFormat, availableCatalogs, language, locale]);
 
   return (
     <AppSettingsProviderContext value={value}>

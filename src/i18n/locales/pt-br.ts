@@ -79,6 +79,14 @@ export const ptBrTranslations = {
       importStrategyToggle: {
         label: "Estrategia de importação",
       },
+      availableCatalogsMultiToggle: {
+        label: "Catalogos disponíveis",
+      },
+      autoFormatSwitch: {
+        label: "Formatação Automática",
+        enabledLabel: "Habilitado",
+        disabledLabel: "Desabilitado",
+      },
       localeSelect: {
         label: "Localização",
         placeholder: "Selecione uma localização",

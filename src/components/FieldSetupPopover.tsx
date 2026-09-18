@@ -22,6 +22,7 @@ import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts
 import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
+import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
 import { EditorTabs } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
@@ -61,6 +62,7 @@ function FieldSetupPopoverComponent(
     removeCustomMethod,
     getMethodUsageCount,
   } = useCatalog()
+  const { autoFormat } = useAppSettings()
 
   const error = activeTab === EditorTabs.OPTIONS
     ? jsonError
@@ -100,8 +102,10 @@ function FieldSetupPopoverComponent(
 
     if (isClosingByClickOnAlert) return;
 
-    jsonEditorRef.current?.format();
-    javascriptEditorRef.current?.format();
+    if (autoFormat) {
+      jsonEditorRef.current?.format();
+      javascriptEditorRef.current?.format();
+    }
 
     setOpen(isOpening);
   };

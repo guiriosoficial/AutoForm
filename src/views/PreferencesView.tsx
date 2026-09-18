@@ -14,13 +14,15 @@ import {
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
 import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
-import { ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
+import { Catalogs, ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
@@ -36,11 +38,21 @@ export function PreferencesView() {
     setLocale,
     language,
     setLanguage,
+    autoFormat,
+    setAutoFormat,
+    availableCatalogs,
+    setAvailableCatalogs,
   } = useAppSettings();
 
   const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), [i18n.language]);
 
   const localeDisplayName = (itemLocale: string) => getLocaleDisplayName(itemLocale, displayNames);
+
+  const handleChangeTheme = (newTheme: string[]) => {
+    if (newTheme.length === 0) return;
+
+    setTheme(newTheme[0] as Theme);
+  };
 
   const handleChangeImportStrategy = (newStrategy: string[]) => {
     if (newStrategy.length === 0) return;
@@ -48,11 +60,9 @@ export function PreferencesView() {
     setImportStrategy(newStrategy[0] as ImportStrategy);
   };
 
-  const handleChangeTheme = (newTheme: string[]) => {
-    if (newTheme.length === 0) return;
-
-    setTheme(newTheme[0] as Theme);
-  };
+  const handleChangeAvailableCatalogs = (newCatalogs: string[]) => {
+    setAvailableCatalogs(newCatalogs as Catalogs[]);
+  }
 
   const handleChangeLocale = (newLocale: string | null) => {
     if (!newLocale) return;
@@ -125,6 +135,46 @@ export function PreferencesView() {
               <FieldDescription>
                 {t(`configs.importStrategy.${importStrategy}.description`)}
               </FieldDescription>
+            </Field>
+
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.availableCatalogsMultiToggle.label")}
+              </FieldLabel>
+              <ToggleGroup
+                value={availableCatalogs}
+                multiple
+                variant="outline"
+                onValueChange={handleChangeAvailableCatalogs}
+              >
+                {Object.values(Catalogs).map((catalog) => (
+                  <ToggleGroupItem
+                    key={catalog}
+                    value={catalog}
+                  >
+                    {toTitleCase(catalog)}
+                  </ToggleGroupItem>
+                ))}
+              </ToggleGroup>
+            </Field>
+
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.autoFormatSwitch.label")}
+              </FieldLabel>
+              <div className="flex items-center gap-2">
+                <Switch
+                  id="auto-format-switch"
+                  checked={autoFormat}
+                  onCheckedChange={setAutoFormat}
+                />
+                <Label form="auto-format-switch">
+                  {autoFormat
+                    ? t("preferencesManager.form.autoFormatSwitch.enabledLabel")
+                    : t("preferencesManager.form.autoFormatSwitch.disabledLabel")
+                  }
+                </Label>
+              </div>
             </Field>
 
             <Field>

@@ -79,6 +79,14 @@ export const enTranslations = {
       importStrategyToggle: {
         label: "Import strategy",
       },
+      availableCatalogsMultiToggle: {
+        label: "Available catalogs",
+      },
+      autoFormatSwitch: {
+        label: "Auto format",
+        enabledLabel: "Enabled",
+        disabledLabel: "Disabled",
+      },
       localeSelect: {
         label: "Locale",
         placeholder: "Select a locale",
