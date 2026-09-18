@@ -18,14 +18,13 @@ import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons } from "@/components/icons/maps";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import type { Preset } from "@/lib/presets";
-import type { ParsePresetsResult } from "@/hooks/use-presets";
+import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-import-export";
 
 interface PresetsImportDialogProps {
   open: boolean;
-  presetsToImport: ParsePresetsResult;
+  presetsToImport: ParseImportExportResult;
   onOpenChange: (open: boolean) => void;
-  onImport: (presets: Preset[], strategy: ImportStrategy) => void;
+  onImport: (imported: ParseJsonResult, strategy: ImportStrategy) => void;
 }
 
 const strategyOptions = Object.values(ImportStrategy)
@@ -41,11 +40,11 @@ export function PresetsImportDialog({
 
   const { t } = useTranslation();
 
-  const { parsed, duplicated } = presetsToImport;
+  const { parsed, duplicatedPresets } = presetsToImport;
 
   const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
-    count: duplicated.length,
-    total: parsed.length,
+    count: duplicatedPresets.length,
+    total: parsed.presets.length,
   });
 
   const handleChangeImportStrategy = (newStrategy: string[]) => {
@@ -73,7 +72,7 @@ export function PresetsImportDialog({
         </DialogHeader>
 
         <div className="space-y-2 ml-4">
-          {duplicated.map((preset) => (
+          {duplicatedPresets.map((preset) => (
             <Item
               key={preset.id}
               size="xs"

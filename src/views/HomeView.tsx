@@ -16,6 +16,7 @@ import { PresetsManager } from "@/components/PresetsManager";
 import { CatalogProvider } from "@/providers/CatalogProvider";
 import { useForm } from "@/hooks/use-form";
 import { usePresets } from "@/hooks/use-presets";
+import { useImportExport } from "@/hooks/use-import-export";
 import { useCatalogData } from "@/hooks/use-catalog-data";
 
 export function HomeView() {
@@ -33,9 +34,7 @@ export function HomeView() {
     isDuplicatedPresetName,
     createPreset,
     deletePreset,
-    exportPresets,
-    importPresets,
-    parsePresets,
+    setPresets,
   } = usePresets({
     presetNameEditorRef,
   });
@@ -51,7 +50,19 @@ export function HomeView() {
     setCustomMethods,
   } = catalogData
 
+  const {
+    importData,
+    exportData,
+    parseData,
+  } = useImportExport({
+    presets,
+    setPresets,
+    customMethods,
+    setCustomMethods,
+  })
+
   const fields = currentPreset?.fields ?? [];
+  const presetId = currentPreset?.id ?? "";
 
   const {
     addField,
@@ -63,9 +74,10 @@ export function HomeView() {
     copyFormAsJSON,
     generatedValues,
   } = useForm({
+    catalogMethodsByKey,
+    presetId,
     fields,
     updateFields: updateCurrentPresetFields,
-    presetId: currentPreset?.id ?? "",
   });
 
   const getDuplicatedPresetNameErrorMessage = (draft: string) =>
@@ -86,9 +98,9 @@ export function HomeView() {
             onSelectPreset={setCurrentPreset}
             onCreatePreset={createPreset}
             onDeletePreset={deletePreset}
-            onExportPresets={exportPresets}
-            onImportPresets={importPresets}
-            onLoadFile={parsePresets}
+            onExportPresets={exportData}
+            onImportPresets={importData}
+            onLoadFile={parseData}
           />
         </CardContent>
       </Card>

@@ -1,7 +1,6 @@
 import { useTranslation } from "react-i18next";
 import { useCallback, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { useCatalog } from "@/providers/CatalogProvider";
 import { toast } from "@/lib/toast";
 import { isFunction } from "@/lib/utils";
 import { type GeneratorValue, generateValue, fillInputElement } from "@/lib/generator";
@@ -12,11 +11,13 @@ import {
   createFieldResult,
 } from "@/lib/fields";
 import { EXPORT_CONFIG, StorageKeys } from "@/configs";
+import type { CatalogMethod } from "@/lib/catalog";
 
 interface UseFormArgs {
   presetId: string;
   fields: FieldConfig[];
   updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
+  catalogMethodsByKey: Map<string, CatalogMethod>
 }
 
 export type GeneratedValuesJson = Record<string, GeneratorValue>;
@@ -27,9 +28,9 @@ export function useForm({
   presetId,
   fields,
   updateFields,
+  catalogMethodsByKey
 }: UseFormArgs) {
   const { t } = useTranslation();
-  const { catalogMethodsByKey } = useCatalog();
 
   const [generatedValuesByPresetId, setGeneratedValuesByPresetId] =
     usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});

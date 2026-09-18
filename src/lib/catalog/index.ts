@@ -1,3 +1,4 @@
+import { isArray, isObject, isOptionalString, isPopulatedString } from "@/lib/utils";
 import { CATALOG_CONFIG } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";
 
@@ -54,6 +55,26 @@ export function createCatalogCustomFunction() {
     }
   `;
 }
+
+export function isValidCustomMethod(value: unknown): value is CatalogMethod {
+  if (!isObject(value)) return false;
+
+  return (
+    isPopulatedString(value.label) &&
+    isPopulatedString(value.key) &&
+    isPopulatedString(value.code) &&
+    isOptionalString(value.docs) &&
+    value.key.startsWith(CATALOG_CONFIG.CUSTOM_MODULE_NAME)
+  );
+}
+
+export function isValidCustomMethodArray(value: unknown): value is CatalogMethod[] {
+  return (
+    isArray(value) &&
+    value.every((item) => isValidCustomMethod(item))
+  );
+}
+
 
 export const newCustomMethodOption = createCatalogMethod(
   CATALOG_CONFIG.CUSTOM_MODULE_NAME,

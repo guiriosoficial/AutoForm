@@ -4,12 +4,10 @@ import {
   type Preset,
   createEmptyPreset,
   getAdjacentPreset,
-  isValidPresetArray,
 } from "@/lib/presets";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { getErrorMessage, isFunction, createNextSequencedName } from "@/lib/utils";
-import { toast } from "@/lib/toast";
-import { EXPORT_CONFIG, ImportStrategy, StorageKeys } from "@/configs";
+import { isFunction, createNextSequencedName } from "@/lib/utils";
+import { StorageKeys } from "@/configs";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
 import type { FieldConfig } from "@/lib/fields";
 
@@ -161,71 +159,6 @@ export function usePresets({
     createPreset();
   }, [presets, currentPreset, presetsById, lasPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
-  const exportPresets = useCallback(() => {
-    const data = JSON.stringify(presets, null, EXPORT_CONFIG.INDENT_SPACES);
-    const blob = new Blob([data], { type: EXPORT_CONFIG.FILE_TYPE });
-    const url = URL.createObjectURL(blob);
-
-    try {
-      const anchor = document.createElement("a");
-      anchor.download = EXPORT_CONFIG.FILE_NAME;
-      anchor.href = url;
-      anchor.click();
-      anchor.remove();
-    } catch {
-      toast.error(t("presetsManager.messages.exportPreset.failed"));
-    } finally {
-      URL.revokeObjectURL(url);
-    }
-  }, [presets, t]);
-
-  const parsePresets = useCallback((json: string) => {
-    try {
-      const imported: Preset[] = JSON.parse(json);
-
-      if (!isValidPresetArray(imported)) {
-        toast.error(t("presetsManager.messages.importPreset.invalid"));
-        return;
-      }
-
-      const existingIds = new Set(presets.map((preset) => preset.id));
-
-      const duplicated = imported.filter((preset) => existingIds.has(preset.id));
-
-      return {
-        parsed: imported,
-        duplicated,
-      };
-    } catch (error) {
-      const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"),);
-
-      toast.error(errorMessage);
-    }
-  }, [presets, t]);
-
-  const importPresets = useCallback((
-    imported: Preset[],
-    strategy: ImportStrategy = ImportStrategy.OVERWRITE,
-  ) => {
-    if (strategy === ImportStrategy.REPLACE_ALL) {
-      setPresets(imported);
-      return;
-    }
-
-    setPresets((prev) => {
-      const isAppendStrategy = strategy === ImportStrategy.APPEND;
-      const map = new Map(prev.map((preset) => [preset.id, preset]));
-
-      for (const preset of imported) {
-        if (isAppendStrategy && map.has(preset.id)) continue;
-
-        map.set(preset.id, preset);
-      }
-
-      return [...map.values()];
-    });
-  }, [setPresets]);
-
   const isDuplicatedPresetName = useCallback((name: string, presetId?: string) => (
     presets.some((preset) => preset.name === name && preset.id !== presetId)
   ), [presets])
@@ -241,8 +174,6 @@ export function usePresets({
     detachGeneratorFromPresets,
     isDuplicatedPresetName,
     deletePreset,
-    exportPresets,
-    importPresets,
-    parsePresets,
+    setPresets,
   };
 }

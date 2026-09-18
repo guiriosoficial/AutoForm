@@ -28,8 +28,8 @@ import { PresetsImportDialog } from "@/components/PresetsImportDialog";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import type { ParsePresetsResult } from "@/hooks/use-presets";
 import type { Preset } from "@/lib/presets";
+import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-import-export";
 
 interface PresetsManagerProps {
   presets: Preset[];
@@ -38,8 +38,8 @@ interface PresetsManagerProps {
   onCreatePreset: () => void;
   onDeletePreset: (presetId: string) => void;
   onExportPresets: () => void;
-  onImportPresets: (presets: Preset[], strategy?: ImportStrategy) => void;
-  onLoadFile: (json: string) => ParsePresetsResult | undefined;
+  onImportPresets: (imported: ParseJsonResult, strategy?: ImportStrategy) => void;
+  onLoadFile: (json: string) => ParseImportExportResult | undefined;
 }
 
 export function PresetsManager({
@@ -53,7 +53,7 @@ export function PresetsManager({
   onLoadFile,
 }: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
-  const [presetsToImport, setPresetsToImport] = useState<ParsePresetsResult | null>(null);
+  const [presetsToImport, setPresetsToImport] = useState<ParseImportExportResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
   const { importStrategy } = useAppSettings();
@@ -96,7 +96,7 @@ export function PresetsManager({
     setPresetsToImport(loaded);
   };
 
-  const handleImportPresets = (imported: Preset[], strategy: ImportStrategy) => {
+  const handleImportPresets = (imported: ParseJsonResult, strategy: ImportStrategy) => {
     onImportPresets(imported, strategy);
 
     setPresetsToImport(null);
