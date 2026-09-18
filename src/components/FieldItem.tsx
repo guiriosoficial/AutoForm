@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/combobox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { type FieldOptionsPopoverRef, FieldOptionsPopover } from "@/components/FieldOptionsPopover";
+import { type FieldSetupPopoverRef, FieldSetupPopover } from "@/components/FieldSetupPopover";
 import { InlineButton } from "@/components/shared/InlineButton";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { cn, preventDefaultEscape } from "@/lib/utils";
@@ -50,7 +50,7 @@ function FieldItemComponent({
     catalogOptions,
   } = useCatalog();
 
-  const fieldOptionsPopoverRef = useRef<FieldOptionsPopoverRef>(null)
+  const fieldOptionsPopoverRef = useRef<FieldSetupPopoverRef>(null)
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
   const hasValue = value !== undefined;
@@ -142,7 +142,7 @@ function FieldItemComponent({
           </ComboboxContent>
         </Combobox>
 
-        <FieldOptionsPopover
+        <FieldSetupPopover
           ref={fieldOptionsPopoverRef}
           value={field.options}
           methodKey={field.generator}

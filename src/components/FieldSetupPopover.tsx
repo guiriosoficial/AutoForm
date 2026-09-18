@@ -27,25 +27,25 @@ import { EditorTabs } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
 import type { CatalogMethod } from "@/lib/catalog";
 
-interface FieldOptionsPopoverProps {
+interface FieldSetupPopoverProps {
   methodKey: string;
   value: string | undefined;
   docUrl?: string;
   onChange: (value: string) => void;
 }
 
-export interface FieldOptionsPopoverRef {
+export interface FieldSetupPopoverRef {
   startEditing: (tab: EditorTabs) => void;
 }
 
-function FieldOptionsPopoverComponent(
+function FieldSetupPopoverComponent(
   {
     methodKey,
     value,
     docUrl,
     onChange,
-  }: FieldOptionsPopoverProps,
-  ref: ForwardedRef<FieldOptionsPopoverRef>
+  }: FieldSetupPopoverProps,
+  ref: ForwardedRef<FieldSetupPopoverRef>
 ) {
   const [open, setOpen] = useState(false);
   const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
@@ -271,6 +271,6 @@ function FieldOptionsPopoverComponent(
   );
 }
 
-export const FieldOptionsPopover = forwardRef(FieldOptionsPopoverComponent)
+export const FieldSetupPopover = forwardRef(FieldSetupPopoverComponent)
 
-FieldOptionsPopover.displayName = "FieldOptionsPopover";
+FieldSetupPopover.displayName = "FieldSetupPopover";

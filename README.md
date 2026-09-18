@@ -52,18 +52,21 @@ npm run build
 - Popup UI should be placed in `src/popup/`
 
 ## TODOs
-
+- Exibir duplicidade métodos customizados na importação
 - Criar Preferência de erros (Ignorar, Preencher, Gerar...)
 - Tratar error ao gerar dados
+- 
+- Criar preset inicial prontos
+- Tratar nomes duplicados na importação
 - Personalizar melhor Editor de JS
-- Tratar presets/metodos com nomes iguais****
-- Tratar delete de Custom Method já utilizado****
-- Criar presets iniciais prontos
+
+- Reorganizar pasta lib
+- Corrigir erros de Lint (plugin react)
+- Revisar literals (textos sem i18n)
+- Revisar nomenclaturas no código
 - Revisar códigos de dom (runners em lib)
 
 - ====================== EM ANDAMENTO ==========================
-- Reorganizar pasta lib
-- Corrigir erros de Lint (plugin react)
 
 - ========================== BONUS ==============================
 - Escrever testes
