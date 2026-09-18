@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { parse as babelParse } from "@babel/parser";
 import { format as prettierFormat } from "prettier/standalone";
 import {
@@ -17,7 +18,7 @@ import {
   createEditorLinter,
   javascriptLinter,
 } from "@/lib/editor";
-import { debounce, getErrorMessage } from "@/lib/utils";
+import { debounce, getErrorMessage, removeSpaces } from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
@@ -38,10 +39,6 @@ export interface JavascriptEditorRef {
   format: () => void;
 }
 
-// TODO: move to lib string
-const transformMethodName = (val: string) =>
-  val.replaceAll(/\s+/ug, "")
-
 function JavascriptEditorComponent (
   {
     value,
@@ -51,10 +48,13 @@ function JavascriptEditorComponent (
   }: JavascriptEditorProps,
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
+  const { t } = useTranslation();
   const { isDuplicatedLabel } = useCatalog();
 
   const getDuplicatedErrorMessage = (draft: string) =>
-    isDuplicatedLabel(draft, value.key) ? "Duplicado" : ""
+    isDuplicatedLabel(draft, value.key)
+      ? t("fieldsManager.messages:changeCustomMethodName.duplicated")
+      : ""
 
   const parse = useCallback((code: string) => {
     if (!code) return;
@@ -162,7 +162,7 @@ function JavascriptEditorComponent (
         value={value.label}
         placeholder="Method Name"
         className="font-semibold px-3 py-2 border rounded-md"
-        transform={transformMethodName}
+        transform={removeSpaces}
         error={getDuplicatedErrorMessage}
         onSave={handleChangeName}
       />

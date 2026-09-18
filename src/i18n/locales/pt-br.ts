@@ -142,6 +142,9 @@ export const ptBrTranslations = {
       exportPreset: {
         failed: "Falha ao exportar presets",
       },
+      changeName:{
+        duplicated: "Nome do preset duplicado",
+      },
     },
   },
   fieldsManager: {
@@ -184,6 +187,9 @@ export const ptBrTranslations = {
         failed: "$t(globals.failedToCopy, { 'item': 'valor' })",
         success: "$t(globals.copiedToClipboard)",
       },
+      changeCustomMethodName: {
+        duplicated: "Nome do método duplicado",
+      }
     },
   },
   footer: {

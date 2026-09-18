@@ -4,6 +4,10 @@ export function toTitleCase(str: string) {
   return _.startCase(str);
 }
 
+export function removeSpaces(str: string) {
+  return _.replace(str, /\s/ug, "")
+}
+
 export function createNextSequencedName<T extends object>(
   list: T[],
   key: keyof T,

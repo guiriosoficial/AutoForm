@@ -81,7 +81,9 @@ export function HomeView() {
   });
 
   const getDuplicatedPresetNameErrorMessage = (draft: string) =>
-    isDuplicatedPresetName(draft, currentPreset?.id) ? "Duplicated" : ""
+    isDuplicatedPresetName(draft, currentPreset?.id)
+      ? t("presetsManager.messages.changeName.duplicated")
+      : ""
 
   return (
     <>

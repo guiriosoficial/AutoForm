@@ -140,6 +140,9 @@ export const enTranslations = {
       exportPreset: {
         failed: "Failed to export presets",
       },
+      changeName:{
+        duplicated: "Preset name already exists",
+      }
     },
   },
   fieldsManager: {
@@ -182,6 +185,9 @@ export const enTranslations = {
         failed: "$t(globals.failedToCopy, { 'item': 'value' })",
         success: "$t(globals.copiedToClipboard)",
       },
+      changeCustomMethodName: {
+        duplicated: "Method name already exists",
+      }
     },
   },
   footer: {

@@ -15,6 +15,7 @@ import { InlineButton } from "@/components/shared/InlineButton";
 import {
   cn,
   isFunction,
+  deferPredicate,
   isPopulatedString,
   preventDefaultEscape,
 } from "@/lib/utils";
@@ -54,22 +55,19 @@ function InlineInputComponent (
 
   const hasErrorRef = useRef(hasError);
   const errorMessageRef = useRef(errorMessage);
-  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  // TODO: Move to async lib
+  const deferPredicatedShowError = useRef(deferPredicate(() => {
+    if (!hasErrorRef.current || !errorMessageRef.current) return;
+    toast.error(errorMessageRef.current);
+  }, EDITOR_CONFIG.ERROR_DELAY_MS)).current;
+
   useEffect(() => {
     hasErrorRef.current = hasError;
     errorMessageRef.current = errorMessage;
 
-    if (!hasError || timerRef.current !== null) return;
+    if (!hasError || !errorMessage) return;
 
-    timerRef.current = setTimeout(() => {
-      timerRef.current = null;
-
-      if (hasErrorRef.current && errorMessageRef.current) {
-        toast.error(errorMessageRef.current);
-      }
-    }, EDITOR_CONFIG.ERROR_DELAY_MS);
+    deferPredicatedShowError()
   }, [hasError, errorMessage]);
 
   useEffect(() => {

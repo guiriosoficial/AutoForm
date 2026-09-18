@@ -12,7 +12,7 @@ export type EditorTabs = (typeof EditorTabs)[keyof typeof EditorTabs];
 export const EDITOR_CONFIG = {
   INDENT_SPACES: 2,
   LINT_DELAY_MS: 1200,
-  ERROR_DELAY_MS: 800,
+  ERROR_DELAY_MS: 1200,
   DEFAULT_AUTO_FORMAT: true,
 } as const;
 
