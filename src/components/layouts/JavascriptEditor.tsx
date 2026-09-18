@@ -9,7 +9,6 @@ import {
   useMemo,
   useRef,
 } from "react";
-import { Input } from "@/components/ui/input";
 import { javascript } from "@codemirror/lang-javascript";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import {
@@ -18,7 +17,7 @@ import {
   createEditorLinter,
   javascriptLinter,
 } from "@/lib/editor";
-import { cn, debounce, getErrorMessage } from "@/lib/utils";
+import { debounce, getErrorMessage } from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
@@ -26,6 +25,7 @@ import {
   EDITOR_PRETTIER_FORMAT_OPTIONS,
 } from "@/configs";
 import { useCatalog } from "@/providers/CatalogProvider";
+import { InlineInput } from "@/components/shared/InlineInput.tsx";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;
@@ -38,6 +38,10 @@ export interface JavascriptEditorRef {
   format: () => void;
 }
 
+// TODO: move to lib string
+const transformMethodName = (val: string) =>
+  val.replaceAll(/\s+/ug, "")
+
 function JavascriptEditorComponent (
   {
     value,
@@ -48,6 +52,9 @@ function JavascriptEditorComponent (
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
   const { isDuplicatedLabel } = useCatalog();
+
+  const getDuplicatedErrorMessage = (draft: string) =>
+    isDuplicatedLabel(draft, value.key) ? "Duplicado" : ""
 
   const parse = useCallback((code: string) => {
     if (!code) return;
@@ -149,18 +156,15 @@ function JavascriptEditorComponent (
     format,
   }), [format])
 
-  const inputClasses = cn(
-    "bg-card dark:bg-card",
-    isDuplicatedLabel(value.label, value.key) && "text-destructive border-destructive! focus-visible:ring-destructive/50"
-  )
-
   return (
     <div className="space-y-2">
-      <Input
+      <InlineInput
         value={value.label}
-        className={inputClasses}
         placeholder="Method Name"
-        onChange={(evt) => handleChangeName(evt.target.value)}
+        className="font-semibold px-3 py-2 border rounded-md"
+        transform={transformMethodName}
+        error={getDuplicatedErrorMessage}
+        onSave={handleChangeName}
       />
       <ReactCodeMirror
         value={value.code}

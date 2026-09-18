@@ -68,6 +68,9 @@ export function HomeView() {
     presetId: currentPreset?.id ?? "",
   });
 
+  const getDuplicatedPresetNameErrorMessage = (draft: string) =>
+    isDuplicatedPresetName(draft, currentPreset?.id) ? "Duplicated" : ""
+
   return (
     <>
       <Card>
@@ -97,7 +100,7 @@ export function HomeView() {
               ref={presetNameEditorRef}
               value={currentPreset?.name}
               placeholder={t("fieldsManager.form.presetNameInput.placeholder")}
-              error={(draft: string) => isDuplicatedPresetName(draft, currentPreset?.id)}
+              error={getDuplicatedPresetNameErrorMessage}
               onSave={updateCurrentPresetName}
             />
           </CardTitle>
