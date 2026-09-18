@@ -12,12 +12,21 @@ import {
 } from "react";
 import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
-import { cn, isFunction, preventDefaultEscape } from "@/lib/utils";
+import {
+  cn,
+  isFunction,
+  isPopulatedString,
+  preventDefaultEscape,
+} from "@/lib/utils";
+import { toast } from "@/lib/toast.ts";
+import { EDITOR_CONFIG } from "@/configs";
 
 interface InlineInputProps {
   value: string | undefined;
   placeholder?: string;
-  error?: string | boolean | ((draft: string) => string | boolean);
+  className?: string;
+  transform?: (value: string) => string;
+  error?: string | ((draft: string) => string);
   onSave: (newValue: string) => void;
 }
 
@@ -28,7 +37,9 @@ export interface InlineInputRef {
 function InlineInputComponent (
   {
     value = "",
+    transform,
     placeholder,
+    className,
     error,
     onSave,
   }: InlineInputProps,
@@ -38,7 +49,28 @@ function InlineInputComponent (
   const [draft, setDraft] = useState(value);
 
   const inputRef = useRef<HTMLInputElement>(null);
-  const hasError = isFunction(error) ? error(draft) : error;
+  const errorMessage = isFunction(error) ? error(draft) : error;
+  const hasError = isPopulatedString(errorMessage);
+
+  const hasErrorRef = useRef(hasError);
+  const errorMessageRef = useRef(errorMessage);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // TODO: Move to async lib
+  useEffect(() => {
+    hasErrorRef.current = hasError;
+    errorMessageRef.current = errorMessage;
+
+    if (!hasError || timerRef.current !== null) return;
+
+    timerRef.current = setTimeout(() => {
+      timerRef.current = null;
+
+      if (hasErrorRef.current && errorMessageRef.current) {
+        toast.error(errorMessageRef.current);
+      }
+    }, EDITOR_CONFIG.ERROR_DELAY_MS);
+  }, [hasError, errorMessage]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -54,13 +86,15 @@ function InlineInputComponent (
     return () => cancelAnimationFrame(frame);
   }, [isEditing]);
 
-  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
-    // TODO: Decidir se apenas bloqueia ou se volta ao estado anterior
-    if (hasError) return;
+  const handleInputChange = (rawValue: string) => {
+    const nextValue = transform ? transform(rawValue) : rawValue;
+    setDraft(nextValue);
+  };
 
+  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
     event?.preventDefault();
 
-    const nextValue = draft.trim();
+    const nextValue = hasError ? value : draft.trim();
 
     setIsEditing(false);
 
@@ -81,6 +115,7 @@ function InlineInputComponent (
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
+    event.stopPropagation()
 
     switch (event.key) {
       case "Enter":
@@ -105,9 +140,11 @@ function InlineInputComponent (
 
   const inputClasses = cn("flex-1 pr-1 outline-none", hasError && "text-destructive");
 
+
+
   if (isEditing) {
     return (
-      <div className="flex gap-1">
+      <div className={cn("flex gap-1", className)}>
         <input
           ref={inputRef}
           value={draft}
@@ -115,7 +152,7 @@ function InlineInputComponent (
           className={inputClasses}
           onKeyDown={handleKeyDown}
           onBlur={confirmEditing}
-          onChange={(evt) => setDraft(evt.target.value)}
+          onChange={(evt) => handleInputChange(evt.target.value)}
         />
         <InlineButton
           icon={Check}
@@ -140,7 +177,7 @@ function InlineInputComponent (
 
   return (
     <p
-      className="group"
+      className={cn("group", className)}
       onClick={startEditing}
     >
       {restantWords}{" "}
