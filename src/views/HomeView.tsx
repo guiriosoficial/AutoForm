@@ -16,6 +16,7 @@ import { PresetsManager } from "@/components/PresetsManager";
 import { CatalogProvider } from "@/providers/CatalogProvider";
 import { useForm } from "@/hooks/use-form";
 import { usePresets } from "@/hooks/use-presets";
+import { useCatalogData } from "@/hooks/use-catalog-data";
 
 export function HomeView() {
   const { t } = useTranslation();
@@ -38,6 +39,17 @@ export function HomeView() {
   } = usePresets({
     presetNameEditorRef,
   });
+
+  const catalogData = useCatalogData({
+    presets,
+    detachGeneratorFromPresets
+  });
+
+  const {
+    catalogMethodsByKey,
+    customMethods,
+    setCustomMethods,
+  } = catalogData
 
   const fields = currentPreset?.fields ?? [];
 
@@ -96,10 +108,7 @@ export function HomeView() {
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-2">
-          <CatalogProvider
-            presets={presets}
-            onRemoveCustomMethod={detachGeneratorFromPresets}
-          >
+          <CatalogProvider catalogData={catalogData}>
             <FieldsManager
               fields={fields}
               values={generatedValues}
