@@ -39,7 +39,7 @@ export interface JavascriptEditorRef {
   format: () => void;
 }
 
-function JavascriptEditorComponent (
+function JavascriptEditorComponent(
   {
     value,
     className,
@@ -154,7 +154,7 @@ function JavascriptEditorComponent (
 
   useImperativeHandle(ref, () => ({
     format,
-  }), [format])
+  }), [format]);
 
   return (
     <div className="space-y-2">

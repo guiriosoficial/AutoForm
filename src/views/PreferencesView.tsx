@@ -62,7 +62,7 @@ export function PreferencesView() {
 
   const handleChangeAvailableCatalogs = (newCatalogs: string[]) => {
     setAvailableCatalogs(newCatalogs as Catalogs[]);
-  }
+  };
 
   const handleChangeLocale = (newLocale: string | null) => {
     if (!newLocale) return;

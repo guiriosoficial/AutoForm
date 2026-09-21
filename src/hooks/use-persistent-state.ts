@@ -1,14 +1,7 @@
 import browser from "webextension-polyfill";
 import { useEffect, useMemo, useState } from "react";
 import { debounce } from "@/lib/utils";
-import { STORAGE_CONFIG, type StorageKeys } from "@/configs";
-
-const AreaName = {
-  LOCAL: "local",
-  SYNC: "sync",
-  MANAGED: "managed",
-  SESSION: "session",
-} as const;
+import { STORAGE_CONFIG, StorageAreaNames, type StorageKeys } from "@/configs";
 
 export function usePersistentState<T>(
   key: StorageKeys,
@@ -68,7 +61,7 @@ export function usePersistentState<T>(
       changes: Record<string, browser.Storage.StorageChange>,
       areaName: string,
     ) => {
-      if (areaName !== AreaName.LOCAL) return;
+      if (areaName !== StorageAreaNames.LOCAL) return;
 
       const change = changes[key];
 

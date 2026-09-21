@@ -4,6 +4,13 @@ export const STORAGE_CONFIG = {
   PERSISTENCE_DELAY_MS: 500,
 } as const;
 
+export const StorageAreaNames = {
+  LOCAL: "local",
+  SYNC: "sync",
+  MANAGED: "managed",
+  SESSION: "session",
+} as const;
+
 export const StorageKeys = {
   LAST_GENERATED_VALUES: `${APP_ID}:last-generated-values`,
   LAST_PRESET_ID: `${APP_ID}:last-preset-id`,
@@ -18,3 +25,4 @@ export const StorageKeys = {
 } as const;
 
 export type StorageKeys = (typeof StorageKeys)[keyof typeof StorageKeys];
+

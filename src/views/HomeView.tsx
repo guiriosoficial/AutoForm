@@ -41,14 +41,14 @@ export function HomeView() {
 
   const catalogData = useCatalogData({
     presets,
-    detachGeneratorFromPresets
+    detachGeneratorFromPresets,
   });
 
   const {
     catalogMethodsByKey,
     customMethods,
     setCustomMethods,
-  } = catalogData
+  } = catalogData;
 
   const {
     importData,

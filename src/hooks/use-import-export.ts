@@ -9,18 +9,18 @@ import { EXPORT_CONFIG, ImportStrategy } from "@/configs";
 interface UseImportExportArgs {
   presets: Preset[];
   setPresets: Dispatch<SetStateAction<Preset[]>>;
-  customMethods: CatalogMethod[]
+  customMethods: CatalogMethod[];
   setCustomMethods: Dispatch<SetStateAction<CatalogMethod[]>>;
 }
 
 export interface ParseJsonResult {
   presets: Preset[];
-  customMethods: CatalogMethod[]
+  customMethods: CatalogMethod[];
 }
 
 export interface ParseImportExportResult {
   parsed: ParseJsonResult;
-  duplicatedPresets: Preset[],
+  duplicatedPresets: Preset[];
   duplicatedCustomMethods: CatalogMethod[];
 }
 

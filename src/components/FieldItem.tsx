@@ -50,7 +50,7 @@ function FieldItemComponent({
     catalogOptions,
   } = useCatalog();
 
-  const fieldOptionsPopoverRef = useRef<FieldSetupPopoverRef>(null)
+  const fieldOptionsPopoverRef = useRef<FieldSetupPopoverRef>(null);
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
   const hasValue = value !== undefined;
