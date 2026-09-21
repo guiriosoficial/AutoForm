@@ -1,11 +1,12 @@
-import _ from "lodash";
-
 export function toTitleCase(str: string) {
-  return _.startCase(str);
+  return str.replaceAll(/(?:^|[-_ ])(?<char>\w)/gu, (...args) => {
+    const groups = args.pop();
+    return groups.char.toUpperCase();
+  });
 }
 
 export function removeSpaces(str: string) {
-  return _.replace(str, /\s/ug, "")
+  return str.replaceAll(/\s/ug, "")
 }
 
 export function createNextSequencedName<T extends object>(

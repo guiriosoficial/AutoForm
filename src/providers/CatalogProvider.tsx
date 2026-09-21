@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useContext } from "react";
-import type { CatalogData } from "@/hooks/use-catalog-data.ts";
+import type { CatalogData } from "@/hooks/use-catalog-data";
 
 interface CatalogProviderProps {
   children: ReactNode;

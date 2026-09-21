@@ -8,12 +8,14 @@ export interface Preset {
   createdAt: number;
 }
 
-export const createEmptyPreset = (presetName: string): Preset => ({
-  id: crypto.randomUUID(),
-  name: presetName,
-  fields: [createField()],
-  createdAt: Date.now(),
-});
+export function createEmptyPreset(presetName: string): Preset {
+  return {
+    id: crypto.randomUUID(),
+    name: presetName,
+    fields: [createField()],
+    createdAt: Date.now(),
+  };
+}
 
 export function isValidPreset(value: unknown): value is Preset {
   if (!isObject(value)) return false;

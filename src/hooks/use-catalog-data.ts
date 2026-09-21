@@ -10,10 +10,11 @@ import {
   newCustomMethodOption,
 } from "@/lib/catalog";
 import {
+  APP_URL,
   CATALOG_CONFIG,
   StorageKeys,
   Catalogs,
-  type Locale, APP_AUTHOR_URL, APP_NAME,
+  type Locale,
 } from "@/configs";
 import { createNextSequencedName, isFunction } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
@@ -91,7 +92,7 @@ export function useCatalogData({
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
       generateUniqueId: true,
-      docUrl: `${APP_AUTHOR_URL}/${APP_NAME}/wiki/Custom-Methods`
+      docUrl: `${APP_URL}/wiki/Custom-Methods`
     };
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,

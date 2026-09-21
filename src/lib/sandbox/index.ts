@@ -8,7 +8,6 @@ export function executeInSandbox<T = unknown>(
   return new Promise((resolve, reject) => {
     const id = crypto.randomUUID();
 
-    // Cria/Reutiliza o iframe do Sandbox
     let iframe = document.querySelector("#extension-sandbox-iframe") as HTMLIFrameElement;
 
     if (!iframe) {

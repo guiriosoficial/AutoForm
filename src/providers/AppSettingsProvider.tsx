@@ -7,13 +7,13 @@ import {
   THEME_CONFIG,
   IMPORT_CONFIG,
   CATALOG_CONFIG,
+  EDITOR_CONFIG,
   StorageKeys,
   Theme,
   type ImportStrategy,
   type Locale,
   type Language,
   type Catalogs,
-  EDITOR_CONFIG,
 } from "@/configs";
 
 interface AppSettingsProviderProps {

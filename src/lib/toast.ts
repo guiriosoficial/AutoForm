@@ -1,4 +1,5 @@
 import { toast as baseToast } from "@/components/ui/toast";
+import { isString } from "@/lib/utils";
 
 export const ToastPriority = {
   LOW: "low",
@@ -26,7 +27,7 @@ interface ToastOptions {
 
 function createToast(type: ToastTypes) {
   return (options: ToastOptions | string) => {
-    const data = typeof options === "string"
+    const data = isString(options)
       ? { title: options }
       : options;
 

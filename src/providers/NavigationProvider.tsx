@@ -1,5 +1,5 @@
 import { type ReactNode, createContext, useContext, useMemo, useState } from "react";
-import { PAGE_CONFIG, type Page } from "@/configs";
+import { type Page, PAGE_CONFIG } from "@/configs";
 
 interface NavigationProviderProps {
   children: ReactNode;
