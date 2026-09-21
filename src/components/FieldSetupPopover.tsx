@@ -73,7 +73,7 @@ function FieldSetupPopoverComponent(
 
   const currentCustomMethod = customMethodsByKey.get(methodKey) ?? null;
   const isCustomMethod = currentCustomMethod !== null;
-  const hasConfig = isPopulatedJson5(value);
+  const hasOptions = isPopulatedJson5(value);
 
   const handleChangeCustomMethod = <K extends keyof CatalogMethod>(
     key: K,
@@ -129,7 +129,7 @@ function FieldSetupPopoverComponent(
 
   const triggerButtonClasses = cn(
     "relative",
-    hasConfig && "bg-primary/5 hover:bg-primary/15! aria-expanded:bg-primary/15 text-primary hover:text-primary aria-expanded:text-primary",
+    hasOptions && "bg-primary/5 hover:bg-primary/15! aria-expanded:bg-primary/15 text-primary hover:text-primary aria-expanded:text-primary",
     error && "bg-destructive/5 hover:bg-destructive/15! aria-expanded:bg-destructive/15 text-destructive hover:text-destructive aria-expanded:text-destructive"
   );
   const triggerBadgeClasses = cn(
@@ -153,7 +153,7 @@ function FieldSetupPopoverComponent(
     customMethodUsageCount?.fieldsUseCount
       ? t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount)
       : null,
-    t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.label }),
+    t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.name }),
   ]
 
   return (
@@ -170,7 +170,7 @@ function FieldSetupPopoverComponent(
               className={triggerButtonClasses}
             >
               <Settings2 size={IconSize.MD} />
-              {hasConfig && <span className={triggerBadgeClasses} />}
+              {hasOptions && <span className={triggerBadgeClasses} />}
             </Button>
           }
         />
@@ -224,7 +224,7 @@ function FieldSetupPopoverComponent(
               <JsonEditor
                 ref={jsonEditorRef}
                 value={value}
-                hasConfig={hasConfig}
+                hasOptions={hasOptions}
                 className={editorClasses}
                 onChange={onChange}
                 onErrorChange={setJsonError}

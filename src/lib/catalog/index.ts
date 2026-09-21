@@ -3,8 +3,8 @@ import { CATALOG_CONFIG } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";
 
 export interface CatalogMethod {
-  label: string;
-  key: string;
+  key: `${string}.${string}`;
+  name: string;
   docs?: string;
   code?: string;
   invoke?: (...args: unknown[]) => GeneratorValue;
@@ -30,7 +30,7 @@ export function createCatalogMethod(
     : methodKey;
 
   return {
-    label: methodKey,
+    name: methodKey,
     key: `${moduleKey}.${uniqueKey}`,
     invoke: invokeFn,
     docs: options?.docsUrl,

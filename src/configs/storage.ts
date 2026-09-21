@@ -1,9 +1,5 @@
 import { APP_ID } from "./app";
 
-export const STORAGE_CONFIG = {
-  PERSISTENCE_DELAY_MS: 500,
-} as const;
-
 export const StorageAreaNames = {
   LOCAL: "local",
   SYNC: "sync",
@@ -26,3 +22,6 @@ export const StorageKeys = {
 
 export type StorageKeys = (typeof StorageKeys)[keyof typeof StorageKeys];
 
+export const STORAGE_CONFIG = {
+  PERSISTENCE_DELAY_MS: 500,
+} as const;

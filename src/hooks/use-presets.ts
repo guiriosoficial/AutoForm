@@ -12,7 +12,7 @@ import type { InlineInputRef } from "@/components/shared/InlineInput";
 import type { FieldConfig } from "@/lib/fields";
 
 interface UsePresetsArgs {
-  presetNameEditorRef: RefObject<InlineInputRef | null>;
+  presetNameInputRef: RefObject<InlineInputRef | null>;
 }
 
 export interface ParsePresetsResult {
@@ -21,7 +21,7 @@ export interface ParsePresetsResult {
 }
 
 export function usePresets({
-  presetNameEditorRef,
+  presetNameInputRef,
 }: UsePresetsArgs) {
   const { t } = useTranslation();
 
@@ -64,9 +64,9 @@ export function usePresets({
     if (presets.length + 1 <= 1) return;
 
     requestAnimationFrame(() => {
-      presetNameEditorRef.current?.startEditing();
+      presetNameInputRef.current?.startEditing();
     });
-  }, [presets, presetNameEditorRef, t, setPresets, setCurrentPreset]);
+  }, [presets, presetNameInputRef, t, setPresets, setCurrentPreset]);
 
   const deletePreset = useCallback((presetId: string) => {
     setPresets((prev) => prev.filter((preset) => preset.id !== presetId));

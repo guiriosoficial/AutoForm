@@ -22,7 +22,7 @@ import { useCatalogData } from "@/hooks/use-catalog-data";
 export function HomeView() {
   const { t } = useTranslation();
 
-  const presetNameEditorRef = useRef<InlineInputRef>(null);
+  const presetNameInputRef = useRef<InlineInputRef>(null);
 
   const {
     presets,
@@ -36,7 +36,7 @@ export function HomeView() {
     deletePreset,
     setPresets,
   } = usePresets({
-    presetNameEditorRef,
+    presetNameInputRef,
   });
 
   const catalogData = useCatalogData({
@@ -61,8 +61,8 @@ export function HomeView() {
     setCustomMethods,
   })
 
-  const fields = currentPreset?.fields ?? [];
-  const presetId = currentPreset?.id ?? "";
+  const currentFields = currentPreset?.fields ?? [];
+  const currentPresetId = currentPreset?.id ?? "";
 
   const {
     addField,
@@ -75,12 +75,12 @@ export function HomeView() {
     generatedValues,
   } = useForm({
     catalogMethodsByKey,
-    presetId,
-    fields,
+    presetId: currentPresetId,
+    fields: currentFields,
     updateFields: updateCurrentPresetFields,
   });
 
-  const getDuplicatedPresetNameErrorMessage = (draft: string) =>
+  const getPresetNameErrorMessage = (draft: string) =>
     isDuplicatedPresetName(draft, currentPreset?.id)
       ? t("presetsManager.messages.changeName.duplicated")
       : ""
@@ -111,23 +111,23 @@ export function HomeView() {
         <CardHeader className="gap-x-11">
           <CardTitle>
             <InlineInput
-              ref={presetNameEditorRef}
+              ref={presetNameInputRef}
               value={currentPreset?.name}
               placeholder={t("fieldsManager.form.presetNameInput.placeholder")}
-              error={getDuplicatedPresetNameErrorMessage}
+              error={getPresetNameErrorMessage}
               onSave={updateCurrentPresetName}
             />
           </CardTitle>
           <CardAction>
             <CardDescription>
-              {t("fieldsManager.description", { count: fields.length })}
+              {t("fieldsManager.description", { count: currentFields.length })}
             </CardDescription>
           </CardAction>
         </CardHeader>
         <CardContent className="space-y-2">
           <CatalogProvider catalogData={catalogData}>
             <FieldsManager
-              fields={fields}
+              fields={currentFields}
               values={generatedValues}
               onUpdateField={updateField}
               onAddField={addField}

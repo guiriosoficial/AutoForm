@@ -49,12 +49,12 @@ function InlineInputComponent (
   const [isEditing, setIsEditing] = useState(false);
   const [draft, setDraft] = useState(value);
 
-  const inputRef = useRef<HTMLInputElement>(null);
   const errorMessage = isFunction(error) ? error(draft) : error;
   const hasError = isPopulatedString(errorMessage);
 
-  const hasErrorRef = useRef(hasError);
   const errorMessageRef = useRef(errorMessage);
+  const hasErrorRef = useRef(hasError);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   const deferPredicatedShowError = useRef(deferPredicate(() => {
     if (!hasErrorRef.current || !errorMessageRef.current) return;
@@ -111,6 +111,11 @@ function InlineInputComponent (
     setIsEditing(false);
   };
 
+  const startEditing = useCallback(() => {
+    setDraft(value);
+    setIsEditing(true);
+  }, [value]);
+
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
     event.stopPropagation()
@@ -127,18 +132,14 @@ function InlineInputComponent (
     }
   };
 
-  const startEditing = useCallback(() => {
-    setDraft(value);
-    setIsEditing(true);
-  }, [value]);
-
   useImperativeHandle(ref, () => ({
     startEditing,
   }), [startEditing])
 
-  const inputClasses = cn("flex-1 pr-1 outline-none", hasError && "text-destructive");
-
-
+  const inputClasses = cn(
+    "flex-1 pr-1 outline-none",
+    hasError && "text-destructive"
+  );
 
   if (isEditing) {
     return (

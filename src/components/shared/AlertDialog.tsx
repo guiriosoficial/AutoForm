@@ -38,11 +38,10 @@ export function AlertDialog({
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
-  const translatedTitle = title ?? t("defaults.alert.title");
-  const translatedDescription = description
-    ? (isArray(description) ? description.filter((item) => item !== null) : [description])
-    : [t("defaults.alert.description")]
+  const descriptionArray = isArray(description) ? description : [description];
 
+  const translatedTitle = title ?? t("defaults.alert.title");
+  const translatedDescription = description ? descriptionArray : [t("defaults.alert.description")];
   const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
   const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 

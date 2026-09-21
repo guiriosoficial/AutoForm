@@ -36,7 +36,7 @@ export default defineConfig({
     "sort-keys": "off",
     "sort-imports": "off",
     "id-length": ["error", { checkGeneric: false, exceptions: ["t"], exceptionPatterns: ["^_"] }],
-    "func-style": ["error", "declaration", { allowArrowFunctions: true }], // Use Declaration for components, expression for components methods
+    "func-style": ["error", "declaration", { allowArrowFunctions: true }], // Use Declaration for top-level functions, expression for the rest
     "curly": ["error", "multi-line", "consistent"],
     "one-var": ["error", "never"],
     "no-ternary": "allow",
@@ -45,7 +45,6 @@ export default defineConfig({
     "no-undefined": "allow", // Resolved in "unicorn/no-useless-undefined"
     "no-redeclare": "allow", // TODO: Review config
     "no-shadow": "allow", // TODO: Review config
-    "no-nested-ternary": "allow", // TODO: Review config
     "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
     "no-implicit-coercion": ["error", { boolean: false }],
     "no-magic-numbers": ["error", { ignore: [-1, 0, 1], ignoreDefaultValues: true }],

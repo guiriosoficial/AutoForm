@@ -23,7 +23,7 @@ import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
   EDITOR_BASIC_SETUP,
-  EDITOR_PRETTIER_FORMAT_OPTIONS,
+  EDITOR_PRETTIER_OPTIONS,
 } from "@/configs";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { InlineInput } from "@/components/shared/InlineInput.tsx";
@@ -49,25 +49,25 @@ function JavascriptEditorComponent(
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
   const { t } = useTranslation();
-  const { isDuplicatedLabel } = useCatalog();
+  const { isDuplicatedMethodName } = useCatalog();
 
-  const getDuplicatedErrorMessage = (draft: string) =>
-    isDuplicatedLabel(draft, value.key)
+  const getMethodNameErrorMessage = (draftName: string) =>
+    isDuplicatedMethodName(draftName, value.key)
       ? t("customMethodManager.messages.duplicatedName")
       : ""
 
   const parse = useCallback((code: string) => {
     if (!code) return;
 
-    const trimmed = code.trim();
+    const trimmedCode = code.trim();
 
-    if (!trimmed) {
+    if (!trimmedCode) {
       onErrorChange(null);
       return;
     }
 
     try {
-      const ast = babelParse(trimmed, {
+      const ast = babelParse(trimmedCode, {
         sourceType: "script",
         allowReturnOutsideFunction: false,
       });
@@ -113,7 +113,7 @@ function JavascriptEditorComponent(
     try {
       const formattedCode = await prettierFormat(
         value.code,
-        EDITOR_PRETTIER_FORMAT_OPTIONS,
+        EDITOR_PRETTIER_OPTIONS,
       );
       onChange("code", formattedCode);
     } catch {
@@ -126,16 +126,16 @@ function JavascriptEditorComponent(
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
-  const handleChangeMethod = (newValue: string) => {
-    onChange("code", newValue);
+  const handleChangeMethod = (newMethod: string) => {
+    onChange("code", newMethod);
 
-    debouncedParse(newValue);
+    debouncedParse(newMethod);
   };
 
-  const handleChangeName = (newValue: string) => {
-    if (newValue === value.label) return;
+  const handleChangeName = (newName: string) => {
+    if (newName === value.name) return;
 
-    onChange("label", newValue);
+    onChange("name", newName);
   };
 
   useEffect(() => {
@@ -146,24 +146,24 @@ function JavascriptEditorComponent(
     };
   }, []);
 
+  useImperativeHandle(ref, () => ({
+    format,
+  }), [format]);
+
   const editorExtension = useMemo(() => [
     javascript(),
     createEditorLinter(javascriptLinter),
     createEditorKeymap({ onFormat: format }),
   ], [format]);
 
-  useImperativeHandle(ref, () => ({
-    format,
-  }), [format]);
-
   return (
     <div className="space-y-2">
       <InlineInput
-        value={value.label}
-        placeholder="Method Name"
+        value={value.name}
+        placeholder={t("customMethodsManager.form.nameInput.placeholder")}
         className="font-semibold px-3 py-2 border rounded-md"
         transform={removeSpaces}
-        error={getDuplicatedErrorMessage}
+        error={getMethodNameErrorMessage}
         onSave={handleChangeName}
       />
       <ReactCodeMirror

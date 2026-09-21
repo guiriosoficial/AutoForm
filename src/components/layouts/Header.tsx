@@ -14,6 +14,7 @@ export function Header() {
 
   const handleNavigate = (nextPage: Page) => {
     const url = new URL(nextPage)
+
     if (url.protocol === PAGE_CONFIG.EXTERNAL_URL_PROTOCOL) {
       window.open(nextPage, "_blank", "noreferrer");
       return;

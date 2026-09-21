@@ -28,7 +28,7 @@ import { EDITOR_CONFIG, EDITOR_BASIC_SETUP } from "@/configs";
 interface JsonEditorProps {
   value: string | undefined;
   className?: string;
-  hasConfig: boolean;
+  hasOptions: boolean;
   onChange: (value: string) => void;
   onErrorChange: (error: string | null) => void;
 }
@@ -41,7 +41,7 @@ function JsonEditorComponent (
   {
     value,
     className,
-    hasConfig,
+    hasOptions,
     onChange,
     onErrorChange,
   }: JsonEditorProps,
@@ -80,10 +80,10 @@ function JsonEditorComponent (
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
-  const handleConfigChange = (newValue: string) => {
-    onChange(newValue);
+  const handleConfigChange = (newOptions: string) => {
+    onChange(newOptions);
 
-    debouncedParse(newValue);
+    debouncedParse(newOptions);
   };
 
   useEffect(() => {
@@ -94,15 +94,15 @@ function JsonEditorComponent (
     };
   }, []);
 
-  const editorExtension = useMemo(() => [
-    json5(),
-    createEditorLinter(jsonLinter, hasConfig),
-    createEditorKeymap({ onFormat: format }),
-  ], [hasConfig, format]);
-
   useImperativeHandle(ref, () => ({
     format,
   }), [format])
+
+  const editorExtension = useMemo(() => [
+    json5(),
+    createEditorLinter(jsonLinter, hasOptions),
+    createEditorKeymap({ onFormat: format }),
+  ], [hasOptions, format]);
 
   return (
     <ReactCodeMirror

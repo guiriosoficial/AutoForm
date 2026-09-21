@@ -9,13 +9,6 @@ export const EditorTabs = {
 
 export type EditorTabs = (typeof EditorTabs)[keyof typeof EditorTabs];
 
-export const EDITOR_CONFIG = {
-  INDENT_SPACES: 2,
-  LINT_DELAY_MS: 1200,
-  ERROR_DELAY_MS: 1200,
-  DEFAULT_AUTO_FORMAT: true,
-} as const;
-
 export const EDITOR_SHORTCUTS = {
   FORMAT: "Mod-Shift-f",
 } as const;
@@ -37,7 +30,7 @@ export const EDITOR_BASIC_SETUP = {
   lintKeymap: false,
 };
 
-export const EDITOR_PRETTIER_FORMAT_OPTIONS = {
+export const EDITOR_PRETTIER_OPTIONS = {
   plugins: [babel, estree],
   parser: "babel",
   semi: true,
@@ -80,3 +73,10 @@ export const EDITOR_THEME = {
     },
   },
 };
+
+export const EDITOR_CONFIG = {
+  INDENT_SPACES: 2,
+  LINT_DELAY_MS: 1200,
+  ERROR_DELAY_MS: 1200,
+  DEFAULT_AUTO_FORMAT: true,
+} as const;

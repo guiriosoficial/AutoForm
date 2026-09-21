@@ -91,7 +91,7 @@ function FieldItemComponent({
           items={catalogOptions}
           value={selectedMethod}
           onValueChange={(newValue) => handleUpdateField("generator", newValue?.key)}
-          itemToStringLabel={(item) => item.label}
+          itemToStringLabel={(item) => item.name}
           itemToStringValue={(item) => item.key}
         >
           <ComboboxInput
@@ -129,7 +129,7 @@ function FieldItemComponent({
                         value={item}
                       >
                         <span className="block truncate">
-                          {item.label}
+                          {item.name}
                         </span>
                       </ComboboxItem>
                     )}

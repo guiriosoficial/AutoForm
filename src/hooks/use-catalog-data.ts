@@ -5,7 +5,9 @@ import { createFakerCatalog } from "@/lib/catalog/providers/faker";
 import { createBox4DevCatalog } from "@/lib/catalog/providers/box-4-dev";
 import {
   type CatalogMethod,
-  type CatalogModule, createCatalogCustomFunction, createCatalogMethod,
+  type CatalogModule,
+  createCatalogCustomFunction,
+  createCatalogMethod,
   createCatalogModule,
   newCustomMethodOption,
 } from "@/lib/catalog";
@@ -33,7 +35,7 @@ export interface CatalogData {
   ) => void;
   removeCustomMethod: (methodKey: string) => void;
   getMethodUsageCount: (methodKey: string | undefined) => { presetsUseCount: number, fieldsUseCount: number } | undefined;
-  isDuplicatedLabel: (label: string, methodKey: string | undefined) => boolean;
+  isDuplicatedMethodName: (label: string, methodKey: string | undefined) => boolean;
 }
 
 interface UseCatalogDataArgs {
@@ -86,7 +88,7 @@ export function useCatalogData({
     const defaultName = t("configs.catalog.method.defaultName");
     const nextCatalogName = createNextSequencedName<CatalogMethod>(
       customMethods,
-      "label",
+      "name",
       defaultName,
     );
     const newCustomMethodOptions = {
@@ -158,8 +160,8 @@ export function useCatalogData({
     return { fieldsUseCount, presetsUseCount };
   }, [presets]);
 
-  const isDuplicatedLabel = useCallback((label: string, methodKey: string | undefined) => (
-    customMethods.some((method) => method.label === label && method.key !== methodKey)
+  const isDuplicatedMethodName = useCallback((name: string, methodKey: string | undefined) => (
+    customMethods.some((method) => method.name === name && method.key !== methodKey)
   ), [customMethods]);
 
   return {
@@ -172,7 +174,7 @@ export function useCatalogData({
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
-    isDuplicatedLabel
+    isDuplicatedMethodName,
   }
 }
 

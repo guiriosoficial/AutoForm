@@ -87,7 +87,7 @@ export function AppSettingsProvider({
     root.classList.remove(Theme.LIGHT, Theme.DARK);
 
     if (theme === Theme.SYSTEM) {
-      const systemTheme = globalThis.matchMedia("(prefers-color-scheme: dark)").matches
+      const systemTheme = globalThis.matchMedia(`(prefers-color-scheme: ${Theme.DARK})`).matches
         ? Theme.DARK
         : Theme.LIGHT;
 
@@ -118,7 +118,14 @@ export function AppSettingsProvider({
     setAvailableCatalogs,
     autoFormat,
     setAutoFormat
-  }), [theme, importStrategy, autoFormat, availableCatalogs, language, locale]);
+  }), [
+    theme,
+    importStrategy,
+    autoFormat,
+    availableCatalogs,
+    language,
+    locale
+  ]);
 
   return (
     <AppSettingsProviderContext value={value}>
