@@ -71,7 +71,7 @@ export const enTranslations = {
   },
   preferencesManager: {
     title: "Preferences",
-    confirmButton: "Concluded",
+    confirmButton: "Done",
     form: {
       themeToggle: {
         label: "Theme",

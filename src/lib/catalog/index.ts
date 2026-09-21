@@ -50,7 +50,7 @@ export function createCatalogModule(
 
 export function createCatalogCustomFunction() {
   return `
-    (name = "Joh Doe") => {
+    (name = "John Doe") => {
       return "Hello " + name
     }
   `;
@@ -64,7 +64,7 @@ export function isValidCustomMethod(value: unknown): value is CatalogMethod {
     isPopulatedString(value.key) &&
     isPopulatedString(value.code) &&
     isOptionalString(value.docs) &&
-    value.key.startsWith(CATALOG_CONFIG.CUSTOM_MODULE_NAME)
+    value.key.startsWith(`${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.`)
   );
 }
 

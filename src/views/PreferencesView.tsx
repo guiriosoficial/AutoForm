@@ -249,7 +249,7 @@ export function PreferencesView() {
       </Card>
 
       <Footer
-        primaryButonText={t("preferencesManager.confirmButton")}
+        primaryButtonText={t("preferencesManager.confirmButton")}
         primaryButtonIcon={ArrowLeft}
         onPrimaryButtonClick={() => setActivePage(Page.HOME)}
       />

@@ -27,7 +27,7 @@ export function usePresets({
 
   const [currentPresetId, setCurrentPresetId] =
     useState<string>("");
-  const [lasPresetId, setLastPresetId, , hydratedLastPresetId] =
+  const [lastPresetId, setLastPresetId, , hydratedLastPresetId] =
     usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
   const [presets, setPresets, , hydratedPresets] =
     usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
@@ -144,7 +144,7 @@ export function usePresets({
       currentPreset
     ) return;
 
-    const lastPreset = presetsById.get(lasPresetId);
+    const lastPreset = presetsById.get(lastPresetId);
 
     if (lastPreset) {
       setCurrentPreset(lastPreset);
@@ -157,7 +157,7 @@ export function usePresets({
     }
 
     createPreset();
-  }, [presets, currentPreset, presetsById, lasPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
+  }, [presets, currentPreset, presetsById, lastPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
   const isDuplicatedPresetName = useCallback((name: string, presetId?: string) => (
     presets.some((preset) => preset.name === name && preset.id !== presetId)

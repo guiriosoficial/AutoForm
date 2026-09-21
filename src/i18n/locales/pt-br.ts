@@ -70,20 +70,20 @@ export const ptBrTranslations = {
     },
   },
   preferencesManager: {
-    title: "Preferencias",
+    title: "Preferências",
     confirmButton: "Concluído",
     form: {
       themeToggle: {
         label: "Tema",
       },
       importStrategyToggle: {
-        label: "Estrategia de importação",
+        label: "Estratégia de importação",
       },
       availableCatalogsMultiToggle: {
-        label: "Catalogos disponíveis",
+        label: "Catálogos disponíveis",
       },
       autoFormatSwitch: {
-        label: "Formatação Automática",
+        label: "Formatação automática",
         enabledLabel: "Habilitado",
         disabledLabel: "Desabilitado",
       },
@@ -93,8 +93,8 @@ export const ptBrTranslations = {
         empty: "Nenhuma localização encontrada",
       },
       languageSelect: {
-        label: "Língua",
-        placeholder: "Seleciona uma língua",
+        label: "Idioma",
+        placeholder: "Seleciona um idioma",
         empty: "Nenhuma língua encontrada",
       },
     },

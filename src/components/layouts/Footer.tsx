@@ -4,7 +4,7 @@ import { APP_AUTHOR_URL } from "@/configs";
 import type { LucideIcon } from "lucide-react";
 
 interface FooterProps {
-  primaryButonText: string;
+  primaryButtonText: string;
   primaryButtonIcon?: LucideIcon;
   onPrimaryButtonClick: () => void;
   secondaryButtonText?: string;
@@ -26,7 +26,7 @@ const creditsTranslationComponents = {
 };
 
 export function Footer({
-  primaryButonText,
+  primaryButtonText,
   primaryButtonIcon: PrimaryButtonIcon,
   onPrimaryButtonClick,
   secondaryButtonText,
@@ -48,7 +48,7 @@ export function Footer({
           onClick={onPrimaryButtonClick}
         >
           {PrimaryButtonIcon && <PrimaryButtonIcon />}
-          {primaryButonText}
+          {primaryButtonText}
         </Button>
 
         {showSecondaryButton && (

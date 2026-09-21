@@ -140,7 +140,7 @@ export function HomeView() {
       </Card>
 
       <Footer
-        primaryButonText={t("footer.buttons.generateData")}
+        primaryButtonText={t("footer.buttons.generateData")}
         primaryButtonIcon={Zap}
         onPrimaryButtonClick={generateValues}
         secondaryButtonText={t("footer.buttons.copyAsJson")}
