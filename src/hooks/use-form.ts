@@ -103,6 +103,8 @@ export function useForm({
   const regenerateValue = useCallback(async (fieldId: string) => {
     const field = fieldsById[fieldId];
 
+    if (!field) return;
+
     const method = catalogMethodsByKey.get(field.generator);
 
     if (!method) return;
@@ -129,7 +131,7 @@ export function useForm({
 
   useEffect(() => {
     if (presetId && fields.length === 0) addField()
-  }, [fields, presetId]);
+  }, [fields, presetId, addField]);
 
   const copyFormAsJSON = useCallback(async () => {
     try {

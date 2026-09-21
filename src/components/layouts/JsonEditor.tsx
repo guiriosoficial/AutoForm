@@ -61,7 +61,7 @@ function JsonEditorComponent (
       const message = getErrorMessage(error);
       onErrorChange(message);
     }
-  }, []);
+  }, [onErrorChange]);
 
   const format = useCallback(() => {
     if (!value) return;

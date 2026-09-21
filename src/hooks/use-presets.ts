@@ -115,7 +115,7 @@ export function usePresets({
     updateCurrentPreset(() => ({
       name,
     }));
-  }, [presets, currentPresetId, updateCurrentPreset]);
+  }, [updateCurrentPreset]);
 
   const detachGeneratorFromPresets = useCallback((generatorToRemove: string) => {
     setPresets((prevPresets) =>

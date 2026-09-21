@@ -20,7 +20,7 @@ export const StorageKeys = {
   LANGUAGE: `${APP_ID}:language`,
   IMPORT_STRATEGY: `${APP_ID}:import-strategy`,
   CUSTOM_METHODS: `${APP_ID}:custom-methods`,
-  AVAILABLE_CATALOGS: `${APP_ID}:hidden-catalogs`,
+  AVAILABLE_CATALOGS: `${APP_ID}:available-catalogs`,
   AUTO_FORMAT: `${APP_ID}:auto-format`,
 } as const;
 

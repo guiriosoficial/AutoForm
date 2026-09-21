@@ -80,7 +80,7 @@ export function useImportExport({
 
       toast.error(errorMessage);
     }
-  }, [presets, t]);
+  }, [presets, customMethods, t]);
 
   const importData = useCallback((
     imported: ParseJsonResult,
@@ -117,7 +117,7 @@ export function useImportExport({
 
       return [...map.values()];
     })
-  }, [setPresets]);
+  }, [setPresets, setCustomMethods]);
 
 
   return {

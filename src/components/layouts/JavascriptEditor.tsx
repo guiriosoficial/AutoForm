@@ -105,7 +105,7 @@ function JavascriptEditorComponent(
       const message = getErrorMessage(error);
       onErrorChange(message);
     }
-  }, []);
+  }, [onErrorChange]);
 
   const format = useCallback(async () => {
     if (!value.code) return;
