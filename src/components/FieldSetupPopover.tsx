@@ -24,7 +24,7 @@ import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
-import { EditorTabs } from "@/configs";
+import { EditorTabs, IconSize } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
 import type { CatalogMethod } from "@/lib/catalog";
 
@@ -169,7 +169,7 @@ function FieldSetupPopoverComponent(
               size="icon"
               className={triggerButtonClasses}
             >
-              <Settings2 size={16} />
+              <Settings2 size={IconSize.MD} />
               {hasConfig && <span className={triggerBadgeClasses} />}
             </Button>
           }

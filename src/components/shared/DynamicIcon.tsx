@@ -1,8 +1,9 @@
 import type { LucideIcon } from "lucide-react";
+import { IconSize } from "@/configs";
 
 interface DynamicIconProps {
   icon: LucideIcon | undefined;
-  size?: number;
+  size?: IconSize;
   className?: string;
 }
 

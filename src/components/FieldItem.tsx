@@ -19,7 +19,7 @@ import { type FieldSetupPopoverRef, FieldSetupPopover } from "@/components/Field
 import { InlineButton } from "@/components/shared/InlineButton";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { cn, preventDefaultEscape } from "@/lib/utils";
-import { CATALOG_CONFIG, EditorTabs } from "@/configs";
+import { CATALOG_CONFIG, EditorTabs, IconSize } from "@/configs";
 import type { CatalogMethod, CatalogModule } from "@/lib/catalog";
 import type { FieldConfig, FieldError } from "@/lib/fields";
 import type { GeneratorValue } from "@/lib/generator";
@@ -121,7 +121,7 @@ function FieldItemComponent({
                         onClick={handleCreateCustomMethod}
                       >
                         {t("fieldsManager.form.generatorSelect.addOption")}
-                        <Plus size={14} />
+                        <Plus size={IconSize.SM} />
                       </Button>
                       ) : (
                       <ComboboxItem
@@ -156,7 +156,7 @@ function FieldItemComponent({
           className="hover:bg-destructive/10! hover:text-destructive"
           onClick={() => onRemove(field.id)}
         >
-          <X size={16} />
+          <X size={IconSize.MD} />
         </Button>
       </div>
 

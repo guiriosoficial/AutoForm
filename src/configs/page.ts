@@ -10,4 +10,5 @@ export type Page = (typeof Page)[keyof typeof Page];
 
 export const PAGE_CONFIG = {
   DEFAULT: Page.HOME,
+  EXTERNAL_URL_PROTOCOL: "https:",
 } as const;

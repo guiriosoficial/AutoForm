@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { PageIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
-import { Page } from "@/configs";
+import { Page, PAGE_CONFIG } from "@/configs";
 
 export function Header() {
   const { activePage, setActivePage } = useNavigation();
@@ -13,7 +13,8 @@ export function Header() {
   const navigationItems = Object.values(Page).filter((page) => page !== activePage);
 
   const handleNavigate = (nextPage: Page) => {
-    if (nextPage.startsWith("https")) {
+    const url = new URL(nextPage)
+    if (url.protocol === PAGE_CONFIG.EXTERNAL_URL_PROTOCOL) {
       window.open(nextPage, "_blank", "noreferrer");
       return;
     }

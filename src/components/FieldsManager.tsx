@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { FieldItem } from "@/components/FieldItem";
 import type { GeneratedValues } from "@/hooks/use-form";
 import type { FieldConfig } from "@/lib/fields";
+import { IconSize } from "@/configs";
 
 interface FieldsManagerProps {
   fields: FieldConfig[];
@@ -46,7 +47,7 @@ export function FieldsManager({
         className="border-dashed"
         onClick={onAddField}
       >
-        <Plus size={14} />
+        <Plus size={IconSize.SM} />
         {t("fieldsManager.buttons.add")}
       </Button>
     </>

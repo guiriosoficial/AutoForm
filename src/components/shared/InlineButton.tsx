@@ -1,10 +1,11 @@
 import { cn } from "@/lib/utils";
+import { type IconSize, ICON_CONFIG } from "@/configs";
 import type { MouseEventHandler } from "react";
 import type { LucideIcon } from "lucide-react";
 
 interface InlineButtonProps {
   icon: LucideIcon;
-  size?: number;
+  size?: IconSize;
   persistent?: boolean;
   destructive?: boolean;
   className?: string;
@@ -13,7 +14,7 @@ interface InlineButtonProps {
 
 export function InlineButton({
   icon: Icon,
-  size = 14,
+  size = ICON_CONFIG.DEFAULT_SIZE,
   persistent,
   destructive,
   className,

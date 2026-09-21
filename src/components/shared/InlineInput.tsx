@@ -20,7 +20,7 @@ import {
   preventDefaultEscape,
 } from "@/lib/utils";
 import { toast } from "@/lib/toast.ts";
-import { EDITOR_CONFIG } from "@/configs";
+import { EDITOR_CONFIG, IconSize } from "@/configs";
 
 interface InlineInputProps {
   value: string | undefined;
@@ -154,13 +154,13 @@ function InlineInputComponent (
         />
         <InlineButton
           icon={Check}
-          size={14}
+          size={IconSize.SM}
           persistent
           onClick={confirmEditing}
         />
         <InlineButton
           icon={X}
-          size={14}
+          size={IconSize.SM}
           persistent
           destructive
           onClick={cancelEditing}
