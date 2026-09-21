@@ -185,10 +185,20 @@ export const enTranslations = {
         failed: "$t(globals.failedToCopy, { 'item': 'value' })",
         success: "$t(globals.copiedToClipboard)",
       },
-      changeCustomMethodName: {
-        duplicated: "Method name already exists",
+    },
+  },
+  customMethodsManager: {
+    form: {
+      nameInput: {
+        placeholder: "Method name",
       }
     },
+    messages: {
+      duplicatedName: "Method name already exists",
+      notSingleExpression: "The code must contain a single expression",
+      notArrowFunction: "The code must be an arrow function",
+      missingReturnStatement: "The function must contain a 'return' statement",
+    }
   },
   footer: {
     buttons: {

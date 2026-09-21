@@ -53,7 +53,7 @@ function JavascriptEditorComponent (
 
   const getDuplicatedErrorMessage = (draft: string) =>
     isDuplicatedLabel(draft, value.key)
-      ? t("fieldsManager.messages:changeCustomMethodName.duplicated")
+      ? t("customMethodManager.messages.duplicatedName")
       : ""
 
   const parse = useCallback((code: string) => {
@@ -73,7 +73,7 @@ function JavascriptEditorComponent (
       });
 
       if (ast.program.body.length !== 1) {
-        onErrorChange("O código deve conter apenas uma declaração de função.");
+        onErrorChange(t("customMethodsManager.messages.notSingleExpression"));
         return;
       }
 
@@ -83,7 +83,7 @@ function JavascriptEditorComponent (
         statement.type !== "ExpressionStatement" ||
         statement.expression.type !== "ArrowFunctionExpression"
       ) {
-        onErrorChange("O código deve ser uma arrow function (ex: (x) => { return x; }).");
+        onErrorChange(t("customMethodsManager.messages.notArrowFunction"));
         return;
       }
 
@@ -95,7 +95,7 @@ function JavascriptEditorComponent (
         );
 
         if (!hasValidReturn) {
-          onErrorChange("A função precisa conter uma instrução 'return'.");
+          onErrorChange(t("customMethodsManager.messages.missingReturnStatement"));
           return;
         }
       }

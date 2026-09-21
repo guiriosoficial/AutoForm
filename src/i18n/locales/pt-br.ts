@@ -187,10 +187,20 @@ export const ptBrTranslations = {
         failed: "$t(globals.failedToCopy, { 'item': 'valor' })",
         success: "$t(globals.copiedToClipboard)",
       },
-      changeCustomMethodName: {
-        duplicated: "Nome do método duplicado",
+    },
+  },
+  customMethodsManager: {
+    form: {
+      nameInput: {
+        placeholder: "Nome do método",
       }
     },
+    messages: {
+      duplicatedName: "Method name already exists",
+      notSingleExpression: "O código deve conter uma única expressão",
+      notArrowFunction: "O código deve ser uma arrow function",
+      missingReturnStatement: "TA função deve conter uma instrução 'return'",
+    }
   },
   footer: {
     buttons: {
