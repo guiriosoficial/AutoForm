@@ -150,7 +150,7 @@ function FieldSetupPopoverComponent(
   const customMethodUsageCount = getMethodUsageCount(currentCustomMethod?.key)
 
   const deleteAlertDescription = [
-    customMethodUsageCount?.fieldsUseCount
+    customMethodUsageCount?.fieldsUsageCount
       ? t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount)
       : null,
     t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.name }),

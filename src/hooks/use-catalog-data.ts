@@ -34,8 +34,8 @@ export interface CatalogData {
     updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
   ) => void;
   removeCustomMethod: (methodKey: string) => void;
-  getMethodUsageCount: (methodKey: string | undefined) => { presetsUseCount: number, fieldsUseCount: number } | undefined;
-  isDuplicatedMethodName: (label: string, methodKey: string | undefined) => boolean;
+  getMethodUsageCount: (methodKey: string | undefined) => { presetsUseCount: number, fieldsUsageCount: number } | undefined;
+  isMethodNameTaken: (label: string, methodKey: string | undefined) => boolean;
 }
 
 interface UseCatalogDataArgs {
@@ -85,11 +85,11 @@ export function useCatalogData({
   ), [customMethods]);
 
   const createCustomMethod = useCallback(() => {
-    const defaultName = t("configs.catalog.method.defaultName");
-    const nextCatalogName = createNextSequencedName<CatalogMethod>(
+    const defaultMethodName = t("configs.catalog.method.defaultName");
+    const nextMethodName = createNextSequencedName<CatalogMethod>(
       customMethods,
       "name",
-      defaultName,
+      defaultMethodName,
     );
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
@@ -98,7 +98,7 @@ export function useCatalogData({
     };
     const newMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-      nextCatalogName,
+      nextMethodName,
       undefined,
       newCustomMethodOptions,
     );
@@ -137,7 +137,7 @@ export function useCatalogData({
   }, [setCustomMethods]);
 
   const getMethodUsageCount = useCallback((methodKey: string | undefined) => {
-    let fieldsUseCount = 0;
+    let fieldsUsageCount = 0;
     let presetsUseCount = 0;
 
     if (!methodKey || !presets) return
@@ -152,15 +152,15 @@ export function useCatalogData({
       }
 
       if (fieldsInPreset > 0) {
-        fieldsUseCount += fieldsInPreset;
+        fieldsUsageCount += fieldsInPreset;
         presetsUseCount += 1;
       }
     }
 
-    return { fieldsUseCount, presetsUseCount };
+    return { fieldsUsageCount, presetsUseCount };
   }, [presets]);
 
-  const isDuplicatedMethodName = useCallback((name: string, methodKey: string | undefined) => (
+  const isMethodNameTaken = useCallback((name: string, methodKey: string | undefined) => (
     customMethods.some((method) => method.name === name && method.key !== methodKey)
   ), [customMethods]);
 
@@ -174,7 +174,7 @@ export function useCatalogData({
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
-    isDuplicatedMethodName,
+    isMethodNameTaken,
   }
 }
 

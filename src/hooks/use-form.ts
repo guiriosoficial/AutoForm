@@ -133,7 +133,7 @@ export function useForm({
     if (presetId && fields.length === 0) addField()
   }, [fields, presetId, addField]);
 
-  const copyFormAsJSON = useCallback(async () => {
+  const copyFieldsAsJSON = useCallback(async () => {
     try {
       const data: GeneratedValuesJson = {};
 
@@ -161,6 +161,6 @@ export function useForm({
     generateValues,
     regenerateValue,
     copyValue,
-    copyFormAsJSON,
+    copyFieldsAsJSON,
   };
 }

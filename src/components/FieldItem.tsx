@@ -26,21 +26,21 @@ import type { GeneratorValue } from "@/lib/generator";
 
 interface FieldItemProps {
   field: FieldConfig;
-  value: GeneratorValue;
+  generatedValue: GeneratorValue;
   error: FieldError | undefined;
-  onRemove: (fieldId: string) => void;
-  onUpdate: (fieldId: string, newValue: FieldConfig) => void;
+  onRemoveField: (fieldId: string) => void;
+  onUpdateField: (fieldId: string, newValue: FieldConfig) => void;
   onRegenerateValue: (fieldId: string) => void;
-  onCopyValue: (value: string) => void;
+  onCopyGeneratedValue: (value: string) => void;
 }
 
 function FieldItemComponent({
   field,
-  value,
+  generatedValue,
   error,
-  onRemove,
-  onUpdate,
-  onCopyValue,
+  onRemoveField,
+  onUpdateField,
+  onCopyGeneratedValue,
   onRegenerateValue,
 }: FieldItemProps) {
   const { t } = useTranslation();
@@ -53,7 +53,7 @@ function FieldItemComponent({
   const fieldOptionsPopoverRef = useRef<FieldSetupPopoverRef>(null);
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
-  const hasValue = value !== undefined;
+  const hasValue = generatedValue !== undefined;
 
   const handleUpdateField = (
     key: keyof FieldConfig,
@@ -61,7 +61,7 @@ function FieldItemComponent({
   ) => {
     if (!newValue) return;
 
-    onUpdate(field.id, {
+    onUpdateField(field.id, {
       ...field,
       [key]: newValue,
     });
@@ -154,7 +154,7 @@ function FieldItemComponent({
           variant="ghost"
           size="icon"
           className="hover:bg-destructive/10! hover:text-destructive"
-          onClick={() => onRemove(field.id)}
+          onClick={() => onRemoveField(field.id)}
         >
           <X size={IconSize.MD} />
         </Button>
@@ -175,7 +175,7 @@ function FieldItemComponent({
       {hasValue && (
         <div className={resultClasses}>
           <span className="truncate">
-            {String(value)}
+            {String(generatedValue)}
           </span>
           <InlineButton
             icon={RotateCcw}
@@ -183,7 +183,7 @@ function FieldItemComponent({
           />
           <InlineButton
             icon={Copy}
-            onClick={() => onCopyValue(String(value))}
+            onClick={() => onCopyGeneratedValue(String(generatedValue))}
           />
         </div>
       )}

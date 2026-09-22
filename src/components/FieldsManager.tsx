@@ -2,23 +2,23 @@ import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { FieldItem } from "@/components/FieldItem";
+import { IconSize } from "@/configs";
 import type { GeneratedValues } from "@/hooks/use-form";
 import type { FieldConfig } from "@/lib/fields";
-import { IconSize } from "@/configs";
 
 interface FieldsManagerProps {
+  generatedValues: GeneratedValues;
   fields: FieldConfig[];
-  values: GeneratedValues;
   onAddField: () => void;
   onRemoveField: (fieldId: string) => void;
-  onUpdateField: (fieldId: string, updated: FieldConfig) => void;
+  onUpdateField: (fieldId: string, updatedField: FieldConfig) => void;
   onRegenerateValue: (fieldId: string) => void;
   onCopyValue: (value: string) => void;
 }
 
 export function FieldsManager({
+  generatedValues,
   fields,
-  values,
   onAddField,
   onRemoveField,
   onUpdateField,
@@ -33,12 +33,12 @@ export function FieldsManager({
         <FieldItem
           key={field.id}
           field={field}
-          value={values[field.id]?.value}
-          error={values[field.id]?.error}
-          onUpdate={onUpdateField}
-          onRemove={onRemoveField}
+          generatedValue={generatedValues[field.id]?.value}
+          error={generatedValues[field.id]?.error}
+          onUpdateField={onUpdateField}
+          onRemoveField={onRemoveField}
+          onCopyGeneratedValue={onCopyValue}
           onRegenerateValue={onRegenerateValue}
-          onCopyValue={onCopyValue}
         />
       ))}
 

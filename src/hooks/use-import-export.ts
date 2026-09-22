@@ -64,8 +64,8 @@ export function useImportExport({
         return;
       }
 
-      const existingPresetsId = new Set(presets.map((preset) => preset.id));
-      const duplicatedPresets = imported.presets.filter((preset) => existingPresetsId.has(preset.id));
+      const existingPresetsIds = new Set(presets.map((preset) => preset.id));
+      const duplicatedPresets = imported.presets.filter((preset) => existingPresetsIds.has(preset.id));
 
       const existingCustomMethodsId = new Set(customMethods.map((method) => method.key));
       const duplicatedCustomMethods = imported.customMethods.filter((method) => existingCustomMethodsId.has(method.key));
@@ -95,27 +95,27 @@ export function useImportExport({
     const isAppendStrategy = strategy === ImportStrategy.APPEND;
 
     setPresets((prev) => {
-      const map = new Map(prev.map((preset) => [preset.id, preset]));
+      const presetsById = new Map(prev.map((preset) => [preset.id, preset]));
 
       for (const preset of imported.presets) {
-        if (isAppendStrategy && map.has(preset.id)) continue;
+        if (isAppendStrategy && presetsById.has(preset.id)) continue;
 
-        map.set(preset.id, preset);
+        presetsById.set(preset.id, preset);
       }
 
-      return [...map.values()];
+      return [...presetsById.values()];
     });
 
     setCustomMethods((prev) => {
-      const map = new Map(prev.map((customMethod) => [customMethod.key, customMethod]));
+      const customMethodsByKey = new Map(prev.map((customMethod) => [customMethod.key, customMethod]));
 
       for (const method of imported.customMethods) {
-        if (isAppendStrategy && map.has(method.key)) continue;
+        if (isAppendStrategy && customMethodsByKey.has(method.key)) continue;
 
-        map.set(method.key, method);
+        customMethodsByKey.set(method.key, method);
       }
 
-      return [...map.values()];
+      return [...customMethodsByKey.values()];
     })
   }, [setPresets, setCustomMethods]);
 

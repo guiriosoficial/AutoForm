@@ -31,7 +31,7 @@ export function HomeView() {
     updateCurrentPresetName,
     updateCurrentPresetFields,
     detachGeneratorFromPresets,
-    isDuplicatedPresetName,
+    isPresetNameTaken,
     createPreset,
     deletePreset,
     setPresets,
@@ -71,7 +71,7 @@ export function HomeView() {
     generateValues,
     regenerateValue,
     copyValue,
-    copyFormAsJSON,
+    copyFieldsAsJSON,
     generatedValues,
   } = useForm({
     catalogMethodsByKey,
@@ -80,8 +80,8 @@ export function HomeView() {
     updateFields: updateCurrentPresetFields,
   });
 
-  const getPresetNameErrorMessage = (draft: string) =>
-    isDuplicatedPresetName(draft, currentPreset?.id)
+  const getPresetNameErrorMessage = (name: string) =>
+    isPresetNameTaken(name, currentPreset?.id)
       ? t("presetsManager.messages.changeName.duplicated")
       : ""
 
@@ -127,8 +127,8 @@ export function HomeView() {
         <CardContent className="space-y-2">
           <CatalogProvider catalogData={catalogData}>
             <FieldsManager
+              generatedValues={generatedValues}
               fields={currentFields}
-              values={generatedValues}
               onUpdateField={updateField}
               onAddField={addField}
               onRemoveField={removeField}
@@ -145,7 +145,7 @@ export function HomeView() {
         onPrimaryButtonClick={generateValues}
         secondaryButtonText={t("footer.buttons.copyAsJson")}
         secondaryButtonIcon={Copy}
-        onSecondaryButtonClick={copyFormAsJSON}
+        onSecondaryButtonClick={copyFieldsAsJSON}
         hideSecondaryButton={Object.keys(generatedValues).length <= 0}
       />
     </>
