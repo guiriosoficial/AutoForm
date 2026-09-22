@@ -164,7 +164,7 @@ export const enTranslations = {
     alerts: {
       deleteCustomMethod: {
         description: "Are you sure you want to delete custom method \"{{ name }}\"?",
-        usesCounter: "This method is currently used in $t(globals.fields, { 'count': {{ fieldsUseCount }} }) across $t(globals.presets, { 'count': {{ presetsUseCount }} }) and will be removed from all of them."
+        usesCounter: "This method is currently used in $t(globals.fields, { 'count': {{ fieldsUsageCount }} }) across $t(globals.presets, { 'count': {{ presetsUsageCount }} }) and will be removed from all of them."
       },
     },
     form: {

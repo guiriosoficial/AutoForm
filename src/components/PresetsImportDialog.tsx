@@ -22,25 +22,25 @@ import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-impor
 
 interface PresetsImportDialogProps {
   open: boolean;
-  presetsToImport: ParseImportExportResult;
+  importPreview: ParseImportExportResult;
   onOpenChange: (open: boolean) => void;
-  onImport: (imported: ParseJsonResult, strategy: ImportStrategy) => void;
+  onImport: (importedData: ParseJsonResult, importStrategy: ImportStrategy) => void;
 }
 
-const strategyOptions = Object.values(ImportStrategy)
+const importStrategyOptions = Object.values(ImportStrategy)
   .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK);
 
 export function PresetsImportDialog({
   open,
-  presetsToImport,
+  importPreview,
   onOpenChange,
   onImport,
 }: PresetsImportDialogProps) {
-  const [strategy, setStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
+  const [importStrategy, setImportStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
   const { t } = useTranslation();
 
-  const { parsed, duplicatedPresets } = presetsToImport;
+  const { parsed, duplicatedPresets } = importPreview;
 
   const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicatedPresets.length,
@@ -50,7 +50,7 @@ export function PresetsImportDialog({
   const handleChangeImportStrategy = (newStrategy: string[]) => {
     if (newStrategy.length === 0) return;
 
-    setStrategy(newStrategy[0] as ImportStrategy);
+    setImportStrategy(newStrategy[0] as ImportStrategy);
   };
 
   return (
@@ -95,24 +95,24 @@ export function PresetsImportDialog({
             {t("presetsManager.dialogs.importPreset.form.strategyToggle.label")}
           </FieldLabel>
           <ToggleGroup
-            value={[strategy]}
+            value={[importStrategy]}
             variant="outline"
             onValueChange={handleChangeImportStrategy}
           >
             <ButtonGroup>
-              {strategyOptions.map((value) => (
+              {importStrategyOptions.map((strategy) => (
                 <ToggleGroupItem
-                  key={value}
-                  value={value}
+                  key={strategy}
+                  value={strategy}
                 >
-                  <DynamicIcon icon={ImportStrategyIcons[value]} />
-                  {t(`configs.importStrategy.${value}.title`)}
+                  <DynamicIcon icon={ImportStrategyIcons[strategy]} />
+                  {t(`configs.importStrategy.${strategy}.title`)}
                 </ToggleGroupItem>
               ))}
             </ButtonGroup>
           </ToggleGroup>
           <FieldDescription>
-            {t(`configs.importStrategy.${strategy}.description`)}
+            {t(`configs.importStrategy.${importStrategy}.description`)}
           </FieldDescription>
         </Field>
 
@@ -124,7 +124,7 @@ export function PresetsImportDialog({
               </Button>
             }
           />
-          <Button onClick={() => onImport(presetsToImport.parsed, strategy)}>
+          <Button onClick={() => onImport(importPreview.parsed, importStrategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>

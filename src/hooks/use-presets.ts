@@ -15,11 +15,6 @@ interface UsePresetsArgs {
   presetNameInputRef: RefObject<InlineInputRef | null>;
 }
 
-export interface ParsePresetsResult {
-  parsed: Preset[];
-  duplicated: Preset[];
-}
-
 export function usePresets({
   presetNameInputRef,
 }: UsePresetsArgs) {
@@ -50,13 +45,13 @@ export function usePresets({
 
   const createPreset = useCallback(() => {
     const defaultName = t("configs.preset.defaultName");
-    const nextPresetNumber = createNextSequencedName<Preset>(
+    const nextPresetName = createNextSequencedName<Preset>(
       presets,
       "name",
       defaultName,
       { spaced: true },
     );
-    const emptyPreset = createEmptyPreset(nextPresetNumber);
+    const emptyPreset = createEmptyPreset(nextPresetName);
 
     setPresets((prev) => [...prev, emptyPreset]);
     setCurrentPreset(emptyPreset);
@@ -71,11 +66,11 @@ export function usePresets({
   const deletePreset = useCallback((presetId: string) => {
     setPresets((prev) => prev.filter((preset) => preset.id !== presetId));
 
-    const isCurrent = presetId === currentPresetId;
+    const isCurrentPreset = presetId === currentPresetId;
 
-    if (isCurrent) {
-      const presetToSet = getAdjacentPreset(presets, presetId);
-      setCurrentPreset(presetToSet);
+    if (isCurrentPreset) {
+      const replacementPreset = getAdjacentPreset(presets, presetId);
+      setCurrentPreset(replacementPreset);
     }
   }, [presets, currentPresetId, setPresets, setCurrentPreset]);
 
@@ -117,7 +112,7 @@ export function usePresets({
     }));
   }, [updateCurrentPreset]);
 
-  const detachGeneratorFromPresets = useCallback((generatorToRemove: string) => {
+  const removeGeneratorFromPresets = useCallback((generatorToRemove: string) => {
     setPresets((prevPresets) =>
       prevPresets.map((preset) => {
         const hasFieldWithGenerator = preset.fields
@@ -159,7 +154,7 @@ export function usePresets({
     createPreset();
   }, [presets, currentPreset, presetsById, lastPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
-  const isDuplicatedPresetName = useCallback((name: string, presetId?: string) => (
+  const isPresetNameTaken = useCallback((name: string, presetId?: string) => (
     presets.some((preset) => preset.name === name && preset.id !== presetId)
   ), [presets])
 
@@ -171,8 +166,8 @@ export function usePresets({
     updateCurrentPreset,
     updateCurrentPresetName,
     updateCurrentPresetFields,
-    detachGeneratorFromPresets,
-    isDuplicatedPresetName,
+    removeGeneratorFromPresets,
+    isPresetNameTaken,
     deletePreset,
     setPresets,
   };

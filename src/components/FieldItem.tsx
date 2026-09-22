@@ -26,22 +26,22 @@ import type { GeneratorValue } from "@/lib/generator";
 
 interface FieldItemProps {
   field: FieldConfig;
-  value: GeneratorValue;
+  generatedValue: GeneratorValue;
   error: FieldError | undefined;
-  onRemove: (fieldId: string) => void;
-  onUpdate: (fieldId: string, newValue: FieldConfig) => void;
-  onRegenerateValue: (fieldId: string) => void;
-  onCopyValue: (value: string) => void;
+  onRemoveField: (fieldId: string) => void;
+  onUpdateField: (fieldId: string, newValue: FieldConfig) => void;
+  onRegenerateFieldValue: (fieldId: string) => void;
+  onCopyGeneratedValue: (generatedValue: string) => void;
 }
 
 function FieldItemComponent({
   field,
-  value,
+  generatedValue,
   error,
-  onRemove,
-  onUpdate,
-  onCopyValue,
-  onRegenerateValue,
+  onRemoveField,
+  onUpdateField,
+  onCopyGeneratedValue,
+  onRegenerateFieldValue,
 }: FieldItemProps) {
   const { t } = useTranslation();
   const {
@@ -53,24 +53,24 @@ function FieldItemComponent({
   const fieldOptionsPopoverRef = useRef<FieldSetupPopoverRef>(null);
 
   const selectedMethod = catalogMethodsByKey.get(field.generator) ?? null;
-  const hasValue = value !== undefined;
+  const hasGeneratedValue = generatedValue !== undefined;
 
   const handleUpdateField = (
-    key: keyof FieldConfig,
+    propertyKey: keyof FieldConfig,
     newValue: string | undefined,
   ) => {
     if (!newValue) return;
 
-    onUpdate(field.id, {
+    onUpdateField(field.id, {
       ...field,
-      [key]: newValue,
+      [propertyKey]: newValue,
     });
   };
 
   const handleCreateCustomMethod = () => {
-    const newMethod = createCustomMethod();
+    const newCustomMethod = createCustomMethod();
 
-    handleUpdateField("generator", newMethod.key);
+    handleUpdateField("generator", newCustomMethod.key);
 
     fieldOptionsPopoverRef.current?.startEditing(EditorTabs.METHOD);
   };
@@ -103,7 +103,7 @@ function FieldItemComponent({
               {t("fieldsManager.form.generatorSelect.empty")}
             </ComboboxEmpty>
             <ComboboxList>
-              {(group: CatalogModule, index) => (
+              {(group: CatalogModule, groupIndex) => (
                 <ComboboxGroup
                   key={group.value}
                   items={group.items}
@@ -112,9 +112,9 @@ function FieldItemComponent({
                     {group.value}
                   </ComboboxLabel>
                   <ComboboxCollection>
-                    {(item: CatalogMethod) => item.key === CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
+                    {(method: CatalogMethod) => method.key === CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
                       <Button
-                        key={item.key}
+                        key={method.key}
                         variant="ghost"
                         size="sm"
                         className="w-full justify-between"
@@ -125,17 +125,17 @@ function FieldItemComponent({
                       </Button>
                       ) : (
                       <ComboboxItem
-                        key={item.key}
-                        value={item}
+                        key={method.key}
+                        value={method}
                       >
                         <span className="block truncate">
-                          {item.name}
+                          {method.name}
                         </span>
                       </ComboboxItem>
                     )}
                   </ComboboxCollection>
 
-                  {index < catalogOptions.length - 1 && <ComboboxSeparator />}
+                  {groupIndex < catalogOptions.length - 1 && <ComboboxSeparator />}
                 </ComboboxGroup>
               )}
             </ComboboxList>
@@ -154,7 +154,7 @@ function FieldItemComponent({
           variant="ghost"
           size="icon"
           className="hover:bg-destructive/10! hover:text-destructive"
-          onClick={() => onRemove(field.id)}
+          onClick={() => onRemoveField(field.id)}
         >
           <X size={IconSize.MD} />
         </Button>
@@ -167,23 +167,23 @@ function FieldItemComponent({
           </span>
           <InlineButton
             icon={RotateCcw}
-            onClick={() => onRegenerateValue(field.id)}
+            onClick={() => onRegenerateFieldValue(field.id)}
           />
         </div>
       )}
 
-      {hasValue && (
+      {hasGeneratedValue && (
         <div className={resultClasses}>
           <span className="truncate">
-            {String(value)}
+            {String(generatedValue)}
           </span>
           <InlineButton
             icon={RotateCcw}
-            onClick={() => onRegenerateValue(field.id)}
+            onClick={() => onRegenerateFieldValue(field.id)}
           />
           <InlineButton
             icon={Copy}
-            onClick={() => onCopyValue(String(value))}
+            onClick={() => onCopyGeneratedValue(String(generatedValue))}
           />
         </div>
       )}

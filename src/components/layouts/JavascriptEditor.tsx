@@ -49,10 +49,11 @@ function JavascriptEditorComponent(
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
   const { t } = useTranslation();
-  const { isDuplicatedMethodName } = useCatalog();
+  const { isMethodNameTaken } = useCatalog();
 
+  // TODO: Move to father component
   const getMethodNameErrorMessage = (draftName: string) =>
-    isDuplicatedMethodName(draftName, value.key)
+    isMethodNameTaken(draftName, value.key)
       ? t("customMethodManager.messages.duplicatedName")
       : ""
 

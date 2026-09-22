@@ -1,10 +1,10 @@
 import browser from "webextension-polyfill";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { debounce } from "@/lib/utils";
 import { STORAGE_CONFIG, StorageAreaNames, type StorageKeys } from "@/configs";
 
 export function usePersistentState<T>(
-  key: StorageKeys,
+  storageKey: StorageKeys,
   initialState: T,
   persistenceDelay = STORAGE_CONFIG.PERSISTENCE_DELAY_MS,
 ) {
@@ -18,13 +18,13 @@ export function usePersistentState<T>(
     let cancelled = false;
 
     browser.storage.local
-      .get(key)
+      .get(storageKey)
       .then((result) => {
         if (cancelled) return;
 
-        const value = result[key] as T | undefined;
+        const storedValue = result[storageKey] as T | undefined;
 
-        setState(value ?? initialState);
+        setState(storedValue ?? initialState);
         setHydrated(true);
       })
       .catch(() => {
@@ -37,15 +37,16 @@ export function usePersistentState<T>(
     return () => {
       cancelled = true;
     };
-  }, [key, initialState, hydrated]);
+  }, [storageKey, initialState, hydrated]);
 
   // Persist
-  const persist = useMemo(() =>
+  const persist = useRef(
     debounce((newState: T) => {
       browser.storage?.local.set({
-        [key]: newState,
+        [storageKey]: newState,
       });
-    }, persistenceDelay), [persistenceDelay, key]);
+    }, persistenceDelay)
+  ).current;
 
   useEffect(() => {
     if (!hydrated) return;
@@ -53,7 +54,7 @@ export function usePersistentState<T>(
     persist(state);
 
     return () => persist.cancel();
-  }, [key, state, hydrated, persist]);
+  }, [storageKey, state, hydrated, persist]);
 
   // Sync
   useEffect(() => {
@@ -63,7 +64,7 @@ export function usePersistentState<T>(
     ) => {
       if (areaName !== StorageAreaNames.LOCAL) return;
 
-      const change = changes[key];
+      const change = changes[storageKey];
 
       if (!change) return;
 
@@ -77,10 +78,10 @@ export function usePersistentState<T>(
     return () => {
       browser.storage?.onChanged.removeListener(handleStorageChange);
     };
-  }, [key, initialState]);
+  }, [storageKey, initialState]);
 
   const remove = async () => {
-    await browser.storage?.local.remove(key);
+    await browser.storage?.local.remove(storageKey);
     setState(initialState);
   };
 

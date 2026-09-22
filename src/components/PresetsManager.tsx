@@ -53,7 +53,7 @@ export function PresetsManager({
   onLoadFile,
 }: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
-  const [presetsToImport, setPresetsToImport] = useState<ParseImportExportResult | null>(null);
+  const [importPreview, setImportPreview] = useState<ParseImportExportResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
   const { importStrategy } = useAppSettings();
@@ -62,7 +62,7 @@ export function PresetsManager({
 
   const { t } = useTranslation();
 
-  const handleStartDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
+  const handleRequestDeletePreset = (event: MouseEvent<HTMLButtonElement>, preset: Preset) => {
     event.stopPropagation();
 
     setIsPresetSelectorOpen(false);
@@ -74,7 +74,7 @@ export function PresetsManager({
     setPresetToDelete(null);
   };
 
-  const handleLoadPresetsFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleLoadUploadedFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
@@ -93,13 +93,13 @@ export function PresetsManager({
       return;
     }
 
-    setPresetsToImport(loaded);
+    setImportPreview(loaded);
   };
 
-  const handleImportPresets = (imported: ParseJsonResult, strategy: ImportStrategy) => {
-    onImportPresets(imported, strategy);
+  const handleImportPresets = (importData: ParseJsonResult, importStrategy: ImportStrategy) => {
+    onImportPresets(importData, importStrategy);
 
-    setPresetsToImport(null);
+    setImportPreview(null);
   };
 
   return (
@@ -144,7 +144,7 @@ export function PresetsManager({
                     <button
                       className="absolute top-1/2 -translate-y-1/2 right-2 in-data-[selected]:right-8 opacity-0 in-data-[highlighted]:opacity-100 in-data-[highlighted]:hover:**:text-destructive! **:transition-colors"
                       type="button"
-                      onClick={(event) => handleStartDeletePreset(event, preset)}
+                      onClick={(event) => handleRequestDeletePreset(event, preset)}
                     >
                       <Trash />
                     </button>
@@ -197,12 +197,12 @@ export function PresetsManager({
         />
       )}
 
-      {presetsToImport && (
+      {importPreview && (
         <PresetsImportDialog
-          open={!!presetsToImport}
-          presetsToImport={presetsToImport}
+          open={!!importPreview}
+          importPreview={importPreview}
           onImport={handleImportPresets}
-          onOpenChange={() => setPresetsToImport(null)}
+          onOpenChange={() => setImportPreview(null)}
         />
       )}
 
@@ -211,7 +211,7 @@ export function PresetsManager({
         className="hidden"
         type="file"
         accept={IMPORT_CONFIG.FILE_TYPE}
-        onChange={handleLoadPresetsFile}
+        onChange={handleLoadUploadedFile}
       />
     </>
   );

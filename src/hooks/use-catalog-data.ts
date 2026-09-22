@@ -34,18 +34,18 @@ export interface CatalogData {
     updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
   ) => void;
   removeCustomMethod: (methodKey: string) => void;
-  getMethodUsageCount: (methodKey: string | undefined) => { presetsUseCount: number, fieldsUseCount: number } | undefined;
-  isDuplicatedMethodName: (label: string, methodKey: string | undefined) => boolean;
+  getMethodUsageCount: (methodKey: string | undefined) => { presetsUsageCount: number, fieldsUsageCount: number } | undefined;
+  isMethodNameTaken: (label: string, methodKey: string | undefined) => boolean;
 }
 
 interface UseCatalogDataArgs {
   presets: Preset[]
-  detachGeneratorFromPresets: (key: string) => void;
+  removeGeneratorFromPresets: (generatorKey: string) => void;
 }
 
 export function useCatalogData({
   presets,
-  detachGeneratorFromPresets
+  removeGeneratorFromPresets
 }: UseCatalogDataArgs) {
   const [customMethods, setCustomMethods] =
     usePersistentState<CatalogMethod[]>(StorageKeys.CUSTOM_METHODS, []);
@@ -85,27 +85,27 @@ export function useCatalogData({
   ), [customMethods]);
 
   const createCustomMethod = useCallback(() => {
-    const defaultName = t("configs.catalog.method.defaultName");
-    const nextCatalogName = createNextSequencedName<CatalogMethod>(
+    const defaultMethodName = t("configs.catalog.method.defaultName");
+    const nextMethodName = createNextSequencedName<CatalogMethod>(
       customMethods,
       "name",
-      defaultName,
+      defaultMethodName,
     );
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
       generateUniqueId: true,
       docUrl: `${APP_URL}/wiki/Custom-Methods`
     };
-    const newMethod = createCatalogMethod(
+    const newCustomMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-      nextCatalogName,
+      nextMethodName,
       undefined,
       newCustomMethodOptions,
     );
 
-    setCustomMethods((prev) => [...prev, newMethod]);
+    setCustomMethods((prev) => [...prev, newCustomMethod]);
 
-    return newMethod;
+    return newCustomMethod;
   }, [customMethods, t]);
 
   const updateCustomMethod = useCallback((
@@ -133,12 +133,12 @@ export function useCatalogData({
       prev.filter(method => method.key !== methodKey)
     );
 
-    detachGeneratorFromPresets(methodKey);
+    removeGeneratorFromPresets(methodKey);
   }, [setCustomMethods]);
 
   const getMethodUsageCount = useCallback((methodKey: string | undefined) => {
-    let fieldsUseCount = 0;
-    let presetsUseCount = 0;
+    let fieldsUsageCount = 0;
+    let presetsUsageCount = 0;
 
     if (!methodKey || !presets) return
 
@@ -152,15 +152,15 @@ export function useCatalogData({
       }
 
       if (fieldsInPreset > 0) {
-        fieldsUseCount += fieldsInPreset;
-        presetsUseCount += 1;
+        fieldsUsageCount += fieldsInPreset;
+        presetsUsageCount += 1;
       }
     }
 
-    return { fieldsUseCount, presetsUseCount };
+    return { fieldsUsageCount, presetsUsageCount };
   }, [presets]);
 
-  const isDuplicatedMethodName = useCallback((name: string, methodKey: string | undefined) => (
+  const isMethodNameTaken = useCallback((name: string, methodKey: string | undefined) => (
     customMethods.some((method) => method.name === name && method.key !== methodKey)
   ), [customMethods]);
 
@@ -174,7 +174,7 @@ export function useCatalogData({
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
-    isDuplicatedMethodName,
+    isMethodNameTaken,
   }
 }
 
