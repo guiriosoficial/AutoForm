@@ -24,15 +24,14 @@ import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
+import { type CatalogMethod, isValidCustomMethod } from "@/lib/catalog";
 import { EditorTabs, IconSize } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
-import type { CatalogMethod } from "@/lib/catalog";
 
 interface FieldSetupPopoverProps {
-  methodKey: string;
-  value: string | undefined;
-  docUrl?: string;
-  onChange: (value: string) => void;
+  method: CatalogMethod | null;
+  options: string | undefined;
+  onChangeOptions: (nextOptions: string) => void;
 }
 
 export interface FieldSetupPopoverRef {
@@ -41,57 +40,61 @@ export interface FieldSetupPopoverRef {
 
 function FieldSetupPopoverComponent(
   {
-    methodKey,
-    value,
-    docUrl,
-    onChange,
+    options,
+    method,
+    onChangeOptions,
   }: FieldSetupPopoverProps,
   ref: ForwardedRef<FieldSetupPopoverRef>
 ) {
   const [open, setOpen] = useState(false);
-  const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
+  const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
 
   const [jsonError, setJsonError] = useState<string | null>(null);
   const [javascriptError, setJavascriptError] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const {
-    customMethodsByKey,
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
   } = useCatalog()
   const { autoFormat } = useAppSettings()
 
-  const error = activeTab === EditorTabs.OPTIONS
-    ? jsonError
-    : javascriptError;
-
   const jsonEditorRef = useRef<JsonEditorRef>(null);
   const javascriptEditorRef = useRef<JavascriptEditorRef>(null);
 
-  const currentCustomMethod = customMethodsByKey.get(methodKey) ?? null;
-  const isCustomMethod = currentCustomMethod !== null;
-  const hasOptions = isPopulatedJson5(value);
+  const error = activeTab === EditorTabs.OPTIONS ? jsonError : javascriptError;
+  const customMethodUsageCount = getMethodUsageCount(method?.key)
+
+  const isCustomMethod = isValidCustomMethod(method)
+  const hasOptions = isPopulatedJson5(options);
 
   const handleChangeCustomMethod = <K extends keyof CatalogMethod>(
-    key: K,
-    newValue: CatalogMethod[K],
+    propertyKey: K,
+    nextValue: CatalogMethod[K],
   ) => {
-    if (!isCustomMethod || !newValue) return;
+    if (!isCustomMethod || !nextValue) return;
 
     updateCustomMethod(
-      currentCustomMethod?.key,
-      { [key]: newValue }
+      method.key,
+      { [propertyKey]: nextValue }
     )
   };
 
-  const handleConfirmDeleteMethod = (key: string) => {
-    removeCustomMethod(key);
+  const handleConfirmDeleteMethod = (methodKey: string) => {
+    removeCustomMethod(methodKey);
 
     setDeleteMethodAlertOpen(false);
     setOpen(false);
+  };
+
+  const handleFormatClick = () => {
+    const activeEditor = activeTab === EditorTabs.OPTIONS
+      ? jsonEditorRef
+      : javascriptEditorRef;
+
+    activeEditor.current?.format();
   };
 
   const handlePopoverOpenChange = (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
@@ -108,14 +111,6 @@ function FieldSetupPopoverComponent(
     }
 
     setOpen(isOpening);
-  };
-
-  const handleFormatClick = () => {
-    if (activeTab === EditorTabs.OPTIONS) {
-      jsonEditorRef.current?.format();
-    } else {
-      javascriptEditorRef.current?.format();
-    }
   };
 
   const startEditing = useCallback((tab: EditorTabs) => {
@@ -146,14 +141,9 @@ function FieldSetupPopoverComponent(
   );
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
-
-  const customMethodUsageCount = getMethodUsageCount(currentCustomMethod?.key)
-
   const deleteAlertDescription = [
-    customMethodUsageCount?.fieldsUsageCount
-      ? t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount)
-      : null,
-    t("fieldsManager.alerts.deleteCustomMethod.description", { name: currentCustomMethod?.name }),
+    !!customMethodUsageCount?.fieldsUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount),
+    t("fieldsManager.alerts.deleteCustomMethod.description", { name: method?.name }),
   ]
 
   return (
@@ -223,10 +213,10 @@ function FieldSetupPopoverComponent(
             <TabsContent value={EditorTabs.OPTIONS}>
               <JsonEditor
                 ref={jsonEditorRef}
-                value={value}
+                value={options}
                 hasOptions={hasOptions}
                 className={editorClasses}
-                onChange={onChange}
+                onChange={onChangeOptions}
                 onErrorChange={setJsonError}
               />
             </TabsContent>
@@ -235,7 +225,7 @@ function FieldSetupPopoverComponent(
               <TabsContent value={EditorTabs.METHOD}>
                 <JavascriptEditor
                   ref={javascriptEditorRef}
-                  value={currentCustomMethod}
+                  value={method}
                   className={editorClasses}
                   onChange={handleChangeCustomMethod}
                   onErrorChange={setJavascriptError}
@@ -247,9 +237,9 @@ function FieldSetupPopoverComponent(
           <PopoverDescription className={descriptionClasses}>
             {descriptionText}
 
-            {docUrl && (
+            {method && (
               <a
-                href={docUrl}
+                href={method.docs}
                 target="_blank"
                 rel="noreferrer"
                 className={buttonVariants({ variant: "link", size: "xs" })}
@@ -267,7 +257,7 @@ function FieldSetupPopoverComponent(
           destructive
           open={deleteMethodAlertOpen}
           description={deleteAlertDescription}
-          onConfirm={() => handleConfirmDeleteMethod(currentCustomMethod.key)}
+          onConfirm={() => handleConfirmDeleteMethod(method.key)}
           onCancel={() => setDeleteMethodAlertOpen(false)}
         />
       )}

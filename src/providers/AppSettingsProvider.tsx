@@ -105,7 +105,7 @@ export function AppSettingsProvider({
     i18n.changeLanguage(language);
   }, [language]);
 
-  const value = useMemo(() => ({
+  const contextValue = useMemo(() => ({
     theme,
     setTheme,
     importStrategy,
@@ -128,7 +128,7 @@ export function AppSettingsProvider({
   ]);
 
   return (
-    <AppSettingsProviderContext value={value}>
+    <AppSettingsProviderContext value={contextValue}>
       {children}
     </AppSettingsProviderContext>
   );

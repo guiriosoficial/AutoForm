@@ -20,7 +20,7 @@ import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { createLocaleDisplayNames, getLocaleDisplayName } from "@/lib/locale";
+import { getLocaleDisplayNamesMap } from "@/lib/locale";
 import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
 import { Catalogs, ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
 
@@ -44,36 +44,42 @@ export function PreferencesView() {
     setAvailableCatalogs,
   } = useAppSettings();
 
-  const displayNames = useMemo(() => createLocaleDisplayNames(i18n.language), [i18n.language]);
+  const localeDisplayNamesMap = useMemo(() =>
+    getLocaleDisplayNamesMap(i18n.language, Object.values(Locale)
+    ), [i18n.language])
 
-  const localeDisplayName = (itemLocale: string) => getLocaleDisplayName(itemLocale, displayNames);
+  const getLocaleDisplayName = (locale: string) => {
+    const displayName = localeDisplayNamesMap.get(locale) ?? locale;
 
-  const handleChangeTheme = (newTheme: string[]) => {
-    if (newTheme.length === 0) return;
-
-    setTheme(newTheme[0] as Theme);
+    return toTitleCase(displayName)
   };
 
-  const handleChangeImportStrategy = (newStrategy: string[]) => {
-    if (newStrategy.length === 0) return;
+  const handleChangeTheme = (nextTheme: string[]) => {
+    if (nextTheme.length === 0) return;
 
-    setImportStrategy(newStrategy[0] as ImportStrategy);
+    setTheme(nextTheme[0] as Theme);
   };
 
-  const handleChangeAvailableCatalogs = (newCatalogs: string[]) => {
-    setAvailableCatalogs(newCatalogs as Catalogs[]);
+  const handleChangeImportStrategy = (nextStrategy: string[]) => {
+    if (nextStrategy.length === 0) return;
+
+    setImportStrategy(nextStrategy[0] as ImportStrategy);
   };
 
-  const handleChangeLocale = (newLocale: string | null) => {
-    if (!newLocale) return;
-
-    setLocale(newLocale as Locale);
+  const handleChangeAvailableCatalogs = (nextCatalogs: string[]) => {
+    setAvailableCatalogs(nextCatalogs as Catalogs[]);
   };
 
-  const handleChangeLanguage = (newLanguage: string | null) => {
-    if (!newLanguage) return;
+  const handleChangeLocale = (nextLocale: string | null) => {
+    if (!nextLocale) return;
 
-    setLanguage(newLanguage as Language);
+    setLocale(nextLocale as Locale);
+  };
+
+  const handleChangeLanguage = (nextLanguage: string | null) => {
+    if (!nextLanguage) return;
+
+    setLanguage(nextLanguage as Language);
   };
 
   return (
@@ -147,12 +153,12 @@ export function PreferencesView() {
                 variant="outline"
                 onValueChange={handleChangeAvailableCatalogs}
               >
-                {Object.values(Catalogs).map((catalog) => (
+                {Object.values(Catalogs).map((itemCatalog) => (
                   <ToggleGroupItem
-                    key={catalog}
-                    value={catalog}
+                    key={itemCatalog}
+                    value={itemCatalog}
                   >
-                    {toTitleCase(catalog)}
+                    {toTitleCase(itemCatalog)}
                   </ToggleGroupItem>
                 ))}
               </ToggleGroup>
@@ -184,7 +190,7 @@ export function PreferencesView() {
               <Combobox
                 value={locale}
                 items={Object.values(Locale)}
-                itemToStringLabel={(value) => toTitleCase(localeDisplayName(value))}
+                itemToStringLabel={getLocaleDisplayName}
                 onValueChange={handleChangeLocale}
               >
                 <ComboboxInput
@@ -201,9 +207,8 @@ export function PreferencesView() {
                       <ComboboxItem
                         key={itemLocale}
                         value={itemLocale}
-                        className="capitalize"
                       >
-                        {localeDisplayName(itemLocale)}
+                        {getLocaleDisplayName(itemLocale)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>
@@ -218,7 +223,7 @@ export function PreferencesView() {
               <Combobox
                 value={language}
                 items={Object.values(Language)}
-                itemToStringLabel={(value) => toTitleCase(localeDisplayName(value))}
+                itemToStringLabel={getLocaleDisplayName}
                 onValueChange={handleChangeLanguage}
               >
                 <ComboboxInput
@@ -235,9 +240,8 @@ export function PreferencesView() {
                       <ComboboxItem
                         key={itemLanguage}
                         value={itemLanguage}
-                        className="capitalize"
                       >
-                        {localeDisplayName(itemLanguage)}
+                        {getLocaleDisplayName(itemLanguage)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>

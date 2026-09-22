@@ -8,4 +8,4 @@ export type Theme = (typeof Theme)[keyof typeof Theme];
 
 export const THEME_CONFIG = {
   DEFAULT: Theme.SYSTEM,
-};
+} as const;

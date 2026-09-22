@@ -14,4 +14,4 @@ export const CATALOG_CONFIG = {
   CUSTOM_NEW_METHOD_NAME,
   CUSTOM_NEW_METHOD_KEY: `${CUSTOM_MODULE_NAME}.${CUSTOM_NEW_METHOD_NAME}`,
   DEFAULT_AVAILABLE: Object.values(Catalogs),
-};
+} as const;

@@ -16,7 +16,7 @@ import type { KeyboardEvent } from "react";
 interface AlertDialogProps {
   open: boolean;
   title?: string;
-  description?: string | (string | null)[];
+  description?: string | (string | null | false)[];
   confirmButtonText?: string;
   cancelButtonText?: string;
   destructive?: boolean;
@@ -38,7 +38,9 @@ export function AlertDialog({
 }: AlertDialogProps) {
   const { t } = useTranslation();
 
-  const descriptionArray = isArray(description) ? description : [description];
+  const descriptionArray = isArray(description)
+    ? description.filter(Boolean)
+    : [description];
 
   const translatedTitle = title ?? t("defaults.alert.title");
   const translatedDescription = description ? descriptionArray : [t("defaults.alert.description")];

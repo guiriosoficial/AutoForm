@@ -22,13 +22,13 @@ export function NavigationProvider({
 }: NavigationProviderProps) {
   const [activePage, setActivePage] = useState<Page>(PAGE_CONFIG.DEFAULT);
 
-  const value = useMemo(() => ({
+  const contextValue = useMemo(() => ({
     activePage,
     setActivePage,
   }), [activePage]);
 
   return (
-    <NavigationProviderContext value={value}>
+    <NavigationProviderContext value={contextValue}>
       {children}
     </NavigationProviderContext>
   );

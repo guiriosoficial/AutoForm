@@ -11,7 +11,7 @@ interface FieldsManagerProps {
   fields: FieldConfig[];
   onAddField: () => void;
   onRemoveField: (fieldId: string) => void;
-  onUpdateField: (fieldId: string, updatedField: FieldConfig) => void;
+  onUpdateField: (fieldId: string, nextField: FieldConfig) => void;
   onRegenerateFieldValue: (fieldId: string) => void;
   onCopyGeneratedValue: (generatedValue: string) => void;
 }
@@ -33,8 +33,8 @@ export function FieldsManager({
         <FieldItem
           key={field.id}
           field={field}
-          generatedValue={generatedValues[field.id]?.value}
           error={generatedValues[field.id]?.error}
+          generatedValue={generatedValues[field.id]?.value}
           onUpdateField={onUpdateField}
           onRemoveField={onRemoveField}
           onCopyGeneratedValue={onCopyGeneratedValue}

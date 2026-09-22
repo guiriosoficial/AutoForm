@@ -32,7 +32,7 @@ function getLocaleFlagEmoji(locale: string): string {
   }
 }
 
-export function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayNames | undefined {
+function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayNames | undefined {
   try {
     return new Intl.DisplayNames([toLocaleTag(currentLanguage)], { type: "language" });
   } catch {
@@ -40,21 +40,28 @@ export function createLocaleDisplayNames(currentLanguage: string): Intl.DisplayN
   }
 }
 
-export function getLocaleDisplayName(
-  locale: string,
-  displayNames: Intl.DisplayNames | undefined,
-): string {
-  const tag = toLocaleTag(locale);
-  const flag = getLocaleFlagEmoji(locale);
-  let name = tag;
+export function getLocaleDisplayNamesMap(
+  currentLanguage: string,
+  locales: string[],
+): Map<string, string> {
+  const map = new Map<string, string>();
+  const displayNames = createLocaleDisplayNames(currentLanguage);
 
-  if (displayNames) {
-    try {
-      name = displayNames.of(tag) ?? tag;
-    } catch {
-      name = tag;
+  for (const locale of locales) {
+    const tag = toLocaleTag(locale);
+    const flag = getLocaleFlagEmoji(locale);
+
+    let name = tag;
+    if (displayNames) {
+      try {
+        name = displayNames.of(tag) ?? tag;
+      } catch {
+        name = tag;
+      }
     }
+
+    map.set(locale, flag ? `${flag} ${name}` : name);
   }
 
-  return flag ? `${flag} ${name}` : name;
+  return map;
 }

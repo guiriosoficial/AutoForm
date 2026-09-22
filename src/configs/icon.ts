@@ -7,4 +7,4 @@ export type IconSize = (typeof IconSize)[keyof typeof IconSize];
 
 export const ICON_CONFIG = {
   DEFAULT_SIZE: IconSize.SM
-};
+} as const;

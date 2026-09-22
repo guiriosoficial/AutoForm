@@ -37,9 +37,9 @@ interface PresetsManagerProps {
   onSelectPreset: (preset: Preset | null) => void;
   onCreatePreset: () => void;
   onDeletePreset: (presetId: string) => void;
-  onExportPresets: () => void;
-  onImportPresets: (imported: ParseJsonResult, strategy?: ImportStrategy) => void;
-  onLoadFile: (json: string) => ParseImportExportResult | undefined;
+  onExportData: () => void;
+  onImportData: (parsedData: ParseJsonResult, importStrategy?: ImportStrategy) => void;
+  onLoadDataFile: (jsonFile: string) => ParseImportExportResult | undefined;
 }
 
 export function PresetsManager({
@@ -48,9 +48,9 @@ export function PresetsManager({
   onSelectPreset,
   onCreatePreset,
   onDeletePreset,
-  onExportPresets,
-  onImportPresets,
-  onLoadFile,
+  onExportData,
+  onImportData,
+  onLoadDataFile,
 }: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
   const [importPreview, setImportPreview] = useState<ParseImportExportResult | null>(null);
@@ -74,32 +74,33 @@ export function PresetsManager({
     setPresetToDelete(null);
   };
 
-  const handleLoadUploadedFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const importData = (parsedData: ParseJsonResult, importStrategy: ImportStrategy) => {
+    onImportData(parsedData, importStrategy);
+
+    setImportPreview(null);
+  };
+
+  const processUploadedFile = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
     const json = await file.text();
 
-    const loaded = onLoadFile(json);
+    const loaded = onLoadDataFile(json);
 
     if (!loaded) return;
 
-    if (
+    const shouldSkipConfirmation =
       presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
       importStrategy !== ImportStrategy.ALWAYS_ASK
-    ) {
-      onImportPresets(loaded.parsed, importStrategy);
+
+    if (shouldSkipConfirmation) {
+      onImportData(loaded.parsed, importStrategy);
       return;
     }
 
     setImportPreview(loaded);
-  };
-
-  const handleImportPresets = (importData: ParseJsonResult, importStrategy: ImportStrategy) => {
-    onImportPresets(importData, importStrategy);
-
-    setImportPreview(null);
   };
 
   return (
@@ -176,7 +177,7 @@ export function PresetsManager({
           }
         />
         <DropdownMenuContent onKeyDown={preventDefaultEscape}>
-          <DropdownMenuItem onClick={onExportPresets}>
+          <DropdownMenuItem onClick={onExportData}>
             <Download />
             {t("presetsManager.buttons.export")}
           </DropdownMenuItem>
@@ -201,7 +202,7 @@ export function PresetsManager({
         <PresetsImportDialog
           open={!!importPreview}
           importPreview={importPreview}
-          onImport={handleImportPresets}
+          onImport={importData}
           onOpenChange={() => setImportPreview(null)}
         />
       )}
@@ -211,7 +212,7 @@ export function PresetsManager({
         className="hidden"
         type="file"
         accept={IMPORT_CONFIG.FILE_TYPE}
-        onChange={handleLoadUploadedFile}
+        onChange={processUploadedFile}
       />
     </>
   );

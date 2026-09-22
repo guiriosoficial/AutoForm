@@ -14,4 +14,4 @@ export type Locale = (typeof Locale)[keyof typeof Locale];
 
 export const LOCALE_CONFIG = {
   DEFAULT: Locale.EN,
-};
+} as const;

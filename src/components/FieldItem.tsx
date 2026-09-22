@@ -26,18 +26,18 @@ import type { GeneratorValue } from "@/lib/generator";
 
 interface FieldItemProps {
   field: FieldConfig;
-  generatedValue: GeneratorValue;
   error: FieldError | undefined;
+  generatedValue: GeneratorValue;
   onRemoveField: (fieldId: string) => void;
-  onUpdateField: (fieldId: string, newValue: FieldConfig) => void;
+  onUpdateField: (fieldId: string, nextField: FieldConfig) => void;
   onRegenerateFieldValue: (fieldId: string) => void;
   onCopyGeneratedValue: (generatedValue: string) => void;
 }
 
 function FieldItemComponent({
   field,
-  generatedValue,
   error,
+  generatedValue,
   onRemoveField,
   onUpdateField,
   onCopyGeneratedValue,
@@ -57,13 +57,13 @@ function FieldItemComponent({
 
   const handleUpdateField = (
     propertyKey: keyof FieldConfig,
-    newValue: string | undefined,
+    nextValue: string | undefined,
   ) => {
-    if (!newValue) return;
+    if (!nextValue) return;
 
     onUpdateField(field.id, {
       ...field,
-      [propertyKey]: newValue,
+      [propertyKey]: nextValue,
     });
   };
 
@@ -90,9 +90,9 @@ function FieldItemComponent({
         <Combobox
           items={catalogOptions}
           value={selectedMethod}
-          onValueChange={(newValue) => handleUpdateField("generator", newValue?.key)}
-          itemToStringLabel={(item) => item.name}
-          itemToStringValue={(item) => item.key}
+          onValueChange={(nextGenerator) => handleUpdateField("generator", nextGenerator?.key)}
+          itemToStringLabel={(method) => method.name}
+          itemToStringValue={(method) => method.key}
         >
           <ComboboxInput
             placeholder={t("fieldsManager.form.generatorSelect.placeholder")}
@@ -103,13 +103,13 @@ function FieldItemComponent({
               {t("fieldsManager.form.generatorSelect.empty")}
             </ComboboxEmpty>
             <ComboboxList>
-              {(group: CatalogModule, groupIndex) => (
+              {(module: CatalogModule, moduleIndex) => (
                 <ComboboxGroup
-                  key={group.value}
-                  items={group.items}
+                  key={module.value}
+                  items={module.items}
                 >
                   <ComboboxLabel>
-                    {group.value}
+                    {module.value}
                   </ComboboxLabel>
                   <ComboboxCollection>
                     {(method: CatalogMethod) => method.key === CATALOG_CONFIG.CUSTOM_NEW_METHOD_KEY ? (
@@ -135,7 +135,7 @@ function FieldItemComponent({
                     )}
                   </ComboboxCollection>
 
-                  {groupIndex < catalogOptions.length - 1 && <ComboboxSeparator />}
+                  {moduleIndex < catalogOptions.length - 1 && <ComboboxSeparator />}
                 </ComboboxGroup>
               )}
             </ComboboxList>
@@ -144,10 +144,9 @@ function FieldItemComponent({
 
         <FieldSetupPopover
           ref={fieldOptionsPopoverRef}
-          value={field.options}
-          methodKey={field.generator}
-          docUrl={selectedMethod?.docs}
-          onChange={(newValue) => handleUpdateField("options", newValue)}
+          options={field.options}
+          method={selectedMethod}
+          onChangeOptions={(nextOptions) => handleUpdateField("options", nextOptions)}
         />
 
         <Button

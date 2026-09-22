@@ -23,18 +23,18 @@ import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-impor
 interface PresetsImportDialogProps {
   open: boolean;
   importPreview: ParseImportExportResult;
+  onImport: (parsedData: ParseJsonResult, importStrategy: ImportStrategy) => void;
   onOpenChange: (open: boolean) => void;
-  onImport: (importedData: ParseJsonResult, importStrategy: ImportStrategy) => void;
 }
 
 const importStrategyOptions = Object.values(ImportStrategy)
-  .filter(strategy => strategy !== ImportStrategy.ALWAYS_ASK);
+  .filter((strategy) => strategy !== ImportStrategy.ALWAYS_ASK);
 
 export function PresetsImportDialog({
   open,
   importPreview,
-  onOpenChange,
   onImport,
+  onOpenChange,
 }: PresetsImportDialogProps) {
   const [importStrategy, setImportStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
@@ -42,16 +42,16 @@ export function PresetsImportDialog({
 
   const { parsed, duplicatedPresets } = importPreview;
 
+  const handleChangeImportStrategy = (nextStrategy: string[]) => {
+    if (nextStrategy.length === 0) return;
+
+    setImportStrategy(nextStrategy[0] as ImportStrategy);
+  };
+
   const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicatedPresets.length,
     total: parsed.presets.length,
   });
-
-  const handleChangeImportStrategy = (newStrategy: string[]) => {
-    if (newStrategy.length === 0) return;
-
-    setImportStrategy(newStrategy[0] as ImportStrategy);
-  };
 
   return (
     <Dialog
@@ -124,7 +124,7 @@ export function PresetsImportDialog({
               </Button>
             }
           />
-          <Button onClick={() => onImport(importPreview.parsed, importStrategy)}>
+          <Button onClick={() => onImport(parsed, importStrategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>

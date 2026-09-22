@@ -56,10 +56,12 @@ function InlineInputComponent (
   const hasErrorRef = useRef(hasError);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const deferPredicatedShowError = useRef(deferPredicate(() => {
-    if (!hasErrorRef.current || !errorMessageRef.current) return;
-    toast.error(errorMessageRef.current);
-  }, EDITOR_CONFIG.ERROR_DELAY_MS)).current;
+  const deferPredicatedShowError = useRef(
+    deferPredicate(() => {
+      if (!hasErrorRef.current || !errorMessageRef.current) return;
+      toast.error(errorMessageRef.current);
+    }, EDITOR_CONFIG.ERROR_DELAY_MS)
+  ).current;
 
   useEffect(() => {
     hasErrorRef.current = hasError;
@@ -75,34 +77,18 @@ function InlineInputComponent (
 
     const input = inputRef.current;
 
-    input?.focus();
-
     const frame = requestAnimationFrame(() => {
+      input?.focus();
       input?.select();
     });
 
     return () => cancelAnimationFrame(frame);
   }, [isEditing]);
 
-  const handleInputChange = (rawValue: string) => {
-    const nextValue = transform ? transform(rawValue) : rawValue;
-    setDraft(nextValue);
-  };
-
-  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
-    event?.preventDefault();
-
-    const nextValue = hasError ? value : draft.trim();
-
-    setIsEditing(false);
-
-    if (!nextValue || nextValue === value) {
-      setDraft(value);
-      return;
-    }
-
-    onSave(nextValue);
-  };
+  const startEditing = useCallback(() => {
+    setDraft(value);
+    setIsEditing(true);
+  }, [value]);
 
   const cancelEditing = (event?: MouseEvent) => {
     event?.preventDefault();
@@ -111,10 +97,27 @@ function InlineInputComponent (
     setIsEditing(false);
   };
 
-  const startEditing = useCallback(() => {
-    setDraft(value);
-    setIsEditing(true);
-  }, [value]);
+  const confirmEditing = (event?: MouseEvent | FocusEvent) => {
+    event?.preventDefault();
+
+    const nextValue = hasError ? value : draft.trim();
+
+    if (!nextValue || nextValue === value) {
+      cancelEditing();
+      return;
+    }
+
+    onSave(nextValue);
+    setIsEditing(false);
+  };
+
+  const handleInputChange = (rawValue: string) => {
+    const nextValue = transform
+      ? transform(rawValue)
+      : rawValue;
+
+    setDraft(nextValue);
+  };
 
   const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
@@ -136,6 +139,8 @@ function InlineInputComponent (
     startEditing,
   }), [startEditing])
 
+  const previewContainerClasses = cn("group", className)
+  const inputContainerClasses = cn("flex gap-1", className)
   const inputClasses = cn(
     "flex-1 pr-1 outline-none",
     hasError && "text-destructive"
@@ -143,7 +148,7 @@ function InlineInputComponent (
 
   if (isEditing) {
     return (
-      <div className={cn("flex gap-1", className)}>
+      <div className={inputContainerClasses}>
         <input
           ref={inputRef}
           value={draft}
@@ -176,7 +181,7 @@ function InlineInputComponent (
 
   return (
     <p
-      className={cn("group", className)}
+      className={previewContainerClasses}
       onClick={startEditing}
     >
       {restantWords}{" "}

@@ -100,9 +100,9 @@ export function HomeView() {
             onSelectPreset={setCurrentPreset}
             onCreatePreset={createPreset}
             onDeletePreset={deletePreset}
-            onExportPresets={exportData}
-            onImportPresets={importData}
-            onLoadFile={parseData}
+            onExportData={exportData}
+            onImportData={importData}
+            onLoadDataFile={parseData}
           />
         </CardContent>
       </Card>
