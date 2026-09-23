@@ -96,7 +96,7 @@ function OptionsEditorComponent (
 
   useImperativeHandle(ref, () => ({
     format,
-  }), [format])
+  }), [format]);
 
   const editorExtensions = useMemo(() => [
     json5(),

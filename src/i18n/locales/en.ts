@@ -140,9 +140,9 @@ export const enTranslations = {
       exportPreset: {
         failed: "Failed to export presets",
       },
-      changeName:{
+      changeName: {
         duplicated: "Preset name already exists",
-      }
+      },
     },
   },
   fieldsManager: {
@@ -191,14 +191,14 @@ export const enTranslations = {
     form: {
       nameInput: {
         placeholder: "Method name",
-      }
+      },
     },
     messages: {
       duplicatedName: "Method name already exists",
       notSingleExpression: "The code must contain a single expression",
       notArrowFunction: "The code must be an arrow function",
       missingReturnStatement: "The function must contain a 'return' statement",
-    }
+    },
   },
   footer: {
     buttons: {

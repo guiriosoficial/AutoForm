@@ -13,7 +13,7 @@ export function Header() {
   const navigationItems = Object.values(Page).filter((page) => page !== activePage);
 
   const handleNavigate = (nextPage: Page) => {
-    const url = new URL(nextPage)
+    const url = new URL(nextPage);
 
     if (url.protocol === PAGE_CONFIG.EXTERNAL_URL_PROTOCOL) {
       window.open(nextPage, "_blank", "noreferrer");

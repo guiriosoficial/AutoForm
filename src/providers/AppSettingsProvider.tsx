@@ -56,13 +56,21 @@ export const AppSettingsProviderContext =
 export function AppSettingsProvider({
   children,
 }: AppSettingsProviderProps) {
-  const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
-    StorageKeys.AVAILABLE_CATALOGS,
-    CATALOG_CONFIG.DEFAULT_AVAILABLE
-  )
+  const [theme, setTheme] = usePersistentState<Theme>(
+    StorageKeys.THEME,
+    THEME_CONFIG.DEFAULT,
+  );
   const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(
     StorageKeys.IMPORT_STRATEGY,
     IMPORT_CONFIG.STRATEGY_DEFAULT,
+  );
+  const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
+    StorageKeys.AVAILABLE_CATALOGS,
+    CATALOG_CONFIG.DEFAULT_AVAILABLE,
+  );
+  const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
+    StorageKeys.AUTO_FORMAT,
+    EDITOR_CONFIG.DEFAULT_AUTO_FORMAT,
   );
   const [language, setLanguage] = usePersistentState<Language>(
     StorageKeys.LANGUAGE,
@@ -72,14 +80,6 @@ export function AppSettingsProvider({
     StorageKeys.LOCALE,
     LOCALE_CONFIG.DEFAULT,
   );
-  const [theme, setTheme] = usePersistentState<Theme>(
-    StorageKeys.THEME,
-    THEME_CONFIG.DEFAULT,
-  );
-  const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
-    StorageKeys.AUTO_FORMAT,
-    EDITOR_CONFIG.DEFAULT_AUTO_FORMAT
-  )
 
   useEffect(() => {
     const root = globalThis.document.documentElement;
@@ -110,21 +110,21 @@ export function AppSettingsProvider({
     setTheme,
     importStrategy,
     setImportStrategy,
+    availableCatalogs,
+    setAvailableCatalogs,
+    autoFormat,
+    setAutoFormat,
     language,
     setLanguage,
     locale,
     setLocale,
-    availableCatalogs,
-    setAvailableCatalogs,
-    autoFormat,
-    setAutoFormat
   }), [
     theme,
     importStrategy,
-    autoFormat,
     availableCatalogs,
+    autoFormat,
     language,
-    locale
+    locale,
   ]);
 
   return (

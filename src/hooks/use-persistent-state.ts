@@ -45,7 +45,7 @@ export function usePersistentState<T>(
       browser.storage?.local.set({
         [storageKey]: nextState,
       });
-    }, persistenceDelay)
+    }, persistenceDelay),
   ).current;
 
   useEffect(() => {

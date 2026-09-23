@@ -6,7 +6,7 @@ export function toTitleCase(str: string) {
 }
 
 export function removeSpaces(str: string) {
-  return str.replaceAll(/\s/ug, "")
+  return str.replaceAll(/\s/gu, "");
 }
 
 export function createNextSequencedName<T extends object>(

@@ -59,7 +59,7 @@ export function HomeView() {
     setPresets,
     customMethods,
     setCustomMethods,
-  })
+  });
 
   const currentFields = currentPreset?.fields ?? [];
   const currentPresetId = currentPreset?.id ?? "";
@@ -83,7 +83,7 @@ export function HomeView() {
   const getPresetNameErrorMessage = (name: string) =>
     isPresetNameTaken(name, currentPreset?.id)
       ? t("presetsManager.messages.changeName.duplicated")
-      : ""
+      : "";
 
   return (
     <>

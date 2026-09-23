@@ -190,6 +190,6 @@ function FieldItemComponent({
   );
 }
 
-export const FieldItem = memo(FieldItemComponent)
+export const FieldItem = memo(FieldItemComponent);
 
 FieldItem.displayName = "FieldItem";

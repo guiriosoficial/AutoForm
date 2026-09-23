@@ -17,7 +17,7 @@ interface UseFormArgs {
   presetId: string;
   fields: FieldConfig[];
   updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
-  catalogMethodsByKey: Map<string, CatalogMethod>
+  catalogMethodsByKey: Map<string, CatalogMethod>;
 }
 
 export type GeneratedValuesJson = Record<string, GeneratorValue>;
@@ -28,7 +28,7 @@ export function useForm({
   presetId,
   fields,
   updateFields,
-  catalogMethodsByKey
+  catalogMethodsByKey,
 }: UseFormArgs) {
   const { t } = useTranslation();
 
@@ -113,7 +113,7 @@ export function useForm({
 
     if (!generatedValue) return;
 
-    setGeneratedValues(prev => ({
+    setGeneratedValues((prev) => ({
       ...prev,
       [fieldId]: createFieldResult.value(generatedValue),
     }));
@@ -130,7 +130,7 @@ export function useForm({
   }, [t]);
 
   useEffect(() => {
-    if (presetId && fields.length === 0) addField()
+    if (presetId && fields.length === 0) addField();
   }, [fields, presetId, addField]);
 
   const copyFieldsAsJSON = useCallback(async () => {

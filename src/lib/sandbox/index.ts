@@ -39,7 +39,7 @@ export function executeInSandbox<T = unknown>(
         action: MessageAction.EXECUTE_IN_SANDBOX,
         id,
         code,
-        scope
+        scope,
       }, "*");
     };
 

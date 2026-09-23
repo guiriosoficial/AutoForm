@@ -87,7 +87,7 @@ export function PresetsManager({
 
     const shouldSkipConfirmation =
       presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
-      importStrategy !== ImportStrategy.ALWAYS_ASK
+      importStrategy !== ImportStrategy.ALWAYS_ASK;
 
     if (shouldSkipConfirmation) {
       onImportData(parseResult.parsedData, importStrategy);
@@ -97,7 +97,10 @@ export function PresetsManager({
     setImportPreview(parseResult);
   };
 
-  const handleConfirmImportData = (importPayload: ImportPayload, importStrategySelected: ImportStrategy) => {
+  const handleConfirmImportData = (
+    importPayload: ImportPayload,
+    importStrategySelected: ImportStrategy,
+  ) => {
     onImportData(importPayload, importStrategySelected);
 
     setImportPreview(null);

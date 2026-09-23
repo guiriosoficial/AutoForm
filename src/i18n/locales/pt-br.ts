@@ -142,7 +142,7 @@ export const ptBrTranslations = {
       exportPreset: {
         failed: "Falha ao exportar presets",
       },
-      changeName:{
+      changeName: {
         duplicated: "Nome do preset duplicado",
       },
     },
@@ -165,7 +165,7 @@ export const ptBrTranslations = {
     },
     alerts: {
       deleteCustomMethod: {
-        description: 'Tem certeza que deseja apagar o gerador customizado "{{ name }}"?',
+        description: "Tem certeza que deseja apagar o gerador customizado \"{{ name }}\"?",
         usesCounter: "Este método está sendo usado em $t(globals.fields, { 'count': fieldUsageCount }) em $t(globals.presets, { 'count': presetUsageCount }) e será removido de todos eles."
       },
     },
@@ -193,14 +193,14 @@ export const ptBrTranslations = {
     form: {
       nameInput: {
         placeholder: "Nome do método",
-      }
+      },
     },
     messages: {
       duplicatedName: "Method name already exists",
       notSingleExpression: "O código deve conter uma única expressão",
       notArrowFunction: "O código deve ser uma arrow function",
       missingReturnStatement: "TA função deve conter uma instrução 'return'",
-    }
+    },
   },
   footer: {
     buttons: {

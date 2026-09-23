@@ -75,7 +75,6 @@ export function isValidCustomMethodArray(value: unknown): value is CatalogMethod
   );
 }
 
-
 export const newCustomMethodOption = createCatalogMethod(
   CATALOG_CONFIG.CUSTOM_MODULE_NAME,
   CATALOG_CONFIG.CUSTOM_NEW_METHOD_NAME,

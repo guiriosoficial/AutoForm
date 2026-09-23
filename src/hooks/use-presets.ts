@@ -156,7 +156,7 @@ export function usePresets({
 
   const isPresetNameTaken = useCallback((name: string, presetId?: string) => (
     presets.some((preset) => preset.name === name && preset.id !== presetId)
-  ), [presets])
+  ), [presets]);
 
   return {
     presets,

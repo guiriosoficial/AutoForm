@@ -46,12 +46,12 @@ export function PreferencesView() {
 
   const localeDisplayNamesMap = useMemo(() =>
     getLocaleDisplayNamesMap(i18n.language, Object.values(Locale)
-    ), [i18n.language])
+  ), [i18n.language]);
 
   const getLocalizedDisplayName = (localeCode: string) => {
     const displayName = localeDisplayNamesMap.get(localeCode) ?? locale;
 
-    return toTitleCase(displayName)
+    return toTitleCase(displayName);
   };
 
   const handleThemeChange = (nextTheme: string[]) => {
