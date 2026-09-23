@@ -35,7 +35,7 @@ export interface CatalogData {
   ) => void;
   removeCustomMethod: (methodKey: string) => void;
   getMethodUsageCount: (methodKey: string | undefined) => { presetUsageCount: number, fieldUsageCount: number } | undefined;
-  isMethodNameTaken: (label: string, methodKey: string | undefined) => boolean;
+  isCustomMethodNameTaken: (methodName: string, methodKey: string | undefined) => boolean;
 }
 
 interface UseCatalogDataArgs {
@@ -54,8 +54,8 @@ export function useCatalogData({
 
   const { locale, availableCatalogs } = useAppSettings();
 
-  const customCatalog = useMemo(() => createCatalogModule(
-    CATALOG_CONFIG.CUSTOM_MODULE_NAME,
+  const customCatalog = useMemo(
+    () => createCatalogModule(CATALOG_CONFIG.CUSTOM_MODULE_NAME,
     [...customMethods, newCustomMethodOption],
   ), [customMethods]);
 
@@ -160,8 +160,8 @@ export function useCatalogData({
     return { fieldUsageCount, presetUsageCount };
   }, [presets]);
 
-  const isMethodNameTaken = useCallback((name: string, methodKey: string | undefined) => (
-    customMethods.some((method) => method.name === name && method.key !== methodKey)
+  const isCustomMethodNameTaken = useCallback((methodName: string, methodKey: string | undefined) => (
+    customMethods.some((method) => method.name === methodName && method.key !== methodKey)
   ), [customMethods]);
 
   return {
@@ -174,7 +174,7 @@ export function useCatalogData({
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
-    isMethodNameTaken,
+    isCustomMethodNameTaken,
   }
 }
 
