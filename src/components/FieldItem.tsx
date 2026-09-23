@@ -146,7 +146,7 @@ function FieldItemComponent({
           ref={fieldOptionsPopoverRef}
           options={field.options}
           method={selectedMethod}
-          onChangeOptions={(nextOptions) => handleUpdateField("options", nextOptions)}
+          onOptionsChange={(nextOptions) => handleUpdateField("options", nextOptions)}
         />
 
         <Button

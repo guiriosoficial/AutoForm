@@ -40,10 +40,10 @@ export function usePersistentState<T>(
   }, [storageKey, initialState, hydrated]);
 
   // Persist
-  const persist = useRef(
-    debounce((newState: T) => {
+  const persistState = useRef(
+    debounce((nextState: T) => {
       browser.storage?.local.set({
-        [storageKey]: newState,
+        [storageKey]: nextState,
       });
     }, persistenceDelay)
   ).current;
@@ -51,26 +51,26 @@ export function usePersistentState<T>(
   useEffect(() => {
     if (!hydrated) return;
 
-    persist(state);
+    persistState(state);
 
-    return () => persist.cancel();
-  }, [storageKey, state, hydrated, persist]);
+    return () => persistState.cancel();
+  }, [storageKey, state, hydrated, persistState]);
 
   // Sync
   useEffect(() => {
     const handleStorageChange = (
-      changes: Record<string, browser.Storage.StorageChange>,
+      storageChanges: Record<string, browser.Storage.StorageChange>,
       areaName: string,
     ) => {
       if (areaName !== StorageAreaNames.LOCAL) return;
 
-      const change = changes[storageKey];
+      const currentChange = storageChanges[storageKey];
 
-      if (!change) return;
+      if (!currentChange) return;
 
-      const newValue = change.newValue as T | undefined;
+      const nextValue = currentChange.newValue as T;
 
-      setState(newValue ?? initialState);
+      setState(nextValue);
     };
 
     browser.storage?.onChanged.addListener(handleStorageChange);
@@ -78,9 +78,9 @@ export function usePersistentState<T>(
     return () => {
       browser.storage?.onChanged.removeListener(handleStorageChange);
     };
-  }, [storageKey, initialState]);
+  }, [storageKey]);
 
-  const remove = async () => {
+  const removeState = async () => {
     await browser.storage?.local.remove(storageKey);
     setState(initialState);
   };
@@ -88,7 +88,7 @@ export function usePersistentState<T>(
   return [
     state,
     setState,
-    remove,
+    removeState,
     hydrated,
   ] as const;
 }

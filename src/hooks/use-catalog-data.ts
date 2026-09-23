@@ -34,7 +34,7 @@ export interface CatalogData {
     updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
   ) => void;
   removeCustomMethod: (methodKey: string) => void;
-  getMethodUsageCount: (methodKey: string | undefined) => { presetsUsageCount: number, fieldsUsageCount: number } | undefined;
+  getMethodUsageCount: (methodKey: string | undefined) => { presetUsageCount: number, fieldUsageCount: number } | undefined;
   isMethodNameTaken: (label: string, methodKey: string | undefined) => boolean;
 }
 
@@ -137,8 +137,8 @@ export function useCatalogData({
   }, [setCustomMethods]);
 
   const getMethodUsageCount = useCallback((methodKey: string | undefined) => {
-    let fieldsUsageCount = 0;
-    let presetsUsageCount = 0;
+    let fieldUsageCount = 0;
+    let presetUsageCount = 0;
 
     if (!methodKey || !presets) return
 
@@ -152,12 +152,12 @@ export function useCatalogData({
       }
 
       if (fieldsInPreset > 0) {
-        fieldsUsageCount += fieldsInPreset;
-        presetsUsageCount += 1;
+        fieldUsageCount += fieldsInPreset;
+        presetUsageCount += 1;
       }
     }
 
-    return { fieldsUsageCount, presetsUsageCount };
+    return { fieldUsageCount, presetUsageCount };
   }, [presets]);
 
   const isMethodNameTaken = useCallback((name: string, methodKey: string | undefined) => (

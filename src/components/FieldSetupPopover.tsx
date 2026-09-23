@@ -31,7 +31,7 @@ import type { PopoverRoot } from "@base-ui/react";
 interface FieldSetupPopoverProps {
   method: CatalogMethod | null;
   options: string | undefined;
-  onChangeOptions: (nextOptions: string) => void;
+  onOptionsChange: (nextOptions: string) => void;
 }
 
 export interface FieldSetupPopoverRef {
@@ -40,15 +40,15 @@ export interface FieldSetupPopoverRef {
 
 function FieldSetupPopoverComponent(
   {
-    options,
     method,
-    onChangeOptions,
+    options,
+    onOptionsChange,
   }: FieldSetupPopoverProps,
   ref: ForwardedRef<FieldSetupPopoverRef>
 ) {
   const [open, setOpen] = useState(false);
   const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
-  const [deleteMethodAlertOpen, setDeleteMethodAlertOpen] = useState(false);
+  const [isDeleteMethodAlertOpen, setIsDeleteMethodAlertOpen] = useState(false);
 
   const [jsonError, setJsonError] = useState<string | null>(null);
   const [javascriptError, setJavascriptError] = useState<string | null>(null);
@@ -70,6 +70,21 @@ function FieldSetupPopoverComponent(
   const isCustomMethod = isValidCustomMethod(method)
   const hasOptions = isPopulatedJson5(options);
 
+  const handleFormatActiveEditor = () => {
+    const activeEditor = activeTab === EditorTabs.OPTIONS
+      ? jsonEditorRef
+      : javascriptEditorRef;
+
+    activeEditor.current?.format();
+  };
+
+  const handleDeleteCustomMethod = (methodKey: string) => {
+    removeCustomMethod(methodKey);
+
+    setIsDeleteMethodAlertOpen(false);
+    setOpen(false);
+  };
+
   const handleChangeCustomMethod = <K extends keyof CatalogMethod>(
     propertyKey: K,
     nextValue: CatalogMethod[K],
@@ -82,25 +97,10 @@ function FieldSetupPopoverComponent(
     )
   };
 
-  const handleConfirmDeleteMethod = (methodKey: string) => {
-    removeCustomMethod(methodKey);
-
-    setDeleteMethodAlertOpen(false);
-    setOpen(false);
-  };
-
-  const handleFormatClick = () => {
-    const activeEditor = activeTab === EditorTabs.OPTIONS
-      ? jsonEditorRef
-      : javascriptEditorRef;
-
-    activeEditor.current?.format();
-  };
-
   const handlePopoverOpenChange = (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
     const isClosingByClickOnAlert =
       !isOpening &&
-      deleteMethodAlertOpen &&
+      isDeleteMethodAlertOpen &&
       event?.reason === "outside-press";
 
     if (isClosingByClickOnAlert) return;
@@ -142,7 +142,7 @@ function FieldSetupPopoverComponent(
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
   const deleteAlertDescription = [
-    !!customMethodUsageCount?.fieldsUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount),
+    !!customMethodUsageCount?.fieldUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount),
     t("fieldsManager.alerts.deleteCustomMethod.description", { name: method?.name }),
   ]
 
@@ -193,7 +193,7 @@ function FieldSetupPopoverComponent(
                 <Button
                   variant="secondary"
                   size="sm"
-                  onClick={handleFormatClick}
+                  onClick={handleFormatActiveEditor}
                 >
                   {t("fieldsManager.popovers.fieldSettings.formatButton")}
                 </Button>
@@ -202,7 +202,7 @@ function FieldSetupPopoverComponent(
                     className="hover:text-destructive hover:bg-destructive/10"
                     variant="secondary"
                     size="icon-sm"
-                    onClick={() => setDeleteMethodAlertOpen(true)}
+                    onClick={() => setIsDeleteMethodAlertOpen(true)}
                   >
                     <Trash />
                   </Button>
@@ -216,7 +216,7 @@ function FieldSetupPopoverComponent(
                 value={options}
                 hasOptions={hasOptions}
                 className={editorClasses}
-                onChange={onChangeOptions}
+                onChange={onOptionsChange}
                 onErrorChange={setJsonError}
               />
             </TabsContent>
@@ -252,13 +252,13 @@ function FieldSetupPopoverComponent(
         </PopoverContent>
       </Popover>
 
-      {(deleteMethodAlertOpen && isCustomMethod) && (
+      {(isDeleteMethodAlertOpen && isCustomMethod) && (
         <AlertDialog
           destructive
-          open={deleteMethodAlertOpen}
+          open={isDeleteMethodAlertOpen}
           description={deleteAlertDescription}
-          onConfirm={() => handleConfirmDeleteMethod(method.key)}
-          onCancel={() => setDeleteMethodAlertOpen(false)}
+          onConfirm={() => handleDeleteCustomMethod(method.key)}
+          onCancel={() => setIsDeleteMethodAlertOpen(false)}
         />
       )}
     </>

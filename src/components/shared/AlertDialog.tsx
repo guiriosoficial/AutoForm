@@ -43,13 +43,13 @@ export function AlertDialog({
     : [description];
 
   const translatedTitle = title ?? t("defaults.alert.title");
-  const translatedDescription = description ? descriptionArray : [t("defaults.alert.description")];
+  const translatedDescriptionLines = description ? descriptionArray : [t("defaults.alert.description")];
   const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
   const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
 
   const variant = destructive ? "destructive" : "default";
 
-  const handleKeyPress = (event: KeyboardEvent<HTMLDivElement>) => {
+  const handleDialogKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
     preventDefaultEscape(event);
     event.stopPropagation();
 
@@ -72,7 +72,7 @@ export function AlertDialog({
     >
       <AlertDialogContent
         size="sm"
-        onKeyDown={handleKeyPress}
+        onKeyDown={handleDialogKeyDown}
       >
         <AlertDialogHeader>
           <AlertDialogTitle className="flex items-center gap-2">
@@ -80,7 +80,7 @@ export function AlertDialog({
             {translatedTitle}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            {translatedDescription.map((text, index) => (
+            {translatedDescriptionLines.map((text, index) => (
               <p key={index}>
                 {text}
               </p>

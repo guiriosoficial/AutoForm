@@ -56,7 +56,7 @@ function InlineInputComponent (
   const hasErrorRef = useRef(hasError);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const deferPredicatedShowError = useRef(
+  const deferPredicatedErrorNotification = useRef(
     deferPredicate(() => {
       if (!hasErrorRef.current || !errorMessageRef.current) return;
       toast.error(errorMessageRef.current);
@@ -69,7 +69,7 @@ function InlineInputComponent (
 
     if (!hasError || !errorMessage) return;
 
-    deferPredicatedShowError()
+    deferPredicatedErrorNotification()
   }, [hasError, errorMessage]);
 
   useEffect(() => {
@@ -119,7 +119,7 @@ function InlineInputComponent (
     setDraft(nextValue);
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+  const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
     event.stopPropagation()
 
@@ -154,8 +154,8 @@ function InlineInputComponent (
           value={draft}
           placeholder={placeholder}
           className={inputClasses}
-          onKeyDown={handleKeyDown}
           onBlur={confirmEditing}
+          onKeyDown={handleInputKeyDown}
           onChange={(evt) => handleInputChange(evt.target.value)}
         />
         <InlineButton

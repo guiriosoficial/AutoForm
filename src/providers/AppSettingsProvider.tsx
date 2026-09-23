@@ -56,6 +56,10 @@ export const AppSettingsProviderContext =
 export function AppSettingsProvider({
   children,
 }: AppSettingsProviderProps) {
+  const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
+    StorageKeys.AVAILABLE_CATALOGS,
+    CATALOG_CONFIG.DEFAULT_AVAILABLE
+  )
   const [importStrategy, setImportStrategy] = usePersistentState<ImportStrategy>(
     StorageKeys.IMPORT_STRATEGY,
     IMPORT_CONFIG.STRATEGY_DEFAULT,
@@ -72,10 +76,6 @@ export function AppSettingsProvider({
     StorageKeys.THEME,
     THEME_CONFIG.DEFAULT,
   );
-  const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
-    StorageKeys.AVAILABLE_CATALOGS,
-    CATALOG_CONFIG.DEFAULT_AVAILABLE
-  )
   const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
     StorageKeys.AUTO_FORMAT,
     EDITOR_CONFIG.DEFAULT_AUTO_FORMAT

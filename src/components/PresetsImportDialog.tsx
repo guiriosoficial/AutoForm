@@ -18,12 +18,12 @@ import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons } from "@/components/icons/maps";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-import-export";
+import type { ParseImportDataResult, ImportExportData } from "@/hooks/use-import-export";
 
 interface PresetsImportDialogProps {
   open: boolean;
-  importPreview: ParseImportExportResult;
-  onImport: (parsedData: ParseJsonResult, importStrategy: ImportStrategy) => void;
+  importPreview: ParseImportDataResult;
+  onImportData: (parsedData: ImportExportData, importStrategy: ImportStrategy) => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -33,7 +33,7 @@ const importStrategyOptions = Object.values(ImportStrategy)
 export function PresetsImportDialog({
   open,
   importPreview,
-  onImport,
+  onImportData,
   onOpenChange,
 }: PresetsImportDialogProps) {
   const [importStrategy, setImportStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
@@ -42,13 +42,13 @@ export function PresetsImportDialog({
 
   const { parsed, duplicatedPresets } = importPreview;
 
-  const handleChangeImportStrategy = (nextStrategy: string[]) => {
+  const handleImportStrategyChange = (nextStrategy: string[]) => {
     if (nextStrategy.length === 0) return;
 
     setImportStrategy(nextStrategy[0] as ImportStrategy);
   };
 
-  const strategyDescription = t("presetsManager.dialogs.importPreset.description", {
+  const dialogDescription = t("presetsManager.dialogs.importPreset.description", {
     count: duplicatedPresets.length,
     total: parsed.presets.length,
   });
@@ -67,7 +67,7 @@ export function PresetsImportDialog({
             {t("presetsManager.dialogs.importPreset.title")}
           </DialogTitle>
           <DialogDescription>
-            {strategyDescription}
+            {dialogDescription}
           </DialogDescription>
         </DialogHeader>
 
@@ -97,7 +97,7 @@ export function PresetsImportDialog({
           <ToggleGroup
             value={[importStrategy]}
             variant="outline"
-            onValueChange={handleChangeImportStrategy}
+            onValueChange={handleImportStrategyChange}
           >
             <ButtonGroup>
               {importStrategyOptions.map((strategy) => (
@@ -124,7 +124,7 @@ export function PresetsImportDialog({
               </Button>
             }
           />
-          <Button onClick={() => onImport(parsed, importStrategy)}>
+          <Button onClick={() => onImportData(parsed, importStrategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>

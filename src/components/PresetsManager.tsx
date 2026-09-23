@@ -29,7 +29,7 @@ import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";
-import type { ParseImportExportResult, ParseJsonResult } from "@/hooks/use-import-export";
+import type { ParseImportDataResult, ImportExportData } from "@/hooks/use-import-export";
 
 interface PresetsManagerProps {
   presets: Preset[];
@@ -38,8 +38,8 @@ interface PresetsManagerProps {
   onCreatePreset: () => void;
   onDeletePreset: (presetId: string) => void;
   onExportData: () => void;
-  onImportData: (parsedData: ParseJsonResult, importStrategy?: ImportStrategy) => void;
-  onLoadDataFile: (jsonFile: string) => ParseImportExportResult | undefined;
+  onImportData: (parsedData: ImportExportData, importStrategy?: ImportStrategy) => void;
+  onParseImportData: (jsonContent: string) => ParseImportDataResult | undefined;
 }
 
 export function PresetsManager({
@@ -50,15 +50,15 @@ export function PresetsManager({
   onDeletePreset,
   onExportData,
   onImportData,
-  onLoadDataFile,
+  onParseImportData,
 }: PresetsManagerProps) {
   const [isPresetSelectorOpen, setIsPresetSelectorOpen] = useState(false);
-  const [importPreview, setImportPreview] = useState<ParseImportExportResult | null>(null);
+  const [importPreview, setImportPreview] = useState<ParseImportDataResult | null>(null);
   const [presetToDelete, setPresetToDelete] = useState<Preset | null>(null);
 
   const { importStrategy } = useAppSettings();
 
-  const importInputRef = useRef<HTMLInputElement>(null);
+  const importDataInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
@@ -74,33 +74,33 @@ export function PresetsManager({
     setPresetToDelete(null);
   };
 
-  const importData = (parsedData: ParseJsonResult, importStrategy: ImportStrategy) => {
-    onImportData(parsedData, importStrategy);
-
-    setImportPreview(null);
-  };
-
-  const processUploadedFile = async (event: ChangeEvent<HTMLInputElement>) => {
+  const handleRequestImportData = async (event: ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
 
     if (!file) return;
 
-    const json = await file.text();
+    const jsonContent = await file.text();
 
-    const loaded = onLoadDataFile(json);
+    const parsedContent = onParseImportData(jsonContent);
 
-    if (!loaded) return;
+    if (!parsedContent) return;
 
-    const shouldSkipConfirmation =
+    const skipConfirmation =
       presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
       importStrategy !== ImportStrategy.ALWAYS_ASK
 
-    if (shouldSkipConfirmation) {
-      onImportData(loaded.parsed, importStrategy);
+    if (skipConfirmation) {
+      onImportData(parsedContent.parsed, importStrategy);
       return;
     }
 
-    setImportPreview(loaded);
+    setImportPreview(parsedContent);
+  };
+
+  const handleConfirmImportData = (parsedData: ImportExportData, importStrategy: ImportStrategy) => {
+    onImportData(parsedData, importStrategy);
+
+    setImportPreview(null);
   };
 
   return (
@@ -181,7 +181,7 @@ export function PresetsManager({
             <Download />
             {t("presetsManager.buttons.export")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => importInputRef.current?.click()}>
+          <DropdownMenuItem onClick={() => importDataInputRef.current?.click()}>
             <Upload />
             {t("presetsManager.buttons.import")}
           </DropdownMenuItem>
@@ -202,17 +202,17 @@ export function PresetsManager({
         <PresetsImportDialog
           open={!!importPreview}
           importPreview={importPreview}
-          onImport={importData}
+          onImportData={handleConfirmImportData}
           onOpenChange={() => setImportPreview(null)}
         />
       )}
 
       <input
-        ref={importInputRef}
+        ref={importDataInputRef}
         className="hidden"
         type="file"
         accept={IMPORT_CONFIG.FILE_TYPE}
-        onChange={processUploadedFile}
+        onChange={handleRequestImportData}
       />
     </>
   );

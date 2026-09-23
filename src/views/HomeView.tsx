@@ -51,9 +51,9 @@ export function HomeView() {
   } = catalogData;
 
   const {
-    importData,
     exportData,
-    parseData,
+    importData,
+    parseImportData,
   } = useImportExport({
     presets,
     setPresets,
@@ -102,7 +102,7 @@ export function HomeView() {
             onDeletePreset={deletePreset}
             onExportData={exportData}
             onImportData={importData}
-            onLoadDataFile={parseData}
+            onParseImportData={parseImportData}
           />
         </CardContent>
       </Card>

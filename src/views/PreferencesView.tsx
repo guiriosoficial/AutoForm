@@ -48,35 +48,35 @@ export function PreferencesView() {
     getLocaleDisplayNamesMap(i18n.language, Object.values(Locale)
     ), [i18n.language])
 
-  const getLocaleDisplayName = (locale: string) => {
+  const getLocalizedDisplayName = (locale: string) => {
     const displayName = localeDisplayNamesMap.get(locale) ?? locale;
 
     return toTitleCase(displayName)
   };
 
-  const handleChangeTheme = (nextTheme: string[]) => {
+  const handleThemeChange = (nextTheme: string[]) => {
     if (nextTheme.length === 0) return;
 
     setTheme(nextTheme[0] as Theme);
   };
 
-  const handleChangeImportStrategy = (nextStrategy: string[]) => {
+  const handleImportStrategyChange = (nextStrategy: string[]) => {
     if (nextStrategy.length === 0) return;
 
     setImportStrategy(nextStrategy[0] as ImportStrategy);
   };
 
-  const handleChangeAvailableCatalogs = (nextCatalogs: string[]) => {
+  const handleAvailableCatalogsChange = (nextCatalogs: string[]) => {
     setAvailableCatalogs(nextCatalogs as Catalogs[]);
   };
 
-  const handleChangeLocale = (nextLocale: string | null) => {
+  const handleLocaleChange = (nextLocale: string | null) => {
     if (!nextLocale) return;
 
     setLocale(nextLocale as Locale);
   };
 
-  const handleChangeLanguage = (nextLanguage: string | null) => {
+  const handleLanguageChange = (nextLanguage: string | null) => {
     if (!nextLanguage) return;
 
     setLanguage(nextLanguage as Language);
@@ -101,7 +101,7 @@ export function PreferencesView() {
               <ToggleGroup
                 value={[theme]}
                 variant="outline"
-                onValueChange={handleChangeTheme}
+                onValueChange={handleThemeChange}
               >
                 <ButtonGroup>
                   {Object.values(Theme).map((itemTheme) => (
@@ -124,7 +124,7 @@ export function PreferencesView() {
               <ToggleGroup
                 value={[importStrategy]}
                 variant="outline"
-                onValueChange={handleChangeImportStrategy}
+                onValueChange={handleImportStrategyChange}
               >
                 <ButtonGroup>
                   {Object.values(ImportStrategy).map((itemStrategy) => (
@@ -151,7 +151,7 @@ export function PreferencesView() {
                 value={availableCatalogs}
                 multiple
                 variant="outline"
-                onValueChange={handleChangeAvailableCatalogs}
+                onValueChange={handleAvailableCatalogsChange}
               >
                 {Object.values(Catalogs).map((itemCatalog) => (
                   <ToggleGroupItem
@@ -190,8 +190,8 @@ export function PreferencesView() {
               <Combobox
                 value={locale}
                 items={Object.values(Locale)}
-                itemToStringLabel={getLocaleDisplayName}
-                onValueChange={handleChangeLocale}
+                itemToStringLabel={getLocalizedDisplayName}
+                onValueChange={handleLocaleChange}
               >
                 <ComboboxInput
                   className="flex-1"
@@ -208,7 +208,7 @@ export function PreferencesView() {
                         key={itemLocale}
                         value={itemLocale}
                       >
-                        {getLocaleDisplayName(itemLocale)}
+                        {getLocalizedDisplayName(itemLocale)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>
@@ -223,8 +223,8 @@ export function PreferencesView() {
               <Combobox
                 value={language}
                 items={Object.values(Language)}
-                itemToStringLabel={getLocaleDisplayName}
-                onValueChange={handleChangeLanguage}
+                itemToStringLabel={getLocalizedDisplayName}
+                onValueChange={handleLanguageChange}
               >
                 <ComboboxInput
                   className="flex-1"
@@ -241,7 +241,7 @@ export function PreferencesView() {
                         key={itemLanguage}
                         value={itemLanguage}
                       >
-                        {getLocaleDisplayName(itemLanguage)}
+                        {getLocalizedDisplayName(itemLanguage)}
                       </ComboboxItem>
                     )}
                   </ComboboxList>
