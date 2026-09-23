@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MethodEditor, type MethodEditorRef } from "@/components/layouts/MethodEditor";
-import { OptionsEditor, type OptionsEditorRef } from "@/components/layouts/OptionsEditor";
+import { MethodEditor, type MethodEditorRef } from "@/components/MethodEditor";
+import { OptionsEditor, type OptionsEditorRef } from "@/components/OptionsEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
@@ -50,8 +50,8 @@ function FieldSetupPopoverComponent(
   const [activeTab, setActiveTab] = useState<EditorTabs>(EditorTabs.OPTIONS);
   const [isDeleteMethodAlertOpen, setIsDeleteMethodAlertOpen] = useState(false);
 
-  const [jsonError, setJsonError] = useState<string | null>(null);
-  const [javascriptError, setJavascriptError] = useState<string | null>(null);
+  const [optionsError, setOptionsError] = useState<string | null>(null);
+  const [methodError, setMethodError] = useState<string | null>(null);
 
   const { t } = useTranslation();
   const {
@@ -62,10 +62,10 @@ function FieldSetupPopoverComponent(
   } = useCatalog()
   const { autoFormat } = useAppSettings()
 
-  const jsonEditorRef = useRef<OptionsEditorRef>(null);
-  const javascriptEditorRef = useRef<MethodEditorRef>(null);
+  const optionsEditorRef = useRef<OptionsEditorRef>(null);
+  const methodEditorRef = useRef<MethodEditorRef>(null);
 
-  const error = activeTab === EditorTabs.OPTIONS ? jsonError : javascriptError;
+  const error = activeTab === EditorTabs.OPTIONS ? optionsError : methodError;
   const customMethodUsageCount = getMethodUsageCount(method?.key)
 
   const isCustomMethod = isValidCustomMethod(method)
@@ -73,8 +73,8 @@ function FieldSetupPopoverComponent(
 
   const handleFormatActiveEditor = () => {
     const activeEditor = activeTab === EditorTabs.OPTIONS
-      ? jsonEditorRef
-      : javascriptEditorRef;
+      ? optionsEditorRef
+      : methodEditorRef;
 
     activeEditor.current?.format();
   };
@@ -107,8 +107,8 @@ function FieldSetupPopoverComponent(
     if (isClosingByClickOnAlert) return;
 
     if (autoFormat) {
-      jsonEditorRef.current?.format();
-      javascriptEditorRef.current?.format();
+      optionsEditorRef.current?.format();
+      methodEditorRef.current?.format();
     }
 
     setOpen(isOpening);
@@ -219,23 +219,23 @@ function FieldSetupPopoverComponent(
 
             <TabsContent value={EditorTabs.OPTIONS}>
               <OptionsEditor
-                ref={jsonEditorRef}
+                ref={optionsEditorRef}
                 options={options}
                 hasOptions={hasOptions}
                 className={editorClasses}
                 onOptionsChange={onOptionsChange}
-                onErrorChange={setJsonError}
+                onErrorChange={setOptionsError}
               />
             </TabsContent>
 
             {isCustomMethod && (
               <TabsContent value={EditorTabs.METHOD}>
                 <MethodEditor
-                  ref={javascriptEditorRef}
+                  ref={methodEditorRef}
                   className={editorClasses}
                   method={method}
                   error={getCustomMethodNameErrorMessage}
-                  onErrorChange={setJavascriptError}
+                  onErrorChange={setMethodError}
                   onMethodChange={handleChangeCustomMethod}
                 />
               </TabsContent>

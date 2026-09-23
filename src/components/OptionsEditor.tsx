@@ -14,7 +14,7 @@ import {
   createEditorKeymap,
   createEditorLinter,
   jsonLinter,
-} from "@/lib/editor";
+} from "@/lib/editor.ts";
 import {
   type JsonValue,
   debounce,
@@ -98,7 +98,7 @@ function OptionsEditorComponent (
     format,
   }), [format])
 
-  const editorExtension = useMemo(() => [
+  const editorExtensions = useMemo(() => [
     json5(),
     createEditorLinter(jsonLinter, hasOptions),
     createEditorKeymap({ onFormat: format }),
@@ -108,7 +108,7 @@ function OptionsEditorComponent (
     <ReactCodeMirror
       value={options}
       className={className}
-      extensions={editorExtension}
+      extensions={editorExtensions}
       theme={EDITOR_THEME_CREATED}
       basicSetup={EDITOR_BASIC_SETUP}
       onChange={handleEditorChange}

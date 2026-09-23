@@ -17,7 +17,7 @@ import {
   createEditorKeymap,
   createEditorLinter,
   javascriptLinter,
-} from "@/lib/editor";
+} from "@/lib/editor.ts";
 import {
   debounce,
   getErrorMessage,
@@ -29,7 +29,7 @@ import {
   EDITOR_BASIC_SETUP,
   EDITOR_PRETTIER_OPTIONS,
 } from "@/configs";
-import { InlineInput } from "@/components/shared/InlineInput";
+import { InlineInput } from "@/components/shared/InlineInput.tsx";
 
 interface MethodEditorProps {
   method: CatalogMethod;
@@ -120,18 +120,18 @@ function MethodEditorComponent(
     }
   }, [method.code, onMethodChange]);
 
-  const debouncedParse = useRef(debounce(
+  const debouncedValidate = useRef(debounce(
     (code: string) => validate(code),
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
-  const handleChangeMethod = (nextMethod: string) => {
-    onMethodChange("code", nextMethod);
+  const handleMethodCodeChange = (nextCode: string) => {
+    onMethodChange("code", nextCode);
 
-    debouncedParse(nextMethod);
+    debouncedValidate(nextCode);
   };
 
-  const handleChangeName = (nextName: string) => {
+  const handleMethodNameChange = (nextName: string) => {
     if (nextName === method.name) return;
 
     onMethodChange("name", nextName);
@@ -141,7 +141,7 @@ function MethodEditorComponent(
     if (method.code) validate(method.code);
 
     return () => {
-      debouncedParse.cancel();
+      debouncedValidate.cancel();
     };
   }, []);
 
@@ -149,7 +149,7 @@ function MethodEditorComponent(
     format,
   }), [format]);
 
-  const editorExtension = useMemo(() => [
+  const editorExtensions = useMemo(() => [
     javascript(),
     createEditorLinter(javascriptLinter),
     createEditorKeymap({ onFormat: format }),
@@ -163,16 +163,16 @@ function MethodEditorComponent(
         placeholder={t("customMethodsManager.form.nameInput.placeholder")}
         className="font-semibold px-3 py-2 border rounded-md"
         transform={removeSpaces}
-        onSave={handleChangeName}
+        onSave={handleMethodNameChange}
         onError={onErrorChange}
       />
       <ReactCodeMirror
         value={method.code}
         className={className}
-        extensions={editorExtension}
+        extensions={editorExtensions}
         theme={EDITOR_THEME_CREATED}
         basicSetup={EDITOR_BASIC_SETUP}
-        onChange={handleChangeMethod}
+        onChange={handleMethodCodeChange}
       />
     </div>
   );
