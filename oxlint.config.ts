@@ -44,6 +44,7 @@ export default defineConfig({
     "no-warning-comments": "allow",
     "no-undefined": "allow", // Resolved in "unicorn/no-useless-undefined"
     "no-redeclare": "allow", // TODO: Review config
+    "no-shadow": ["error", { allow: ["error"]}],
     "no-plusplus": ["error", { allowForLoopAfterthoughts: true }],
     "no-implicit-coercion": ["error", { boolean: false }],
     "no-magic-numbers": ["error", { ignore: [-1, 0, 1], ignoreDefaultValues: true }],

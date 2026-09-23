@@ -58,6 +58,7 @@ function FieldSetupPopoverComponent(
     updateCustomMethod,
     removeCustomMethod,
     getMethodUsageCount,
+    isCustomMethodNameTaken,
   } = useCatalog()
   const { autoFormat } = useAppSettings()
 
@@ -112,6 +113,12 @@ function FieldSetupPopoverComponent(
 
     setOpen(isOpening);
   };
+
+  const getCustomMethodNameErrorMessage = (draftName: string) => (
+    isCustomMethodNameTaken(draftName, method?.key)
+      ? t("customMethodManager.messages.duplicatedName")
+      : ""
+  );
 
   const startEditing = useCallback((targetTab: EditorTabs) => {
     setActiveTab(targetTab);
@@ -214,7 +221,7 @@ function FieldSetupPopoverComponent(
               <JsonEditor
                 ref={jsonEditorRef}
                 value={options}
-                hasOptions={hasOptions}
+                hasValue={hasOptions}
                 className={editorClasses}
                 onChange={onOptionsChange}
                 onErrorChange={setJsonError}
@@ -227,6 +234,7 @@ function FieldSetupPopoverComponent(
                   ref={javascriptEditorRef}
                   value={method}
                   className={editorClasses}
+                  error={getCustomMethodNameErrorMessage}
                   onChange={handleChangeCustomMethod}
                   onErrorChange={setJavascriptError}
                 />

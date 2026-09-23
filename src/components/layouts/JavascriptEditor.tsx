@@ -18,18 +18,22 @@ import {
   createEditorLinter,
   javascriptLinter,
 } from "@/lib/editor";
-import { debounce, getErrorMessage, removeSpaces } from "@/lib/utils";
+import {
+  debounce,
+  getErrorMessage,
+  removeSpaces,
+} from "@/lib/utils";
 import type { CatalogMethod } from "@/lib/catalog";
 import {
   EDITOR_CONFIG,
   EDITOR_BASIC_SETUP,
   EDITOR_PRETTIER_OPTIONS,
 } from "@/configs";
-import { useCatalog } from "@/providers/CatalogProvider";
 import { InlineInput } from "@/components/shared/InlineInput.tsx";
 
 interface JavascriptEditorProps {
   value: CatalogMethod;
+  error?: string | ((draft: string) => string);
   className?: string;
   onChange: <K extends keyof CatalogMethod>(propertyKey: K, nextValue: CatalogMethod[K]) => void;
   onErrorChange: (error: string | null) => void;
@@ -42,6 +46,7 @@ export interface JavascriptEditorRef {
 function JavascriptEditorComponent(
   {
     value,
+    error,
     className,
     onChange,
     onErrorChange,
@@ -49,15 +54,8 @@ function JavascriptEditorComponent(
   ref: ForwardedRef<JavascriptEditorRef>,
 ) {
   const { t } = useTranslation();
-  const { isMethodNameTaken } = useCatalog();
 
-  // TODO: Move to father component
-  const getMethodNameErrorMessage = (draftName: string) =>
-    isMethodNameTaken(draftName, value.key)
-      ? t("customMethodManager.messages.duplicatedName")
-      : ""
-
-  const parse = useCallback((code: string) => {
+  const validate = useCallback((code: string) => {
     if (!code) return;
 
     const trimmedCode = code.trim();
@@ -123,7 +121,7 @@ function JavascriptEditorComponent(
   }, [value.code, onChange]);
 
   const debouncedParse = useRef(debounce(
-    (code: string) => parse(code),
+    (code: string) => validate(code),
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
@@ -140,7 +138,7 @@ function JavascriptEditorComponent(
   };
 
   useEffect(() => {
-    if (value.code) parse(value.code);
+    if (value.code) validate(value.code);
 
     return () => {
       debouncedParse.cancel();
@@ -161,11 +159,12 @@ function JavascriptEditorComponent(
     <div className="space-y-2">
       <InlineInput
         value={value.name}
+        error={error}
         placeholder={t("customMethodsManager.form.nameInput.placeholder")}
         className="font-semibold px-3 py-2 border rounded-md"
         transform={removeSpaces}
-        error={getMethodNameErrorMessage}
         onSave={handleChangeName}
+        onError={onErrorChange}
       />
       <ReactCodeMirror
         value={value.code}

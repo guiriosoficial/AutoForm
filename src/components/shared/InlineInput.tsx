@@ -28,7 +28,8 @@ interface InlineInputProps {
   className?: string;
   transform?: (value: string) => string;
   error?: string | ((draft: string) => string);
-  onSave: (newValue: string) => void;
+  onError?: (errorMessage: string) => void;
+  onSave: (nextValue: string) => void;
 }
 
 export interface InlineInputRef {
@@ -42,6 +43,7 @@ function InlineInputComponent (
     placeholder,
     className,
     error,
+    onError,
     onSave,
   }: InlineInputProps,
   ref: ForwardedRef<InlineInputRef>,
@@ -107,6 +109,8 @@ function InlineInputComponent (
   };
 
   const handleInputChange = (rawValue: string) => {
+    if (onError && errorMessage) onError(errorMessage);
+
     const nextValue = transform
       ? transform(rawValue)
       : rawValue;
