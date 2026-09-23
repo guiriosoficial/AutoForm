@@ -3,10 +3,10 @@ import type { CatalogData } from "@/hooks/use-catalog-data";
 
 interface CatalogProviderProps {
   children: ReactNode;
-  catalogData: CatalogData,
+  catalogData: CatalogData;
 }
 
-type CatalogProviderState = CatalogData
+type CatalogProviderState = CatalogData;
 
 export const CatalogProviderContext =
   createContext<CatalogProviderState | undefined>(undefined);

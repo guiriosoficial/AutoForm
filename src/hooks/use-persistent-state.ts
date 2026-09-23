@@ -1,7 +1,7 @@
 import browser from "webextension-polyfill";
 import { useEffect, useRef, useState } from "react";
 import { debounce } from "@/lib/utils";
-import { STORAGE_CONFIG, StorageAreaNames, type StorageKeys } from "@/configs";
+import { type StorageKeys, StorageAreaNames, STORAGE_CONFIG } from "@/configs";
 
 export function usePersistentState<T>(
   storageKey: StorageKeys,
@@ -45,7 +45,7 @@ export function usePersistentState<T>(
       browser.storage?.local.set({
         [storageKey]: nextState,
       });
-    }, persistenceDelay)
+    }, persistenceDelay),
   ).current;
 
   useEffect(() => {

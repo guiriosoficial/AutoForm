@@ -59,16 +59,16 @@ function FieldSetupPopoverComponent(
     removeCustomMethod,
     getMethodUsageCount,
     isCustomMethodNameTaken,
-  } = useCatalog()
-  const { autoFormat } = useAppSettings()
+  } = useCatalog();
+  const { autoFormat } = useAppSettings();
 
   const optionsEditorRef = useRef<OptionsEditorRef>(null);
   const methodEditorRef = useRef<MethodEditorRef>(null);
 
   const error = activeTab === EditorTabs.OPTIONS ? optionsError : methodError;
-  const customMethodUsageCount = getMethodUsageCount(method?.key)
+  const customMethodUsageCount = getMethodUsageCount(method?.key);
 
-  const isCustomMethod = isValidCustomMethod(method)
+  const isCustomMethod = isValidCustomMethod(method);
   const hasOptions = isPopulatedJson5(options);
 
   const handleFormatActiveEditor = () => {
@@ -95,7 +95,7 @@ function FieldSetupPopoverComponent(
     updateCustomMethod(
       method.key,
       { [propertyKey]: nextValue }
-    )
+    );
   };
 
   const handlePopoverOpenChange = (isOpening: boolean, event: PopoverRoot.ChangeEventDetails) => {
@@ -114,20 +114,19 @@ function FieldSetupPopoverComponent(
     setOpen(isOpening);
   };
 
-  const getCustomMethodNameErrorMessage = (draftName: string) => (
+  const getCustomMethodNameErrorMessage = (draftName: string) =>
     isCustomMethodNameTaken(draftName, method?.key)
       ? t("customMethodManager.messages.duplicatedName")
-      : ""
-  );
+      : "";
 
   const startEditing = useCallback((targetTab: EditorTabs) => {
     setActiveTab(targetTab);
     setOpen(true);
-  }, [])
+  }, []);
 
   useImperativeHandle(ref, () => ({
     startEditing,
-  }), [startEditing])
+  }), [startEditing]);
 
   const triggerButtonClasses = cn(
     "relative",
@@ -149,9 +148,9 @@ function FieldSetupPopoverComponent(
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
   const deleteAlertDescription = [
-    !!customMethodUsageCount?.fieldUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", customMethodUsageCount),
+    !!customMethodUsageCount?.fieldUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", { customMethodUsageCount }),
     t("fieldsManager.alerts.deleteCustomMethod.description", { name: method?.name }),
-  ]
+  ];
 
   return (
     <>
@@ -260,7 +259,7 @@ function FieldSetupPopoverComponent(
         </PopoverContent>
       </Popover>
 
-      {(isDeleteMethodAlertOpen && isCustomMethod) && (
+      {isDeleteMethodAlertOpen && isCustomMethod && (
         <AlertDialog
           destructive
           open={isDeleteMethodAlertOpen}
@@ -273,6 +272,6 @@ function FieldSetupPopoverComponent(
   );
 }
 
-export const FieldSetupPopover = forwardRef(FieldSetupPopoverComponent)
+export const FieldSetupPopover = forwardRef(FieldSetupPopoverComponent);
 
 FieldSetupPopover.displayName = "FieldSetupPopover";

@@ -1,9 +1,4 @@
-import {
-  type LucideIcon,
-  ArrowLeft,
-  Heart,
-  Settings2
-} from "lucide-react";
+import { type LucideIcon, ArrowLeft, Heart, Settings2 } from "lucide-react";
 import { Page } from "@/configs";
 
 export const PageIcons: Record<Page, LucideIcon> = {

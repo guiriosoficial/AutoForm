@@ -37,7 +37,7 @@ export function createEditorLinter(lintSource: LintSource, enabled = true) {
 }
 
 export function jsonLinter(view: EditorView) {
- return json5ParseLinter()(view);
+  return json5ParseLinter()(view);
 }
 
 export function javascriptLinter(view: EditorView) {

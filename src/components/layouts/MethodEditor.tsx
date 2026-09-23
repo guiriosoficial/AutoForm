@@ -11,25 +11,12 @@ import {
   useRef,
 } from "react";
 import { javascript } from "@codemirror/lang-javascript";
+import { InlineInput } from "@/components/shared/InlineInput";
 import ReactCodeMirror from "@uiw/react-codemirror";
-import {
-  EDITOR_THEME_CREATED,
-  createEditorKeymap,
-  createEditorLinter,
-  javascriptLinter,
-} from "@/lib/editor.ts";
-import {
-  debounce,
-  getErrorMessage,
-  removeSpaces,
-} from "@/lib/utils";
+import { debounce, getErrorMessage, removeSpaces } from "@/lib/utils";
+import { EDITOR_THEME_CREATED, createEditorKeymap, createEditorLinter, javascriptLinter } from "@/lib/editor";
+import { EDITOR_CONFIG, EDITOR_BASIC_SETUP, EDITOR_PRETTIER_OPTIONS } from "@/configs";
 import type { CatalogMethod } from "@/lib/catalog";
-import {
-  EDITOR_CONFIG,
-  EDITOR_BASIC_SETUP,
-  EDITOR_PRETTIER_OPTIONS,
-} from "@/configs";
-import { InlineInput } from "@/components/shared/InlineInput.tsx";
 
 interface MethodEditorProps {
   method: CatalogMethod;

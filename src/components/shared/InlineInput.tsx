@@ -19,7 +19,7 @@ import {
   isPopulatedString,
   preventDefaultEscape,
 } from "@/lib/utils";
-import { toast } from "@/lib/toast.ts";
+import { toast } from "@/lib/toast";
 import { EDITOR_CONFIG, IconSize } from "@/configs";
 
 interface InlineInputProps {
@@ -73,7 +73,7 @@ function InlineInputComponent (
 
     return () => {
       cancelAnimationFrame(frame);
-      throttledErrorNotification.cancel()
+      throttledErrorNotification.cancel();
     };
   }, [isEditing]);
 
@@ -95,7 +95,7 @@ function InlineInputComponent (
     if (hasError) {
       throttledErrorNotification(errorMessage);
       return;
-    };
+    }
 
     const nextValue = draft.trim();
 
@@ -120,7 +120,7 @@ function InlineInputComponent (
 
   const handleInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
     preventDefaultEscape(event);
-    event.stopPropagation()
+    event.stopPropagation();
 
     switch (event.key) {
       case "Enter":
@@ -136,10 +136,10 @@ function InlineInputComponent (
 
   useImperativeHandle(ref, () => ({
     startEditing,
-  }), [startEditing])
+  }), [startEditing]);
 
-  const previewContainerClasses = cn("group", className)
-  const inputContainerClasses = cn("flex gap-1", className)
+  const previewContainerClasses = cn("group", className);
+  const inputContainerClasses = cn("flex gap-1", className);
   const inputClasses = cn(
     "flex-1 pr-1 outline-none",
     hasError && "text-destructive"
@@ -185,7 +185,7 @@ function InlineInputComponent (
     >
       {remainingWords}{" "}
       <span className="whitespace-nowrap">
-      {lastWord}{" "}
+        {lastWord}{" "}
         <InlineButton
           className="inline-flex translate-y-0.5 ml-1"
           icon={PenLine}

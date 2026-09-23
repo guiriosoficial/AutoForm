@@ -34,5 +34,5 @@ export default defineManifest(({ mode }) => {
     sandbox: {
       pages: ["src/entrypoints/sandbox/index.html"],
     },
-  }
+  };
 });

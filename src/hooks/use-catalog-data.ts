@@ -12,15 +12,20 @@ import {
   newCustomMethodOption,
 } from "@/lib/catalog";
 import {
+  type Locale,
   APP_URL,
   CATALOG_CONFIG,
   StorageKeys,
   Catalogs,
-  type Locale,
 } from "@/configs";
 import { createNextSequencedName, isFunction } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
-import type { Preset } from "@/lib/presets.ts";
+import type { Preset } from "@/lib/presets";
+
+export interface MethodsUsageCount {
+  presetUsageCount: number;
+  fieldUsageCount: number;
+}
 
 export interface CatalogData {
   catalogOptions: CatalogModule[];
@@ -29,17 +34,14 @@ export interface CatalogData {
   customMethods: CatalogMethod[];
   setCustomMethods: Dispatch<SetStateAction<CatalogMethod[]>>;
   createCustomMethod: () => CatalogMethod;
-  updateCustomMethod: (
-    methodKey: string,
-    updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)
-  ) => void;
   removeCustomMethod: (methodKey: string) => void;
-  getMethodUsageCount: (methodKey: string | undefined) => { presetUsageCount: number, fieldUsageCount: number } | undefined;
+  updateCustomMethod: (methodKey: string, updater: Partial<CatalogMethod> | ((method: CatalogMethod) => Partial<CatalogMethod>)) => void;
+  getMethodUsageCount: (methodKey: string | undefined) => MethodsUsageCount | undefined;
   isCustomMethodNameTaken: (methodName: string, methodKey: string | undefined) => boolean;
 }
 
 interface UseCatalogDataArgs {
-  presets: Preset[]
+  presets: Preset[];
   removeGeneratorFromPresets: (generatorKey: string) => void;
 }
 
@@ -94,7 +96,7 @@ export function useCatalogData({
     const newCustomMethodOptions = {
       code: createCatalogCustomFunction(),
       generateUniqueId: true,
-      docUrl: `${APP_URL}/wiki/Custom-Methods`
+      docUrl: `${APP_URL}/wiki/Custom-Methods`,
     };
     const newCustomMethod = createCatalogMethod(
       CATALOG_CONFIG.CUSTOM_MODULE_NAME,
@@ -140,7 +142,7 @@ export function useCatalogData({
     let fieldUsageCount = 0;
     let presetUsageCount = 0;
 
-    if (!methodKey || !presets) return
+    if (!methodKey || !presets) return;
 
     for (const preset of presets) {
       let fieldsInPreset = 0;
@@ -175,6 +177,5 @@ export function useCatalogData({
     removeCustomMethod,
     getMethodUsageCount,
     isCustomMethodNameTaken,
-  }
+  };
 }
-

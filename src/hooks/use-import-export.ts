@@ -37,7 +37,7 @@ export function useImportExport({
   const { t } = useTranslation();
 
   const exportData = useCallback(() => {
-    const exportPayload = { presets, customMethods }
+    const exportPayload = { presets, customMethods };
     const exportJson = JSON.stringify(exportPayload, null, EXPORT_CONFIG.INDENT_SPACES);
     const downloadBlob = new Blob([exportJson], { type: EXPORT_CONFIG.FILE_TYPE });
     const downloadUrl = URL.createObjectURL(downloadBlob);
@@ -61,7 +61,7 @@ export function useImportExport({
 
       const isImportedDataInvalid =
         !isValidPresetArray(importPayload.presets) ||
-        !isValidCustomMethodArray(importPayload.customMethods)
+        !isValidCustomMethodArray(importPayload.customMethods);
 
       if (isImportedDataInvalid) {
         toast.error(t("presetsManager.messages.importPreset.invalid"));
@@ -76,7 +76,7 @@ export function useImportExport({
         conflicts: {
           presets: conflictingPresets,
           customMethods: conflictingCustomMethods,
-        }
+        },
       };
     } catch (error) {
       const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"));

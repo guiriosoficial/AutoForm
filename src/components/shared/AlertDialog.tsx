@@ -81,9 +81,7 @@ export function AlertDialog({
           </AlertDialogTitle>
           <AlertDialogDescription>
             {translatedDescriptionLines.map((text, index) => (
-              <p key={index}>
-                {text}
-              </p>
+              <p key={index}>{text}</p>
             ))}
           </AlertDialogDescription>
         </AlertDialogHeader>

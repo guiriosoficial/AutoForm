@@ -19,7 +19,7 @@ export function isFiniteNumber(value: unknown): value is number {
 }
 
 export function isNaN(value: unknown): value is number & { readonly __brand: "NaN" } {
-  return Number.isNaN(value)
+  return Number.isNaN(value);
 }
 
 export function isArray(value: unknown): value is unknown[] {

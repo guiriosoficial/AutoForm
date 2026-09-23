@@ -14,7 +14,7 @@ import {
   createEditorKeymap,
   createEditorLinter,
   jsonLinter,
-} from "@/lib/editor.ts";
+} from "@/lib/editor";
 import {
   type JsonValue,
   debounce,
@@ -96,7 +96,7 @@ function OptionsEditorComponent (
 
   useImperativeHandle(ref, () => ({
     format,
-  }), [format])
+  }), [format]);
 
   const editorExtensions = useMemo(() => [
     json5(),
