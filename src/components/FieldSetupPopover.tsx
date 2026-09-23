@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MethodEditor, type MethodEditorRef } from "@/components/MethodEditor";
-import { OptionsEditor, type OptionsEditorRef } from "@/components/OptionsEditor";
+import { MethodEditor, type MethodEditorRef } from "@/components/layouts/MethodEditor";
+import { OptionsEditor, type OptionsEditorRef } from "@/components/layouts/OptionsEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
