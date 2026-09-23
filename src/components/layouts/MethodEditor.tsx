@@ -29,29 +29,29 @@ import {
   EDITOR_BASIC_SETUP,
   EDITOR_PRETTIER_OPTIONS,
 } from "@/configs";
-import { InlineInput } from "@/components/shared/InlineInput.tsx";
+import { InlineInput } from "@/components/shared/InlineInput";
 
-interface JavascriptEditorProps {
-  value: CatalogMethod;
+interface MethodEditorProps {
+  method: CatalogMethod;
   error?: string | ((draft: string) => string);
   className?: string;
-  onChange: <K extends keyof CatalogMethod>(propertyKey: K, nextValue: CatalogMethod[K]) => void;
+  onMethodChange: <K extends keyof CatalogMethod>(propertyKey: K, nextValue: CatalogMethod[K]) => void;
   onErrorChange: (error: string | null) => void;
 }
 
-export interface JavascriptEditorRef {
+export interface MethodEditorRef {
   format: () => void;
 }
 
-function JavascriptEditorComponent(
+function MethodEditorComponent(
   {
-    value,
+    method,
     error,
     className,
-    onChange,
+    onMethodChange,
     onErrorChange,
-  }: JavascriptEditorProps,
-  ref: ForwardedRef<JavascriptEditorRef>,
+  }: MethodEditorProps,
+  ref: ForwardedRef<MethodEditorRef>,
 ) {
   const { t } = useTranslation();
 
@@ -107,18 +107,18 @@ function JavascriptEditorComponent(
   }, [onErrorChange]);
 
   const format = useCallback(async () => {
-    if (!value.code) return;
+    if (!method.code) return;
 
     try {
       const formattedCode = await prettierFormat(
-        value.code,
+        method.code,
         EDITOR_PRETTIER_OPTIONS,
       );
-      onChange("code", formattedCode);
+      onMethodChange("code", formattedCode);
     } catch {
       // TODO: Handle this error
     }
-  }, [value.code, onChange]);
+  }, [method.code, onMethodChange]);
 
   const debouncedParse = useRef(debounce(
     (code: string) => validate(code),
@@ -126,19 +126,19 @@ function JavascriptEditorComponent(
   )).current;
 
   const handleChangeMethod = (nextMethod: string) => {
-    onChange("code", nextMethod);
+    onMethodChange("code", nextMethod);
 
     debouncedParse(nextMethod);
   };
 
   const handleChangeName = (nextName: string) => {
-    if (nextName === value.name) return;
+    if (nextName === method.name) return;
 
-    onChange("name", nextName);
+    onMethodChange("name", nextName);
   };
 
   useEffect(() => {
-    if (value.code) validate(value.code);
+    if (method.code) validate(method.code);
 
     return () => {
       debouncedParse.cancel();
@@ -158,7 +158,7 @@ function JavascriptEditorComponent(
   return (
     <div className="space-y-2">
       <InlineInput
-        value={value.name}
+        value={method.name}
         error={error}
         placeholder={t("customMethodsManager.form.nameInput.placeholder")}
         className="font-semibold px-3 py-2 border rounded-md"
@@ -167,7 +167,7 @@ function JavascriptEditorComponent(
         onError={onErrorChange}
       />
       <ReactCodeMirror
-        value={value.code}
+        value={method.code}
         className={className}
         extensions={editorExtension}
         theme={EDITOR_THEME_CREATED}
@@ -178,6 +178,6 @@ function JavascriptEditorComponent(
   );
 }
 
-export const JavascriptEditor = forwardRef(JavascriptEditorComponent);
+export const MethodEditor = forwardRef(MethodEditorComponent);
 
-JavascriptEditor.displayName = "JavascriptEditor";
+MethodEditor.displayName = "MethodEditor";

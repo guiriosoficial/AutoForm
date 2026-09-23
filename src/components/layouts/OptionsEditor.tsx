@@ -25,27 +25,27 @@ import {
 } from "@/lib/utils";
 import { EDITOR_CONFIG, EDITOR_BASIC_SETUP } from "@/configs";
 
-interface JsonEditorProps {
-  value: string | undefined;
-  hasValue: boolean;
+interface OptionsEditorProps {
+  options: string | undefined;
+  hasOptions: boolean;
   className?: string;
-  onChange: (nextValue: string) => void;
+  onOptionsChange: (nextOptions: string) => void;
   onErrorChange: (error: string | null) => void;
 }
 
-export interface JsonEditorRef {
+export interface OptionsEditorRef {
   format: () => void;
 }
 
-function JsonEditorComponent (
+function OptionsEditorComponent (
   {
-    value,
+    options,
     className,
-    hasValue,
-    onChange,
+    hasOptions,
+    onOptionsChange,
     onErrorChange,
-  }: JsonEditorProps,
-  ref: ForwardedRef<JsonEditorRef>,
+  }: OptionsEditorProps,
+  ref: ForwardedRef<OptionsEditorRef>,
 ) {
   const parse = useCallback((json: string) => {
     if (!isPopulatedJson5(json)) {
@@ -64,16 +64,16 @@ function JsonEditorComponent (
   }, [onErrorChange]);
 
   const format = useCallback(() => {
-    if (!value) return;
+    if (!options) return;
 
-    const parsedValue = parse(value);
+    const parsedValue = parse(options);
 
     if (!parsedValue) return;
 
     const formattedValue = stringifyJson5(parsedValue);
 
-    onChange(formattedValue);
-  }, [value, onChange, parse]);
+    onOptionsChange(formattedValue);
+  }, [options, onOptionsChange, parse]);
 
   const debouncedParse = useRef(debounce(
     (text: string) => parse(text),
@@ -81,13 +81,13 @@ function JsonEditorComponent (
   )).current;
 
   const handleEditorChange = (nextValue: string) => {
-    onChange(nextValue);
+    onOptionsChange(nextValue);
 
     debouncedParse(nextValue);
   };
 
   useEffect(() => {
-    if (value) parse(value);
+    if (options) parse(options);
 
     return () => {
       debouncedParse.cancel();
@@ -100,13 +100,13 @@ function JsonEditorComponent (
 
   const editorExtension = useMemo(() => [
     json5(),
-    createEditorLinter(jsonLinter, hasValue),
+    createEditorLinter(jsonLinter, hasOptions),
     createEditorKeymap({ onFormat: format }),
-  ], [hasValue, format]);
+  ], [hasOptions, format]);
 
   return (
     <ReactCodeMirror
-      value={value}
+      value={options}
       className={className}
       extensions={editorExtension}
       theme={EDITOR_THEME_CREATED}
@@ -116,6 +116,6 @@ function JsonEditorComponent (
   );
 }
 
-export const JsonEditor = forwardRef(JsonEditorComponent);
+export const OptionsEditor = forwardRef(OptionsEditorComponent);
 
-JsonEditor.displayName = "JsonEditor";
+OptionsEditor.displayName = "OptionsEditor";

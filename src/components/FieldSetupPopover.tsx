@@ -18,8 +18,8 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { JavascriptEditor, type JavascriptEditorRef } from "@/components/layouts/JavascriptEditor";
-import { JsonEditor, type JsonEditorRef } from "@/components/layouts/JsonEditor";
+import { MethodEditor, type MethodEditorRef } from "@/components/layouts/MethodEditor";
+import { OptionsEditor, type OptionsEditorRef } from "@/components/layouts/OptionsEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
@@ -62,8 +62,8 @@ function FieldSetupPopoverComponent(
   } = useCatalog()
   const { autoFormat } = useAppSettings()
 
-  const jsonEditorRef = useRef<JsonEditorRef>(null);
-  const javascriptEditorRef = useRef<JavascriptEditorRef>(null);
+  const jsonEditorRef = useRef<OptionsEditorRef>(null);
+  const javascriptEditorRef = useRef<MethodEditorRef>(null);
 
   const error = activeTab === EditorTabs.OPTIONS ? jsonError : javascriptError;
   const customMethodUsageCount = getMethodUsageCount(method?.key)
@@ -218,25 +218,25 @@ function FieldSetupPopoverComponent(
             </PopoverHeader>
 
             <TabsContent value={EditorTabs.OPTIONS}>
-              <JsonEditor
+              <OptionsEditor
                 ref={jsonEditorRef}
-                value={options}
-                hasValue={hasOptions}
+                options={options}
+                hasOptions={hasOptions}
                 className={editorClasses}
-                onChange={onOptionsChange}
+                onOptionsChange={onOptionsChange}
                 onErrorChange={setJsonError}
               />
             </TabsContent>
 
             {isCustomMethod && (
               <TabsContent value={EditorTabs.METHOD}>
-                <JavascriptEditor
+                <MethodEditor
                   ref={javascriptEditorRef}
-                  value={method}
                   className={editorClasses}
+                  method={method}
                   error={getCustomMethodNameErrorMessage}
-                  onChange={handleChangeCustomMethod}
                   onErrorChange={setJavascriptError}
+                  onMethodChange={handleChangeCustomMethod}
                 />
               </TabsContent>
             )}
