@@ -14,8 +14,8 @@ import { Check, PenLine, X } from "lucide-react";
 import { InlineButton } from "@/components/shared/InlineButton";
 import {
   cn,
+  throttle,
   isFunction,
-  scheduleFirst,
   isPopulatedString,
   preventDefaultEscape,
 } from "@/lib/utils";
@@ -52,25 +52,12 @@ function InlineInputComponent (
   const errorMessage = isFunction(error) ? error(draft) : error;
   const hasError = isPopulatedString(errorMessage);
 
-  const errorMessageRef = useRef(errorMessage);
-  const hasErrorRef = useRef(hasError);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const scheduleErrorNotification = useRef(
-    scheduleFirst(() => {
-      if (!hasErrorRef.current || !errorMessageRef.current) return;
-      toast.error(errorMessageRef.current);
-    }, EDITOR_CONFIG.ERROR_DELAY_MS)
+  const throttledErrorNotification = useRef(throttle(
+    (notificationMessage: string) => toast.error(notificationMessage),
+    EDITOR_CONFIG.ERROR_DELAY_MS)
   ).current;
-
-  useEffect(() => {
-    hasErrorRef.current = hasError;
-    errorMessageRef.current = errorMessage;
-
-    if (!hasError || !errorMessage) return;
-
-    scheduleErrorNotification()
-  }, [hasError, errorMessage]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -82,7 +69,10 @@ function InlineInputComponent (
       input?.select();
     });
 
-    return () => cancelAnimationFrame(frame);
+    return () => {
+      cancelAnimationFrame(frame);
+      throttledErrorNotification.cancel()
+    };
   }, [isEditing]);
 
   const startEditing = useCallback(() => {
@@ -100,7 +90,12 @@ function InlineInputComponent (
   const confirmEditing = (event?: MouseEvent | FocusEvent) => {
     event?.preventDefault();
 
-    const nextValue = hasError ? value : draft.trim();
+    if (hasError) {
+      throttledErrorNotification(errorMessage);
+      return;
+    };
+
+    const nextValue = draft.trim();
 
     if (!nextValue || nextValue === value) {
       cancelEditing();

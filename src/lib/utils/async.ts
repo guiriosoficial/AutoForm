@@ -21,24 +21,24 @@ export function debounce<T extends (...args: never[]) => void>(callback: T, dela
   return debounced;
 }
 
-export function scheduleFirst<T extends (...args: never[]) => void>(callback: T, delay: number) {
-  let timerId: ReturnType<typeof setTimeout> | null = null;
+export function throttle<T extends (...args: never[]) => void>(callback: T, delay: number) {
+  let timeoutId: ReturnType<typeof setTimeout> | null = null;
 
-  const scheduled = (...args: Parameters<T>) => {
-    if (timerId !== null) return;
+  const throttled = (...args: Parameters<T>) => {
+    if (timeoutId) return;
 
-    timerId = setTimeout(() => {
-      timerId = null;
+    timeoutId = setTimeout(() => {
       callback(...args);
+      timeoutId = null;
     }, delay);
   };
 
-  scheduled.cancel = () => {
-    if (timerId !== null) {
-      clearTimeout(timerId);
-      timerId = null;
+  throttled.cancel = () => {
+    if (timeoutId) {
+      clearTimeout(timeoutId);
+      timeoutId = null;
     }
   };
 
-  return scheduled;
+  return throttled;
 }
