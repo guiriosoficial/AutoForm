@@ -31,7 +31,7 @@ import { InlineInput } from "@/components/shared/InlineInput.tsx";
 interface JavascriptEditorProps {
   value: CatalogMethod;
   className?: string;
-  onChange: <K extends keyof CatalogMethod>(key: K, newValue: CatalogMethod[K]) => void;
+  onChange: <K extends keyof CatalogMethod>(propertyKey: K, nextValue: CatalogMethod[K]) => void;
   onErrorChange: (error: string | null) => void;
 }
 
@@ -120,23 +120,23 @@ function JavascriptEditorComponent(
     } catch {
       // TODO: Handle this error
     }
-  }, [value, onChange]);
+  }, [value.code, onChange]);
 
   const debouncedParse = useRef(debounce(
     (code: string) => parse(code),
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
-  const handleChangeMethod = (newMethod: string) => {
-    onChange("code", newMethod);
+  const handleChangeMethod = (nextMethod: string) => {
+    onChange("code", nextMethod);
 
-    debouncedParse(newMethod);
+    debouncedParse(nextMethod);
   };
 
-  const handleChangeName = (newName: string) => {
-    if (newName === value.name) return;
+  const handleChangeName = (nextName: string) => {
+    if (nextName === value.name) return;
 
-    onChange("name", newName);
+    onChange("name", nextName);
   };
 
   useEffect(() => {

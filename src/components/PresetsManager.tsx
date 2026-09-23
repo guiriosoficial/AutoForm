@@ -29,7 +29,7 @@ import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { Preset } from "@/lib/presets";
-import type { ParseImportDataResult, ImportExportData } from "@/hooks/use-import-export";
+import type { ParseImportDataResult, ImportPayload } from "@/hooks/use-import-export";
 
 interface PresetsManagerProps {
   presets: Preset[];
@@ -38,7 +38,7 @@ interface PresetsManagerProps {
   onCreatePreset: () => void;
   onDeletePreset: (presetId: string) => void;
   onExportData: () => void;
-  onImportData: (parsedData: ImportExportData, importStrategy?: ImportStrategy) => void;
+  onImportData: (importPayload: ImportPayload, importStrategy?: ImportStrategy) => void;
   onParseImportData: (jsonContent: string) => ParseImportDataResult | undefined;
 }
 
@@ -58,7 +58,7 @@ export function PresetsManager({
 
   const { importStrategy } = useAppSettings();
 
-  const importDataInputRef = useRef<HTMLInputElement>(null);
+  const importFileInputRef = useRef<HTMLInputElement>(null);
 
   const { t } = useTranslation();
 
@@ -81,24 +81,24 @@ export function PresetsManager({
 
     const jsonContent = await file.text();
 
-    const parsedContent = onParseImportData(jsonContent);
+    const parseResult = onParseImportData(jsonContent);
 
-    if (!parsedContent) return;
+    if (!parseResult) return;
 
-    const skipConfirmation =
+    const shouldSkipConfirmation =
       presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
       importStrategy !== ImportStrategy.ALWAYS_ASK
 
-    if (skipConfirmation) {
-      onImportData(parsedContent.parsed, importStrategy);
+    if (shouldSkipConfirmation) {
+      onImportData(parseResult.parsedData, importStrategy);
       return;
     }
 
-    setImportPreview(parsedContent);
+    setImportPreview(parseResult);
   };
 
-  const handleConfirmImportData = (parsedData: ImportExportData, importStrategy: ImportStrategy) => {
-    onImportData(parsedData, importStrategy);
+  const handleConfirmImportData = (importPayload: ImportPayload, importStrategySelected: ImportStrategy) => {
+    onImportData(importPayload, importStrategySelected);
 
     setImportPreview(null);
   };
@@ -181,7 +181,7 @@ export function PresetsManager({
             <Download />
             {t("presetsManager.buttons.export")}
           </DropdownMenuItem>
-          <DropdownMenuItem onClick={() => importDataInputRef.current?.click()}>
+          <DropdownMenuItem onClick={() => importFileInputRef.current?.click()}>
             <Upload />
             {t("presetsManager.buttons.import")}
           </DropdownMenuItem>
@@ -208,7 +208,7 @@ export function PresetsManager({
       )}
 
       <input
-        ref={importDataInputRef}
+        ref={importFileInputRef}
         className="hidden"
         type="file"
         accept={IMPORT_CONFIG.FILE_TYPE}

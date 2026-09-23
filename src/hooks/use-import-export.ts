@@ -13,15 +13,19 @@ interface UseImportExportArgs {
   setCustomMethods: Dispatch<SetStateAction<CatalogMethod[]>>;
 }
 
-export interface ImportExportData {
+export interface ExportPayload {
   presets: Preset[];
   customMethods: CatalogMethod[];
 }
 
+export type ImportPayload = ExportPayload;
+
 export interface ParseImportDataResult {
-  parsed: ImportExportData;
-  duplicatedPresets: Preset[];
-  duplicatedCustomMethods: CatalogMethod[];
+  parsedData: ImportPayload;
+  conflicts: {
+    presets: Preset[];
+    customMethods: CatalogMethod[];
+  };
 }
 
 export function useImportExport({
@@ -33,7 +37,8 @@ export function useImportExport({
   const { t } = useTranslation();
 
   const exportData = useCallback(() => {
-    const exportJson = JSON.stringify({ presets, customMethods }, null, EXPORT_CONFIG.INDENT_SPACES);
+    const exportPayload = { presets, customMethods }
+    const exportJson = JSON.stringify(exportPayload, null, EXPORT_CONFIG.INDENT_SPACES);
     const downloadBlob = new Blob([exportJson], { type: EXPORT_CONFIG.FILE_TYPE });
     const downloadUrl = URL.createObjectURL(downloadBlob);
 
@@ -52,24 +57,26 @@ export function useImportExport({
 
   const parseImportData = useCallback((jsonContent: string): ParseImportDataResult | undefined => {
     try {
-      const importedData: ImportExportData = JSON.parse(jsonContent);
+      const importPayload: ImportPayload = JSON.parse(jsonContent);
 
-      const invalidImported =
-        !isValidPresetArray(importedData.presets) ||
-        !isValidCustomMethodArray(importedData.customMethods)
+      const isImportedDataInvalid =
+        !isValidPresetArray(importPayload.presets) ||
+        !isValidCustomMethodArray(importPayload.customMethods)
 
-      if (invalidImported) {
+      if (isImportedDataInvalid) {
         toast.error(t("presetsManager.messages.importPreset.invalid"));
         return;
       }
 
-      const duplicatedPresets = getDuplicatedItemsByKey(presets, importedData.presets, "id");
-      const duplicatedCustomMethods = getDuplicatedItemsByKey(customMethods, importedData.customMethods, "key");
+      const conflictingPresets = getDuplicatedItemsByKey(presets, importPayload.presets, "id");
+      const conflictingCustomMethods = getDuplicatedItemsByKey(customMethods, importPayload.customMethods, "key");
 
       return {
-        parsed: importedData,
-        duplicatedPresets,
-        duplicatedCustomMethods,
+        parsedData: importPayload,
+        conflicts: {
+          presets: conflictingPresets,
+          customMethods: conflictingCustomMethods,
+        }
       };
     } catch (error) {
       const errorMessage = getErrorMessage(error, t("presetsManager.messages.importPreset.failed"));
@@ -78,12 +85,17 @@ export function useImportExport({
   }, [presets, customMethods, t]);
 
   const importData = useCallback((
-    imported: ImportExportData,
+    importPayload: ImportPayload,
     importStrategy: ImportStrategy = ImportStrategy.OVERWRITE,
   ) => {
+    const {
+      presets: importedPresets,
+      customMethods: importedCustomMethods
+    } = importPayload
+
     if (importStrategy === ImportStrategy.REPLACE_ALL) {
-      setPresets(imported.presets);
-      setCustomMethods(imported.customMethods);
+      setPresets(importedPresets);
+      setCustomMethods(importedCustomMethods);
       return;
     }
 
@@ -92,7 +104,7 @@ export function useImportExport({
     setPresets((prev) => {
       const presetsById = new Map(prev.map((preset) => [preset.id, preset]));
 
-      for (const preset of imported.presets) {
+      for (const preset of importedPresets) {
         if (isAppendStrategy && presetsById.has(preset.id)) continue;
 
         presetsById.set(preset.id, preset);
@@ -104,10 +116,10 @@ export function useImportExport({
     setCustomMethods((prev) => {
       const customMethodsByKey = new Map(prev.map((customMethod) => [customMethod.key, customMethod]));
 
-      for (const method of imported.customMethods) {
-        if (isAppendStrategy && customMethodsByKey.has(method.key)) continue;
+      for (const customMethod of importedCustomMethods) {
+        if (isAppendStrategy && customMethodsByKey.has(customMethod.key)) continue;
 
-        customMethodsByKey.set(method.key, method);
+        customMethodsByKey.set(customMethod.key, customMethod);
       }
 
       return [...customMethodsByKey.values()];

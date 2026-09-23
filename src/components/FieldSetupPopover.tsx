@@ -113,8 +113,8 @@ function FieldSetupPopoverComponent(
     setOpen(isOpening);
   };
 
-  const startEditing = useCallback((tab: EditorTabs) => {
-    setActiveTab(tab);
+  const startEditing = useCallback((targetTab: EditorTabs) => {
+    setActiveTab(targetTab);
     setOpen(true);
   }, [])
 

@@ -21,10 +21,10 @@ export function debounce<T extends (...args: never[]) => void>(callback: T, dela
   return debounced;
 }
 
-export function deferPredicate<T extends (...args: never[]) => void>(callback: T, delay: number) {
+export function scheduleFirst<T extends (...args: never[]) => void>(callback: T, delay: number) {
   let timerId: ReturnType<typeof setTimeout> | null = null;
 
-  const predicated = (...args: Parameters<T>) => {
+  const scheduled = (...args: Parameters<T>) => {
     if (timerId !== null) return;
 
     timerId = setTimeout(() => {
@@ -33,12 +33,12 @@ export function deferPredicate<T extends (...args: never[]) => void>(callback: T
     }, delay);
   };
 
-  predicated.cancel = () => {
+  scheduled.cancel = () => {
     if (timerId !== null) {
       clearTimeout(timerId);
       timerId = null;
     }
   };
 
-  return predicated;
+  return scheduled;
 }

@@ -18,12 +18,12 @@ import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons } from "@/components/icons/maps";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import type { ParseImportDataResult, ImportExportData } from "@/hooks/use-import-export";
+import type { ParseImportDataResult, ImportPayload } from "@/hooks/use-import-export";
 
 interface PresetsImportDialogProps {
   open: boolean;
   importPreview: ParseImportDataResult;
-  onImportData: (parsedData: ImportExportData, importStrategy: ImportStrategy) => void;
+  onImportData: (importPayload: ImportPayload, importStrategy: ImportStrategy) => void;
   onOpenChange: (open: boolean) => void;
 }
 
@@ -40,7 +40,7 @@ export function PresetsImportDialog({
 
   const { t } = useTranslation();
 
-  const { parsed, duplicatedPresets } = importPreview;
+  const { parsedData, conflicts } = importPreview;
 
   const handleImportStrategyChange = (nextStrategy: string[]) => {
     if (nextStrategy.length === 0) return;
@@ -49,8 +49,8 @@ export function PresetsImportDialog({
   };
 
   const dialogDescription = t("presetsManager.dialogs.importPreset.description", {
-    count: duplicatedPresets.length,
-    total: parsed.presets.length,
+    count: conflicts.presets.length,
+    total: parsedData.presets.length,
   });
 
   return (
@@ -72,7 +72,7 @@ export function PresetsImportDialog({
         </DialogHeader>
 
         <div className="space-y-2 ml-4">
-          {duplicatedPresets.map((preset) => (
+          {conflicts.presets.map((preset) => (
             <Item
               key={preset.id}
               size="xs"
@@ -124,7 +124,7 @@ export function PresetsImportDialog({
               </Button>
             }
           />
-          <Button onClick={() => onImportData(parsed, importStrategy)}>
+          <Button onClick={() => onImportData(parsedData, importStrategy)}>
             {t("presetsManager.dialogs.importPreset.confirmButton")}
           </Button>
         </DialogFooter>

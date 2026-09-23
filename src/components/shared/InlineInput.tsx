@@ -15,7 +15,7 @@ import { InlineButton } from "@/components/shared/InlineButton";
 import {
   cn,
   isFunction,
-  deferPredicate,
+  scheduleFirst,
   isPopulatedString,
   preventDefaultEscape,
 } from "@/lib/utils";
@@ -56,8 +56,8 @@ function InlineInputComponent (
   const hasErrorRef = useRef(hasError);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const deferPredicatedErrorNotification = useRef(
-    deferPredicate(() => {
+  const scheduleErrorNotification = useRef(
+    scheduleFirst(() => {
       if (!hasErrorRef.current || !errorMessageRef.current) return;
       toast.error(errorMessageRef.current);
     }, EDITOR_CONFIG.ERROR_DELAY_MS)
@@ -69,7 +69,7 @@ function InlineInputComponent (
 
     if (!hasError || !errorMessage) return;
 
-    deferPredicatedErrorNotification()
+    scheduleErrorNotification()
   }, [hasError, errorMessage]);
 
   useEffect(() => {
@@ -177,14 +177,14 @@ function InlineInputComponent (
 
   const words = value.split(" ");
   const lastWord = words.pop();
-  const restantWords = words.join(" ");
+  const remainingWords = words.join(" ");
 
   return (
     <p
       className={previewContainerClasses}
       onClick={startEditing}
     >
-      {restantWords}{" "}
+      {remainingWords}{" "}
       <span className="whitespace-nowrap">
       {lastWord}{" "}
         <InlineButton

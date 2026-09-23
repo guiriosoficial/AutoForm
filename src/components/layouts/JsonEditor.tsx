@@ -27,9 +27,9 @@ import { EDITOR_CONFIG, EDITOR_BASIC_SETUP } from "@/configs";
 
 interface JsonEditorProps {
   value: string | undefined;
+  hasValue: boolean;
   className?: string;
-  hasOptions: boolean;
-  onChange: (value: string) => void;
+  onChange: (nextValue: string) => void;
   onErrorChange: (error: string | null) => void;
 }
 
@@ -41,20 +41,20 @@ function JsonEditorComponent (
   {
     value,
     className,
-    hasOptions,
+    hasValue,
     onChange,
     onErrorChange,
   }: JsonEditorProps,
   ref: ForwardedRef<JsonEditorRef>,
 ) {
-  const parse = useCallback((val: string) => {
-    if (!isPopulatedJson5(val)) {
+  const parse = useCallback((json: string) => {
+    if (!isPopulatedJson5(json)) {
       onErrorChange(null);
       return;
     }
 
     try {
-      const parsedValue = parseJson5<JsonValue>(val);
+      const parsedValue = parseJson5<JsonValue>(json);
       onErrorChange(null);
       return parsedValue;
     } catch (error) {
@@ -80,10 +80,10 @@ function JsonEditorComponent (
     EDITOR_CONFIG.LINT_DELAY_MS,
   )).current;
 
-  const handleConfigChange = (newOptions: string) => {
-    onChange(newOptions);
+  const handleEditorChange = (nextValue: string) => {
+    onChange(nextValue);
 
-    debouncedParse(newOptions);
+    debouncedParse(nextValue);
   };
 
   useEffect(() => {
@@ -100,9 +100,9 @@ function JsonEditorComponent (
 
   const editorExtension = useMemo(() => [
     json5(),
-    createEditorLinter(jsonLinter, hasOptions),
+    createEditorLinter(jsonLinter, hasValue),
     createEditorKeymap({ onFormat: format }),
-  ], [hasOptions, format]);
+  ], [hasValue, format]);
 
   return (
     <ReactCodeMirror
@@ -111,7 +111,7 @@ function JsonEditorComponent (
       extensions={editorExtension}
       theme={EDITOR_THEME_CREATED}
       basicSetup={EDITOR_BASIC_SETUP}
-      onChange={handleConfigChange}
+      onChange={handleEditorChange}
     />
   );
 }

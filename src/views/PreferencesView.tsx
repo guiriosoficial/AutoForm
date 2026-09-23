@@ -48,8 +48,8 @@ export function PreferencesView() {
     getLocaleDisplayNamesMap(i18n.language, Object.values(Locale)
     ), [i18n.language])
 
-  const getLocalizedDisplayName = (locale: string) => {
-    const displayName = localeDisplayNamesMap.get(locale) ?? locale;
+  const getLocalizedDisplayName = (localeCode: string) => {
+    const displayName = localeDisplayNamesMap.get(localeCode) ?? locale;
 
     return toTitleCase(displayName)
   };
