@@ -108,7 +108,7 @@ export function useCatalogData({
     setCustomMethods((prev) => [...prev, newCustomMethod]);
 
     return newCustomMethod;
-  }, [customMethods, t]);
+  }, [customMethods, t, setCustomMethods]);
 
   const updateCustomMethod = useCallback((
     methodKey: string,
@@ -136,7 +136,7 @@ export function useCatalogData({
     );
 
     removeGeneratorFromPresets(methodKey);
-  }, [setCustomMethods]);
+  }, [removeGeneratorFromPresets, setCustomMethods]);
 
   const getMethodUsageCount = useCallback((methodKey: string | undefined) => {
     let fieldUsageCount = 0;

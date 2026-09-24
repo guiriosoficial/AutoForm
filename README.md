@@ -53,14 +53,16 @@ npm run build
 
 ## TODOs
 - ======================== BACKLOG ============================
-- Exibir duplicidade métodos customizados na importação*
 - Criar Preferência de erros (Ignorar, Preencher, Gerar...)
 - Tratar error ao gerar dados
 - Detectar formulários automaticamente
-- Adicionar suporte a arquivos (Gerar XLS, CSV, PNG, JPG, PDF)
-- Documentar possibilidade de Fetch em Custom Methods
 
+- Documentar possibilidade de Fetch em Custom Methods
+- Permitir métodos do faker e box4dev dentro de custom methods
 - Criar preset inicial prontos
+  - CustomMethod que retorne Imagem
+  - CustomMethod que retorne Planilha
+  - CustomMethod que retorne PFD
 - Opção Keep All na importação
 - Tratar nomes duplicados na importação (Inserir Timestamp)
 - Personalizar melhor Editor de JS

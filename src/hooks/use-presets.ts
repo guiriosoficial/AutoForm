@@ -1,12 +1,8 @@
 import { useTranslation } from "react-i18next";
 import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
-import {
-  type Preset,
-  createEmptyPreset,
-  getAdjacentPreset,
-} from "@/lib/presets";
-import { usePersistentState } from "@/hooks/use-persistent-state";
+import { type Preset, createEmptyPreset, getAdjacentPreset } from "@/lib/presets";
 import { isFunction, createNextSequencedName } from "@/lib/utils";
+import { usePersistentState } from "@/hooks/use-persistent-state";
 import { StorageKeys } from "@/configs";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
 import type { FieldConfig } from "@/lib/fields";
@@ -112,18 +108,18 @@ export function usePresets({
     }));
   }, [updateCurrentPreset]);
 
-  const removeGeneratorFromPresets = useCallback((generatorToRemove: string) => {
+  const removeGeneratorFromPresets = useCallback((generator: string) => {
     setPresets((prevPresets) =>
       prevPresets.map((preset) => {
         const hasFieldWithGenerator = preset.fields
-          .some((field) => field.generator === generatorToRemove);
+          .some((field) => field.generator === generator);
 
         if (!hasFieldWithGenerator) return preset;
 
         return {
           ...preset,
           fields: preset.fields.map((field) =>
-            field.generator === generatorToRemove
+            field.generator === generator
               ? { ...field, generator: "" }
               : field
           ),

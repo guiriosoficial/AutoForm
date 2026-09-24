@@ -45,7 +45,7 @@ export function useForm({
       | GeneratedValues
       | ((prev: GeneratedValues) => GeneratedValues)
   ) => {
-    setGeneratedValuesByPresetId(prev => {
+    setGeneratedValuesByPresetId((prev) => {
       const currentPresetValues = prev[presetId] ?? {};
 
         const values = isFunction(valuesOrUpdater)
@@ -129,10 +129,6 @@ export function useForm({
     }
   }, [t]);
 
-  useEffect(() => {
-    if (presetId && fields.length === 0) addField();
-  }, [fields, presetId, addField]);
-
   const copyFieldsAsJSON = useCallback(async () => {
     try {
       const fieldsData: GeneratedValuesJson = {};
@@ -152,6 +148,10 @@ export function useForm({
       toast.error(t("footer.messages.copyJson.failed"));
     }
   }, [fields, generatedValues, t]);
+
+  useEffect(() => {
+    if (presetId && fields.length === 0) addField();
+  }, [fields, presetId, addField]);
 
   return {
     generatedValues,

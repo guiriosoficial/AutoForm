@@ -53,7 +53,7 @@ export function useImportExport({
     } finally {
       URL.revokeObjectURL(downloadUrl);
     }
-  }, [presets, t]);
+  }, [presets, customMethods, t]);
 
   const parseImportData = useCallback((jsonContent: string): ParseImportDataResult | undefined => {
     try {
