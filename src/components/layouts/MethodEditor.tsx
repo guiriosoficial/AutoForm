@@ -91,7 +91,7 @@ function MethodEditorComponent(
       const message = getErrorMessage(error);
       onErrorChange(message);
     }
-  }, [onErrorChange]);
+  }, [onErrorChange, t]);
 
   const format = useCallback(async () => {
     if (!method.code) return;
