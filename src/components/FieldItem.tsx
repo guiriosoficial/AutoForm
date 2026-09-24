@@ -13,9 +13,9 @@ import {
   ComboboxList,
   ComboboxSeparator,
 } from "@/components/ui/combobox";
+import { type FieldSetupPopoverRef, FieldSetupPopover } from "@/components/FieldSetupPopover";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { type FieldSetupPopoverRef, FieldSetupPopover } from "@/components/FieldSetupPopover";
 import { InlineButton } from "@/components/shared/InlineButton";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { cn, preventDefaultEscape } from "@/lib/utils";

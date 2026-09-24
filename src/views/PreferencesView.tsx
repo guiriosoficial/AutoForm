@@ -51,7 +51,7 @@ export function PreferencesView() {
   const getLocalizedDisplayName = (localeCode: string) => {
     const displayName = localeDisplayNamesMap.get(localeCode) ?? locale;
 
-    return toTitleCase(displayName);
+    return toTitleCase(displayName, { keepSeparators: true });
   };
 
   const handleThemeChange = (nextTheme: string[]) => {

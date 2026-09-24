@@ -37,7 +37,7 @@ export function usePresets({
 
     setCurrentPresetId(preset.id);
     setLastPresetId(preset.id);
-  }, [setCurrentPresetId, setLastPresetId]);
+  }, [setLastPresetId]);
 
   const createPreset = useCallback(() => {
     const defaultName = t("configs.preset.defaultName");
@@ -48,11 +48,12 @@ export function usePresets({
       { spaced: true },
     );
     const emptyPreset = createEmptyPreset(nextPresetName);
+    const isFirstPreset = presets.length === 0;
 
     setPresets((prev) => [...prev, emptyPreset]);
     setCurrentPreset(emptyPreset);
 
-    if (presets.length + 1 <= 1) return;
+    if (isFirstPreset) return;
 
     requestAnimationFrame(() => {
       presetNameInputRef.current?.startEditing();
@@ -102,24 +103,24 @@ export function usePresets({
     }));
   }, [updateCurrentPreset]);
 
-  const updateCurrentPresetName = useCallback((name: string) => {
+  const updateCurrentPresetName = useCallback((nextName: string) => {
     updateCurrentPreset(() => ({
-      name,
+      name: nextName,
     }));
   }, [updateCurrentPreset]);
 
-  const removeGeneratorFromPresets = useCallback((generator: string) => {
+  const removeGeneratorFromPresets = useCallback((generatorKey: string) => {
     setPresets((prevPresets) =>
       prevPresets.map((preset) => {
         const hasFieldWithGenerator = preset.fields
-          .some((field) => field.generator === generator);
+          .some((field) => field.generator === generatorKey);
 
         if (!hasFieldWithGenerator) return preset;
 
         return {
           ...preset,
           fields: preset.fields.map((field) =>
-            field.generator === generator
+            field.generator === generatorKey
               ? { ...field, generator: "" }
               : field
           ),
@@ -142,7 +143,7 @@ export function usePresets({
       return;
     }
 
-    if (presets?.length > 0) {
+    if (presets.length > 0) {
       setCurrentPreset(presets[0]);
       return;
     }
@@ -150,8 +151,8 @@ export function usePresets({
     createPreset();
   }, [presets, currentPreset, presetsById, lastPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
 
-  const isPresetNameTaken = useCallback((name: string, presetId?: string) => (
-    presets.some((preset) => preset.name === name && preset.id !== presetId)
+  const isPresetNameTaken = useCallback((name: string, excludedPresetId?: string) => (
+    presets.some((preset) => preset.name === name && preset.id !== excludedPresetId)
   ), [presets]);
 
   return {

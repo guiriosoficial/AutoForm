@@ -18,13 +18,13 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MethodEditor, type MethodEditorRef } from "@/components/layouts/MethodEditor";
-import { OptionsEditor, type OptionsEditorRef } from "@/components/layouts/OptionsEditor";
+import { type MethodEditorRef, MethodEditor } from "@/components/layouts/MethodEditor";
+import { type OptionsEditorRef, OptionsEditor } from "@/components/layouts/OptionsEditor";
 import { AlertDialog } from "@/components/shared/AlertDialog";
 import { useCatalog } from "@/providers/CatalogProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
 import { type CatalogMethod, isValidCustomMethod } from "@/lib/catalog";
+import { cn, preventDefaultEscape, isPopulatedJson5 } from "@/lib/utils";
 import { EditorTabs, IconSize } from "@/configs";
 import type { PopoverRoot } from "@base-ui/react";
 
@@ -148,7 +148,7 @@ function FieldSetupPopoverComponent(
 
   const descriptionText = error || t("fieldsManager.popovers.fieldSettings.caption");
   const deleteAlertDescription = [
-    !!customMethodUsageCount?.fieldUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", { customMethodUsageCount }),
+    !!customMethodUsageCount?.fieldUsageCount && t("fieldsManager.alerts.deleteCustomMethod.usesCounter", { ...customMethodUsageCount }),
     t("fieldsManager.alerts.deleteCustomMethod.description", { name: method?.name }),
   ];
 

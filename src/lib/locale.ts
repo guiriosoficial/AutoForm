@@ -60,7 +60,7 @@ export function getLocaleDisplayNamesMap(
       }
     }
 
-    map.set(locale, flag ? `${flag} ${name}` : name);
+    map.set(tag, flag ? `${flag} ${name}` : name);
   }
 
   return map;

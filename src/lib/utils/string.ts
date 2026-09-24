@@ -1,7 +1,17 @@
-export function toTitleCase(str: string) {
-  return str.replaceAll(/(?:^|[-_ ])(?<char>\w)/gu, (...args) => {
+const TITLE_CASE_PATTERN = /(?<separator>^|[-_ ]+)(?<char>[a-z])|(?<=\d)(?<digit>[a-z])/giu;
+
+export function toTitleCase(
+  str: string,
+  options?: { keepSeparators?: boolean },
+) {
+  const { keepSeparators = false } = options ?? {};
+
+  return str.replaceAll(TITLE_CASE_PATTERN, (...args) => {
     const groups = args.pop();
-    return groups.char.toUpperCase();
+
+    if (groups.digit) return groups.digit.toUpperCase();
+
+    return `${keepSeparators ? groups.separator : ""}${groups.char.toUpperCase()}`;
   });
 }
 

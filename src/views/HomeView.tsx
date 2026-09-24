@@ -71,7 +71,7 @@ export function HomeView() {
     generateValues,
     regenerateFieldValue,
     copyGeneratedValue,
-    copyFieldsAsJSON,
+    copyGeneratedValuesAsJSON,
     generatedValues,
   } = useForm({
     catalogMethodsByKey,
@@ -145,7 +145,7 @@ export function HomeView() {
         onPrimaryButtonClick={generateValues}
         secondaryButtonText={t("footer.buttons.copyAsJson")}
         secondaryButtonIcon={Copy}
-        onSecondaryButtonClick={copyFieldsAsJSON}
+        onSecondaryButtonClick={copyGeneratedValuesAsJSON}
         hideSecondaryButton={Object.keys(generatedValues).length <= 0}
       />
     </>

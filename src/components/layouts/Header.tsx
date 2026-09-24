@@ -13,11 +13,15 @@ export function Header() {
   const navigationItems = Object.values(Page).filter((page) => page !== activePage);
 
   const handleNavigate = (nextPage: Page) => {
-    const url = new URL(nextPage);
+    try {
+      const url = new URL(nextPage);
 
-    if (url.protocol === PAGE_CONFIG.EXTERNAL_URL_PROTOCOL) {
-      window.open(nextPage, "_blank", "noreferrer");
-      return;
+      if (url.protocol === PAGE_CONFIG.EXTERNAL_URL_PROTOCOL) {
+        window.open(nextPage, "_blank", "noreferrer");
+        return;
+      }
+    } catch {
+      // TODO: Handle ignore invalid URLs
     }
 
     setActivePage(nextPage);

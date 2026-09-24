@@ -43,21 +43,21 @@ export function useForm({
   const setGeneratedValues = useCallback((
     valuesOrUpdater:
       | GeneratedValues
-      | ((prev: GeneratedValues) => GeneratedValues)
+      | ((previousValues: GeneratedValues) => GeneratedValues)
   ) => {
     setGeneratedValuesByPresetId((prev) => {
       const currentPresetValues = prev[presetId] ?? {};
 
-        const values = isFunction(valuesOrUpdater)
-          ? valuesOrUpdater(currentPresetValues)
-          : valuesOrUpdater;
+      const nextValues = isFunction(valuesOrUpdater)
+        ? valuesOrUpdater(currentPresetValues)
+        : valuesOrUpdater;
 
-        return {
-          ...prev,
-          [presetId]: values,
-        };
-      });
-    }, [presetId, setGeneratedValuesByPresetId]);
+      return {
+        ...prev,
+        [presetId]: nextValues,
+      };
+    });
+  }, [presetId, setGeneratedValuesByPresetId]);
 
   const fieldsById = useMemo(() =>
     Object.fromEntries(
@@ -83,13 +83,11 @@ export function useForm({
 
     await Promise.all(
       fields.map(async (field) => {
-        const method = catalogMethodsByKey.get(field.generator);
+        const catalogMethod = catalogMethodsByKey.get(field.generator);
 
-        if (!method) return;
+        if (!catalogMethod) return;
 
-        const generatedValue = await generateValue(method, field.options);
-
-        if (!generatedValue) return;
+        const generatedValue = await generateValue(catalogMethod, field.options);
 
         generatedFieldValues[field.id] = createFieldResult.value(generatedValue);
 
@@ -105,13 +103,11 @@ export function useForm({
 
     if (!field) return;
 
-    const method = catalogMethodsByKey.get(field.generator);
+    const catalogMethod = catalogMethodsByKey.get(field.generator);
 
-    if (!method) return;
+    if (!catalogMethod) return;
 
-    const generatedValue = await generateValue(method, field.options);
-
-    if (!generatedValue) return;
+    const generatedValue = await generateValue(catalogMethod, field.options);
 
     setGeneratedValues((prev) => ({
       ...prev,
@@ -129,7 +125,7 @@ export function useForm({
     }
   }, [t]);
 
-  const copyFieldsAsJSON = useCallback(async () => {
+  const copyGeneratedValuesAsJSON = useCallback(async () => {
     try {
       const fieldsData: GeneratedValuesJson = {};
 
@@ -141,8 +137,8 @@ export function useForm({
         fieldsData[field.selector || field.id] = generatedValue.value;
       }
 
-      const value = JSON.stringify(fieldsData, null, EXPORT_CONFIG.INDENT_SPACES);
-      await navigator.clipboard.writeText(value);
+      const stringedFieldsData = JSON.stringify(fieldsData, null, EXPORT_CONFIG.INDENT_SPACES);
+      await navigator.clipboard.writeText(stringedFieldsData);
       toast.success(t("footer.messages.copyJson.success"));
     } catch {
       toast.error(t("footer.messages.copyJson.failed"));
@@ -150,7 +146,11 @@ export function useForm({
   }, [fields, generatedValues, t]);
 
   useEffect(() => {
-    if (presetId && fields.length === 0) addField();
+    const hasFieldInPreset = fields.length > 0;
+
+    if (!hasFieldInPreset) return;
+
+    addField();
   }, [fields, presetId, addField]);
 
   return {
@@ -161,6 +161,6 @@ export function useForm({
     generateValues,
     regenerateFieldValue,
     copyGeneratedValue,
-    copyFieldsAsJSON,
+    copyGeneratedValuesAsJSON,
   };
 }
