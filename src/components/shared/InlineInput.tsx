@@ -161,6 +161,7 @@ function InlineInputComponent (
           icon={Check}
           size={IconSize.SM}
           persistent
+          destructive={hasError}
           onClick={confirmEditing}
         />
         <InlineButton

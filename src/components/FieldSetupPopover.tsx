@@ -116,7 +116,7 @@ function FieldSetupPopoverComponent(
 
   const getCustomMethodNameErrorMessage = (draftName: string) =>
     isCustomMethodNameTaken(draftName, method?.key)
-      ? t("customMethodManager.messages.duplicatedName")
+      ? t("customMethodsManager.messages.duplicatedName")
       : "";
 
   const startEditing = useCallback((targetTab: EditorTabs) => {

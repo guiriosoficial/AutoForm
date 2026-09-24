@@ -1,23 +1,14 @@
 import { type Dispatch, type SetStateAction, useCallback, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
-import { createFakerCatalog } from "@/lib/catalog/providers/faker";
-import { createBox4DevCatalog } from "@/lib/catalog/providers/box-4-dev";
 import {
   type CatalogMethod,
   type CatalogModule,
   createCatalogCustomFunction,
   createCatalogMethod,
-  createCatalogModule,
-  newCustomMethodOption,
 } from "@/lib/catalog";
-import {
-  type Locale,
-  APP_URL,
-  CATALOG_CONFIG,
-  StorageKeys,
-  Catalogs,
-} from "@/configs";
+import { getCatalogFactories } from "@/lib/catalog/registry"
+import { type Catalogs, StorageKeys, APP_URL, CATALOG_CONFIG } from "@/configs";
 import { createNextSequencedName, isFunction } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import type { Preset } from "@/lib/presets";
@@ -56,16 +47,10 @@ export function useCatalogData({
 
   const { locale, availableCatalogs } = useAppSettings();
 
-  const customCatalog = useMemo(
-    () => createCatalogModule(CATALOG_CONFIG.CUSTOM_MODULE_NAME,
-    [...customMethods, newCustomMethodOption],
-  ), [customMethods]);
-
-  const catalogFactories: Record<Catalogs, (locale: Locale) => CatalogModule[]> = useMemo(() => ({
-    [Catalogs.FAKER]: createFakerCatalog,
-    [Catalogs.BOX_4_DEV]: createBox4DevCatalog,
-    [Catalogs.CUSTOM]: () => [customCatalog],
-  }), [customCatalog])
+  const catalogFactories = useMemo(
+    () => getCatalogFactories(customMethods),
+    [customMethods]
+  )
 
   const catalogOptions = useMemo(
     () => Object.entries(catalogFactories)

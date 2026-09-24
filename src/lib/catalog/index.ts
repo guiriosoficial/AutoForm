@@ -48,19 +48,20 @@ export function createCatalogModule(
   };
 }
 
+// TODO: Doc method with comments
 export function createCatalogCustomFunction() {
-  return `
-    (name = "John Doe") => {
-      return "Hello " + name
-    }
-  `;
+  return `\
+  (name = "John Doe") => {
+    return "Hello " + faker.person.firstName()
+  }
+`;
 }
 
 export function isValidCustomMethod(value: unknown): value is CatalogMethod {
   if (!isObject(value)) return false;
 
   return (
-    isPopulatedString(value.label) &&
+    isPopulatedString(value.name) &&
     isPopulatedString(value.key) &&
     isPopulatedString(value.code) &&
     isOptionalString(value.docs) &&

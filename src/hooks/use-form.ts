@@ -146,9 +146,9 @@ export function useForm({
   }, [fields, generatedValues, t]);
 
   useEffect(() => {
-    const hasFieldInPreset = fields.length > 0;
+    const hasFieldInPreset = presetId && fields.length > 0;
 
-    if (!hasFieldInPreset) return;
+    if (hasFieldInPreset) return;
 
     addField();
   }, [fields, presetId, addField]);

@@ -26,6 +26,8 @@ const getBox4DevMethods = () =>
       ]);
   });
 
+export const getBox4DevInstance = () => gerar;
+
 export const createBox4DevCatalog = () => [
   createCatalogModule(
     MODULE_NAME,

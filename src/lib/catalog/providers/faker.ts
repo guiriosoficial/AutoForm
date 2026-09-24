@@ -1,7 +1,7 @@
 import { Faker, allLocales } from "@faker-js/faker";
 import { isFunction, isObject } from "@/lib/utils";
 import { createCatalogMethod, createCatalogModule } from "@/lib/catalog";
-import { LOCALE_CONFIG, type Locale } from "@/configs";
+import type { Locale } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";
 
 type FakerMethodFn = (...args: unknown[]) => GeneratorValue;
@@ -25,11 +25,11 @@ const getFakerModuleMethods = (module: FakerModuleObject) =>
   Object.entries(module)
     .filter(([methodKey, methodValue]) => isFakerMethod(methodKey, methodValue));
 
-export const createFakerCatalog = (locale: Locale) => {
-  const fakerInstance = new Faker({
-    locale: [allLocales[locale], allLocales[LOCALE_CONFIG.DEFAULT]],
-  });
+export const createFakerInstance = (locale: Locale) =>
+  new Faker({ locale: allLocales[locale] });
 
+export const createFakerCatalog = (locale: Locale) => {
+  const fakerInstance = createFakerInstance(locale);
   const modules = getFakerModules(fakerInstance);
 
   return modules.map(([moduleKey, moduleValue]) =>
