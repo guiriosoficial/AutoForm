@@ -1,11 +1,8 @@
 import { Catalogs, type Locale } from "@/configs";
-import { createFakerCatalog, createFakerInstance } from "@/lib/catalog/providers/faker.ts";
-import { createBox4DevCatalog, getBox4DevInstance } from "@/lib/catalog/providers/box-4-dev.ts";
-import {
-  createCustomCatalog,
-  createCustomMethodsInstance,
-} from "@/lib/catalog/providers/custom.ts";
-import type { CatalogMethod, CatalogModule } from "@/lib/catalog/index.ts";
+import { createFakerCatalog, createFakerInstance } from "@/lib/catalog/providers/faker";
+import { createBox4DevCatalog, getBox4DevInstance } from "@/lib/catalog/providers/box-4-dev";
+import { createCustomCatalog } from "@/lib/catalog/providers/custom";
+import type { CatalogMethod, CatalogModule } from "@/lib/catalog";
 
 export function getCatalogFactories(customMethods: CatalogMethod[]): Record<Catalogs, (localeCode: Locale) => CatalogModule[]> {
   return {
@@ -15,10 +12,9 @@ export function getCatalogFactories(customMethods: CatalogMethod[]): Record<Cata
   }
 }
 
-export function getCatalogInstances(locale: Locale, customMethods: CatalogMethod[]): Record<Catalogs, object> {
+export function getCatalogInstances(locale: Locale): Record<Exclude<Catalogs, "custom">, object> {
   return {
-    [Catalogs.BOX_4_DEV]: getBox4DevInstance(),
     [Catalogs.FAKER]: createFakerInstance(locale),
-    [Catalogs.CUSTOM]: createCustomMethodsInstance(customMethods),
+    [Catalogs.BOX_4_DEV]: getBox4DevInstance(),
   }
 }

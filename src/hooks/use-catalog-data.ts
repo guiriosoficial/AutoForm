@@ -1,4 +1,5 @@
-import { type Dispatch, type SetStateAction, useCallback, useMemo } from "react";
+import { useTranslation } from "react-i18next";
+import { type Dispatch, type SetStateAction, useCallback, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import {
@@ -8,10 +9,10 @@ import {
   createCatalogMethod,
 } from "@/lib/catalog";
 import { getCatalogFactories } from "@/lib/catalog/registry"
-import { type Catalogs, StorageKeys, APP_URL, CATALOG_CONFIG } from "@/configs";
 import { createNextSequencedName, isFunction } from "@/lib/utils";
-import { useTranslation } from "react-i18next";
+import { type Catalogs, StorageKeys, APP_URL, CATALOG_CONFIG } from "@/configs";
 import type { Preset } from "@/lib/presets";
+import { createSandboxIframe } from "@/lib/sandbox";
 
 export interface MethodsUsageCount {
   presetUsageCount: number;
@@ -40,7 +41,7 @@ export function useCatalogData({
   presets,
   removeGeneratorFromPresets
 }: UseCatalogDataArgs) {
-  const [customMethods, setCustomMethods] =
+  const [customMethods, setCustomMethods, ,hydratedCustomMethods] =
     usePersistentState<CatalogMethod[]>(StorageKeys.CUSTOM_METHODS, []);
 
   const { t } = useTranslation();
@@ -150,6 +151,12 @@ export function useCatalogData({
   const isCustomMethodNameTaken = useCallback((methodName: string, methodKey: string | undefined) => (
     customMethods.some((method) => method.name === methodName && method.key !== methodKey)
   ), [customMethods]);
+
+  useEffect(() => {
+    if (!hydratedCustomMethods || customMethods.length === 0) return;
+
+    createSandboxIframe(locale);
+  }, [locale, customMethods, hydratedCustomMethods]);
 
   return {
     catalogOptions,

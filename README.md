@@ -58,14 +58,13 @@ npm run build
 - Detectar formulários automaticamente
 
 - Documentar possibilidade de Fetch em Custom Methods
-- Permitir métodos do faker e box4dev dentro de custom methods
 - Criar preset inicial prontos
   - CustomMethod que retorne Imagem
   - CustomMethod que retorne Planilha
   - CustomMethod que retorne PFD
-- Opção Keep All na importação
 - Tratar nomes duplicados na importação (Inserir Timestamp)
 - Personalizar melhor Editor de JS
+- Ordenaçao de presets
 
 - Corrigir erros de Lint (plugin react)
 
@@ -76,3 +75,11 @@ npm run build
 - Reorganizar pasta lib
 - Revisar nomenclaturas no código
 - Revisar códigos de dom (runners em lib)
+
+presetToDelete em PresetsManager
+
+consistencia de remove/delete
+
+consistencia de generator vs method
+
+remover catalog provider e usar apenas hook com prop drilling

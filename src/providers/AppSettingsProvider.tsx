@@ -1,6 +1,7 @@
 import i18n from "@/i18n";
 import { type ReactNode, createContext, useContext, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { updateSandboxLocale } from "@/lib/sandbox";
 import {
   LOCALE_CONFIG,
   LANGUAGE_CONFIG,
@@ -104,6 +105,10 @@ export function AppSettingsProvider({
 
     i18n.changeLanguage(language);
   }, [language]);
+
+  useEffect(() => {
+    updateSandboxLocale(locale)
+  }, [locale]);
 
   const contextValue = useMemo(() => ({
     theme,

@@ -7,7 +7,3 @@ export function createCustomCatalog(customMethods: CatalogMethod[]) {
     [...customMethods, newCustomMethodOption]
   )]
 }
-
-export function createCustomMethodsInstance(customMethods: CatalogMethod[]) {
-  return Object.fromEntries(customMethods.map(method => [method.name, method.code]))
-}
