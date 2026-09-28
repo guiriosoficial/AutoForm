@@ -26,6 +26,7 @@ export function HomeView() {
 
   const {
     presets,
+    presetsOptions,
     currentPreset,
     setCurrentPreset,
     updateCurrentPresetName,
@@ -95,7 +96,7 @@ export function HomeView() {
         </CardHeader>
         <CardContent className="flex-row">
           <PresetsManager
-            presets={presets}
+            presets={presetsOptions}
             selectedPreset={currentPreset}
             onSelectPreset={setCurrentPreset}
             onCreatePreset={createPreset}

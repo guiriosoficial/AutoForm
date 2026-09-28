@@ -36,6 +36,11 @@ export const ptBrTranslations = {
     },
     preset: {
       defaultName: "Novo preset",
+      sorting: {
+        asc: "Crescente",
+        desc: "Decrescente",
+        chronological: "Cronológico",
+      }
     },
     theme: {
       dark: "Escuro",
@@ -78,6 +83,9 @@ export const ptBrTranslations = {
       },
       importStrategyToggle: {
         label: "Estratégia de importação",
+      },
+      presetsSortingToggle: {
+        label: "Ordenação dos presets",
       },
       availableCatalogsMultiToggle: {
         label: "Catálogos disponíveis",

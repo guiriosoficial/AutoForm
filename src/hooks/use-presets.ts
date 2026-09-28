@@ -3,9 +3,10 @@ import { type RefObject, useCallback, useEffect, useMemo, useState } from "react
 import { type Preset, createEmptyPreset, getAdjacentPreset } from "@/lib/presets";
 import { isFunction, createNextSequencedName } from "@/lib/utils";
 import { usePersistentState } from "@/hooks/use-persistent-state";
-import { StorageKeys } from "@/configs";
+import { PresetSorting, StorageKeys } from "@/configs";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
 import type { FieldConfig } from "@/lib/fields";
+import { useAppSettings } from "@/providers/AppSettingsProvider.tsx";
 
 interface UsePresetsArgs {
   presetNameInputRef: RefObject<InlineInputRef | null>;
@@ -15,6 +16,7 @@ export function usePresets({
   presetNameInputRef,
 }: UsePresetsArgs) {
   const { t } = useTranslation();
+  const { presetsSorting, language } = useAppSettings();
 
   const [currentPresetId, setCurrentPresetId] =
     useState<string>("");
@@ -22,6 +24,19 @@ export function usePresets({
     usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
   const [presets, setPresets, , hydratedPresets] =
     usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
+
+  const presetsOptions = useMemo(() => {
+    if (presetsSorting === PresetSorting.CHRONOLOGICAL) return presets
+
+    return presets.toSorted((firstPreset, secondPreset) => {
+      const comparison = firstPreset.name.localeCompare(secondPreset.name, language, {
+        numeric: true,
+        sensitivity: "base",
+      });
+
+      return presetsSorting === PresetSorting.ASC ? comparison : -comparison;
+    });
+  }, [presets, presetsSorting]);
 
   const presetsById = useMemo(() =>
     new Map(presets.map((preset) => [preset.id, preset])
@@ -157,6 +172,7 @@ export function usePresets({
 
   return {
     presets,
+    presetsOptions,
     currentPreset,
     setCurrentPreset,
     createPreset,

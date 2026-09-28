@@ -54,7 +54,7 @@ export function createSandboxIframe(locale: Locale) {
     updateSandboxLocale(locale);
   }, { once: true });
 
-  document.body.append(iframe);
+  // document.body.append(iframe);
 }
 
 export function executeInSandbox<T = unknown>(

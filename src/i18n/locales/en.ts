@@ -36,6 +36,11 @@ export const enTranslations = {
     },
     preset: {
       defaultName: "New preset",
+      sorting: {
+        asc: "Ascending",
+        desc: "Descending",
+        chronological: "Chronological",
+      }
     },
     theme: {
       dark: "Dark",
@@ -78,6 +83,9 @@ export const enTranslations = {
       },
       importStrategyToggle: {
         label: "Import strategy",
+      },
+      presetsSortingToggle: {
+        label: "Presets sorting",
       },
       availableCatalogsMultiToggle: {
         label: "Available catalogs",

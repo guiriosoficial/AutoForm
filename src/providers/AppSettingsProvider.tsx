@@ -6,6 +6,7 @@ import {
   LOCALE_CONFIG,
   LANGUAGE_CONFIG,
   THEME_CONFIG,
+  PRESET_CONFIG,
   IMPORT_CONFIG,
   CATALOG_CONFIG,
   EDITOR_CONFIG,
@@ -15,6 +16,7 @@ import {
   type Locale,
   type Language,
   type Catalogs,
+  type PresetSorting,
 } from "@/configs";
 
 interface AppSettingsProviderProps {
@@ -26,14 +28,16 @@ interface AppSettingsProviderState {
   setTheme: (theme: Theme) => void;
   importStrategy: ImportStrategy;
   setImportStrategy: (strategy: ImportStrategy) => void;
-  language: Language;
-  setLanguage: (language: Language) => void;
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
   availableCatalogs: Catalogs[];
   setAvailableCatalogs: (catalogs: Catalogs[]) => void;
+  presetsSorting: PresetSorting;
+  setPresetsSorting: (sorting: PresetSorting) => void;
   autoFormat: boolean;
   setAutoFormat: (autoFormat: boolean) => void;
+  locale: Locale;
+  setLocale: (locale: Locale) => void;
+  language: Language;
+  setLanguage: (language: Language) => void;
 }
 
 const initialState: AppSettingsProviderState = {
@@ -41,14 +45,16 @@ const initialState: AppSettingsProviderState = {
   setTheme: () => {},
   importStrategy: IMPORT_CONFIG.STRATEGY_DEFAULT,
   setImportStrategy: () => {},
-  language: LANGUAGE_CONFIG.DEFAULT,
-  setLanguage: () => {},
-  locale: LOCALE_CONFIG.DEFAULT,
-  setLocale: () => {},
   availableCatalogs: CATALOG_CONFIG.DEFAULT_AVAILABLE,
   setAvailableCatalogs: () => {},
+  presetsSorting: PRESET_CONFIG.DEFAULT_SORTING,
+  setPresetsSorting: () => {},
   autoFormat: EDITOR_CONFIG.DEFAULT_AUTO_FORMAT,
   setAutoFormat: () => {},
+  locale: LOCALE_CONFIG.DEFAULT,
+  setLocale: () => {},
+  language: LANGUAGE_CONFIG.DEFAULT,
+  setLanguage: () => {},
 };
 
 export const AppSettingsProviderContext =
@@ -68,6 +74,10 @@ export function AppSettingsProvider({
   const [availableCatalogs, setAvailableCatalogs] = usePersistentState<Catalogs[]>(
     StorageKeys.AVAILABLE_CATALOGS,
     CATALOG_CONFIG.DEFAULT_AVAILABLE,
+  );
+  const [presetsSorting, setPresetsSorting] = usePersistentState<PresetSorting>(
+    StorageKeys.PRESETS_SORTING,
+    PRESET_CONFIG.DEFAULT_SORTING
   );
   const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
     StorageKeys.AUTO_FORMAT,
@@ -117,6 +127,8 @@ export function AppSettingsProvider({
     setImportStrategy,
     availableCatalogs,
     setAvailableCatalogs,
+    presetsSorting,
+    setPresetsSorting,
     autoFormat,
     setAutoFormat,
     language,
@@ -127,6 +139,7 @@ export function AppSettingsProvider({
     theme,
     importStrategy,
     availableCatalogs,
+    presetsSorting,
     autoFormat,
     language,
     locale,

@@ -110,7 +110,9 @@ export function useImportExport({
         presetsById.set(preset.id, preset);
       }
 
-      return [...presetsById.values()];
+      return [...presetsById.values()].toSorted(
+        (firstPreset, secondPreset) => firstPreset.createdAt - secondPreset.createdAt
+      );
     });
 
     setCustomMethods((prev) => {

@@ -11,3 +11,4 @@ export * from "./page";
 export * from "./message";
 export * from "./catalog";
 export * from "./icon";
+export * from "./preset";

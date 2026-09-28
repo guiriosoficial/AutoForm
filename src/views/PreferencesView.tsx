@@ -22,7 +22,8 @@ import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { getLocaleDisplayNamesMap } from "@/lib/locale";
 import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
-import { Catalogs, ImportStrategy, Language, Locale, Page, Theme } from "@/configs";
+import { Catalogs, ImportStrategy, Language, Locale, Page, PresetSorting, Theme } from "@/configs";
+import { PresetSortingIcons } from "@/components/icons/maps/sorting.ts";
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
@@ -34,14 +35,16 @@ export function PreferencesView() {
     setTheme,
     importStrategy,
     setImportStrategy,
+    availableCatalogs,
+    setAvailableCatalogs,
+    presetsSorting,
+    setPresetsSorting,
+    autoFormat,
+    setAutoFormat,
     locale,
     setLocale,
     language,
     setLanguage,
-    autoFormat,
-    setAutoFormat,
-    availableCatalogs,
-    setAvailableCatalogs,
   } = useAppSettings();
 
   const localeDisplayNamesMap = useMemo(() =>
@@ -64,6 +67,12 @@ export function PreferencesView() {
     if (nextStrategy.length === 0) return;
 
     setImportStrategy(nextStrategy[0] as ImportStrategy);
+  };
+
+  const handlePresetsSortingChange = (nextSorting: string[]) => {
+    if (nextSorting.length === 0) return;
+
+    setPresetsSorting(nextSorting[0] as PresetSorting);
   };
 
   const handleAvailableCatalogsChange = (nextCatalogs: string[]) => {
@@ -141,6 +150,29 @@ export function PreferencesView() {
               <FieldDescription>
                 {t(`configs.importStrategy.${importStrategy}.description`)}
               </FieldDescription>
+            </Field>
+
+            <Field>
+              <FieldLabel>
+                {t("preferencesManager.form.presetsSortingToggle.label")}
+              </FieldLabel>
+              <ToggleGroup
+                value={[presetsSorting]}
+                variant="outline"
+                onValueChange={handlePresetsSortingChange}
+              >
+                <ButtonGroup>
+                  {Object.values(PresetSorting).map((itemSorting) => (
+                    <ToggleGroupItem
+                      key={itemSorting}
+                      value={itemSorting}
+                    >
+                      <DynamicIcon icon={PresetSortingIcons[itemSorting]} />
+                      {t(`configs.preset.sorting.${itemSorting}`)}
+                    </ToggleGroupItem>
+                  ))}
+                </ButtonGroup>
+              </ToggleGroup>
             </Field>
 
             <Field>

@@ -18,6 +18,7 @@ export const StorageKeys = {
   CUSTOM_METHODS: `${APP_ID}:custom-methods`,
   AVAILABLE_CATALOGS: `${APP_ID}:available-catalogs`,
   AUTO_FORMAT: `${APP_ID}:auto-format`,
+  PRESETS_SORTING: `${APP_ID}:presets-sorting`,
 } as const;
 
 export type StorageKeys = (typeof StorageKeys)[keyof typeof StorageKeys];
