@@ -2,7 +2,12 @@ import { useTranslation } from "react-i18next";
 import { type Dispatch, type SetStateAction, useCallback } from "react";
 import { type Preset, isValidPresetArray } from "@/lib/presets";
 import { type CatalogMethod, isValidCustomMethodArray } from "@/lib/catalog";
-import { getDuplicatedItemsByKey, getErrorMessage } from "@/lib/utils";
+import {
+  type ConflictingItem,
+  getErrorMessage,
+  createNextSequencedName,
+  getItemsBySameAndDifferentKey,
+} from "@/lib/utils";
 import { toast } from "@/lib/toast";
 import { EXPORT_CONFIG, ImportStrategy } from "@/configs";
 
@@ -12,6 +17,13 @@ interface UseImportExportArgs {
   customMethods: CatalogMethod[];
   setCustomMethods: Dispatch<SetStateAction<CatalogMethod[]>>;
 }
+
+const ConflictType = {
+  ID: "id" as const,
+  NAME: "name" as const,
+} as const;
+
+export type ConflictType = (typeof ConflictType)[keyof typeof ConflictType];
 
 export interface ExportPayload {
   presets: Preset[];
@@ -23,8 +35,8 @@ export type ImportPayload = ExportPayload;
 export interface ParseImportDataResult {
   parsedData: ImportPayload;
   conflicts: {
-    presets: Preset[];
-    customMethods: CatalogMethod[];
+    presets: (ConflictingItem<Preset> & { conflictType: ConflictType })[];
+    customMethods: (ConflictingItem<CatalogMethod> & { conflictType: ConflictType })[];
   };
 }
 
@@ -68,14 +80,81 @@ export function useImportExport({
         return;
       }
 
-      const conflictingPresets = getDuplicatedItemsByKey(presets, importPayload.presets, "id");
-      const conflictingCustomMethods = getDuplicatedItemsByKey(customMethods, importPayload.customMethods, "key");
+      const conflictingPresetIds = getItemsBySameAndDifferentKey(
+        presets,
+        importPayload.presets,
+        "id",
+        "updatedAt",
+      );
+      const conflictingCustomMethodKeys = getItemsBySameAndDifferentKey(
+        customMethods,
+        importPayload.customMethods,
+        "key",
+        "updatedAt",
+      );
+
+      const conflictingPresetNames = getItemsBySameAndDifferentKey(
+        presets,
+        importPayload.presets,
+        "name",
+        "id",
+      )
+      const conflictingCustomMethodNames = getItemsBySameAndDifferentKey(
+        customMethods,
+        importPayload.customMethods,
+        "name",
+        "key",
+      )
+
+      for (const preset of conflictingPresetNames) {
+        const newName = createNextSequencedName<Preset>(
+          presets,
+          "name",
+          preset.target.name,
+          {
+            spaced: true,
+            suffix: t("configs.preset.importSuffix"),
+          },
+        );
+
+        Object.assign(preset.target, { name: newName });
+      }
+      for (const customMethod of conflictingCustomMethodNames) {
+        const newName = createNextSequencedName<CatalogMethod>(
+          customMethods,
+          "name",
+          customMethod.target.name,
+          {
+            spaced: true,
+            suffix: t("configs.preset.importSuffix"),
+          },
+        );
+
+        Object.assign(customMethod.target, { name: newName });
+      }
+
+      const allPresetsConflicts = [
+        ...conflictingPresetIds.map((conflict) =>
+          Object.assign(conflict, { conflictType: ConflictType.ID })
+        ),
+        ...conflictingPresetNames.map((conflict) =>
+          Object.assign(conflict, { conflictType: ConflictType.NAME }))
+        ,
+      ];
+      const allCustomMethodsConflicts = [
+        ...conflictingCustomMethodKeys.map((conflict) =>
+          Object.assign(conflict, { conflictType: ConflictType.ID })
+        ),
+        ...conflictingCustomMethodNames.map((conflict) =>
+          Object.assign(conflict, { conflictType: ConflictType.NAME })
+        ),
+      ]
 
       return {
         parsedData: importPayload,
         conflicts: {
-          presets: conflictingPresets,
-          customMethods: conflictingCustomMethods,
+          presets: allPresetsConflicts,
+          customMethods: allCustomMethodsConflicts,
         },
       };
     } catch (error) {
@@ -124,7 +203,9 @@ export function useImportExport({
         customMethodsByKey.set(customMethod.key, customMethod);
       }
 
-      return [...customMethodsByKey.values()];
+      return [...customMethodsByKey.values()].toSorted(
+        (firstPreset, secondPreset) => (firstPreset?.createdAt ?? 0) - (secondPreset?.createdAt ?? 0)
+      );;
     })
   }, [setPresets, setCustomMethods]);
 

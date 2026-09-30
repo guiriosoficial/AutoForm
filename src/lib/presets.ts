@@ -6,6 +6,7 @@ export interface Preset {
   name: string;
   fields: FieldConfig[];
   createdAt: number;
+  updatedAt: number;
 }
 
 export function createEmptyPreset(presetName: string): Preset {
@@ -14,6 +15,7 @@ export function createEmptyPreset(presetName: string): Preset {
     name: presetName,
     fields: [createField()],
     createdAt: Date.now(),
+    updatedAt: Date.now(),
   };
 }
 
@@ -24,6 +26,7 @@ export function isValidPreset(value: unknown): value is Preset {
     isPopulatedString(value.id) &&
     isPopulatedString(value.name) &&
     isTimestamp(value.createdAt) &&
+    isTimestamp(value.updatedAt) &&
     isValidFieldArray(value.fields)
   );
 }

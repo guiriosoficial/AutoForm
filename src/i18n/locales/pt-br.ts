@@ -21,6 +21,7 @@ export const ptBrTranslations = {
     loadedPresets_one: "{{ count }} preset carregado",
     loadedPresets_other: "{{ count }} presets carregados",
 
+    alert: "Atenção",
     import: "Importar",
     export: "Exportar",
     confirm: "Confirmar",
@@ -48,6 +49,9 @@ export const ptBrTranslations = {
       light: "Claro",
       system: "Sistema",
     },
+    import: {
+      suffix: "Importado",
+    },
     importStrategy: {
       append: {
         title: "Adicionar",
@@ -69,7 +73,7 @@ export const ptBrTranslations = {
   },
   defaults: {
     alert: {
-      title: "Atenção",
+      title: "$t(globals.alert)",
       description: "Tem certeza que deseja continuar?",
       confirmButton: "$t(globals.confirm)",
       cancelButton: "$t(globals.cancel)",
@@ -135,6 +139,15 @@ export const ptBrTranslations = {
             label: "Estratégia",
           },
         },
+        alerts: {
+          conflicts: {
+            title: "$t(globals.alert)",
+            description: `
+              Itens com nomes duplicados serão renomeados automaticamente com o sufixo ($t(configs.import.suffix)).\n
+              Conflitos com itens existentes, identificados pelo ID ou chave, serão tratados de acordo com a estratégia de importação selecionada.
+            `,
+          }
+        }
       },
     },
     form: {

@@ -4,11 +4,12 @@ import type { GeneratorValue } from "@/lib/generator";
 
 export interface CatalogMethod {
   key: `${string}.${string}`;
-  createdAt?: number;
   name: string;
   docs?: string;
   code?: string;
   invoke?: (...args: unknown[]) => GeneratorValue;
+  createdAt?: number;
+  updatedAt?: number;
 }
 
 export interface CatalogModule {
@@ -29,7 +30,7 @@ export function createCatalogMethod(
   const uniqueKey = options?.generateUniqueId
     ? crypto.randomUUID()
     : methodKey;
-  const createdAt = uniqueKey
+  const nowTimestamp = uniqueKey
     ? Date.now()
     : undefined;
 
@@ -39,7 +40,8 @@ export function createCatalogMethod(
     invoke: invokeFn,
     docs: options?.docsUrl,
     code: options?.code,
-    createdAt,
+    createdAt: nowTimestamp,
+    updatedAt: nowTimestamp
   };
 }
 
@@ -70,6 +72,7 @@ export function isValidCustomMethod(value: unknown): value is CatalogMethod {
     isPopulatedString(value.code) &&
     isOptionalString(value.docs) &&
     isTimestamp(value.createdAt) &&
+    isTimestamp(value.updatedAt) &&
     value.key.startsWith(`${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.`)
   );
 }

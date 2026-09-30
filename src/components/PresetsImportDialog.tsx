@@ -9,8 +9,13 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import {
+  Alert,
+  AlertDescription,
+  AlertTitle,
+} from "@/components/ui/alert"
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Item, ItemContent, ItemDescription, ItemTitle } from "@/components/ui/item";
+import { Item, ItemContent, ItemDescription, ItemTitle, ItemActions } from "@/components/ui/item";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -19,6 +24,8 @@ import { ImportStrategyIcons } from "@/components/icons/maps";
 import { preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
 import type { ParseImportDataResult, ImportPayload } from "@/hooks/use-import-export";
+import { AlertTriangle } from "lucide-react";
+import { Badge } from "@/components/ui/badge.tsx";
 
 interface PresetsImportDialogProps {
   open: boolean;
@@ -26,9 +33,6 @@ interface PresetsImportDialogProps {
   onImportData: (importPayload: ImportPayload, importStrategy: ImportStrategy) => void;
   onOpenChange: (open: boolean) => void;
 }
-
-const importStrategyOptions = Object.values(ImportStrategy)
-  .filter((strategy) => strategy !== ImportStrategy.ALWAYS_ASK);
 
 export function PresetsImportDialog({
   open,
@@ -39,8 +43,24 @@ export function PresetsImportDialog({
   const [importStrategy, setImportStrategy] = useState<ImportStrategy>(IMPORT_CONFIG.ASKED_STRATEGY_DEFAULT);
 
   const { t } = useTranslation();
-
   const { parsedData, conflicts } = importPreview;
+
+  const hasPresetConflicts = conflicts.presets.length > 0;
+  const hasConflicts = hasPresetConflicts || conflicts.customMethods.length > 0;
+
+  const importStrategyOptions = Object.values(ImportStrategy).filter((strategy) =>
+    (hasPresetConflicts || strategy !== ImportStrategy.OVERWRITE) &&
+    strategy !== ImportStrategy.ALWAYS_ASK
+  )
+
+  const mappedPresetsToImport = parsedData.presets.map((preset) => {
+    const conflictedItem = conflicts.presets.find((conflict) => conflict.target.id === preset.id);
+    return conflictedItem ?? { target: preset };
+  });
+  const mappedCustomMethodsToImport = parsedData.customMethods.map((customMethod) => {
+    const conflictedItem = conflicts.customMethods.find((conflict) => conflict.target.key === customMethod.key)
+    return conflictedItem ?? { target: customMethod };
+  });
 
   const handleImportStrategyChange = (nextStrategy: string[]) => {
     if (nextStrategy.length === 0) return;
@@ -72,19 +92,56 @@ export function PresetsImportDialog({
         </DialogHeader>
 
         <div className="space-y-2 ml-4">
-          {conflicts.presets.map((preset) => (
+          {mappedPresetsToImport.map((preset) => (
             <Item
-              key={preset.id}
+              key={preset.target.id}
               size="xs"
-              className="p-0 text-destructive list-item marker:text-muted-foreground"
+              className="p-0 list-item marker:text-muted-foreground"
             >
               <ItemContent>
-                <ItemTitle className="text-balance" >
-                  {preset.name}
+                <ItemTitle className="text-balance">
+                  {/*{preset.reference.name}*/}
+                  {preset.target.name}
                 </ItemTitle>
                 <ItemDescription>
-                  {t("globals.fields", { count: preset.fields.length })}
+                  {/*{t("globals.fields", { count: preset.reference.fields.length })}*/}
+                  {t("globals.fields", { count: preset.target.fields.length })}
                 </ItemDescription>
+                {preset.conflictType && (
+                  <ItemActions>
+                    <Badge variant="destructive">
+                      {preset.conflictType}
+                    </Badge>
+                  </ItemActions>
+                )}
+              </ItemContent>
+            </Item>
+          ))}
+        </div>
+
+        <div className="space-y-2 ml-4">
+          {mappedCustomMethodsToImport.map((customMethod) => (
+            <Item
+              key={customMethod.target.key}
+              size="xs"
+              className="p-0 list-item marker:text-muted-foreground"
+            >
+              <ItemContent>
+                <ItemTitle className="text-balance">
+                  {/*{preset.reference.name}*/}
+                  {customMethod.target.name}
+                </ItemTitle>
+                <ItemDescription>
+                  {/*{customMethod.reference.code}*/}
+                  {customMethod.target.code}
+                </ItemDescription>
+                {customMethod.conflictType && (
+                  <ItemActions>
+                    <Badge variant="destructive">
+                      {customMethod.conflictType}
+                    </Badge>
+                  </ItemActions>
+                )}
               </ItemContent>
             </Item>
           ))}
@@ -115,6 +172,18 @@ export function PresetsImportDialog({
             {t(`configs.importStrategy.${importStrategy}.description`)}
           </FieldDescription>
         </Field>
+
+        {hasConflicts && (
+          <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-50">
+            <AlertTriangle />
+            <AlertTitle>
+              {t("presetsManager.dialogs.importPreset.alerts.title")}
+            </AlertTitle>
+            <AlertDescription>
+              {t("presetsManager.dialogs.importPreset.alerts.description")}
+            </AlertDescription>
+          </Alert>
+        )}
 
         <DialogFooter>
           <DialogClose

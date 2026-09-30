@@ -21,6 +21,7 @@ export const enTranslations = {
     loadedPresets_one: "{{ count }} preset loaded",
     loadedPresets_other: "{{ count }} presets loaded",
 
+    alert: "Warning",
     import: "Import",
     export: "Export",
     confirm: "Confirm",
@@ -48,6 +49,9 @@ export const enTranslations = {
       light: "Light",
       system: "System",
     },
+    import: {
+      suffix: "Imported",
+    },
     importStrategy: {
       append: {
         title: "Append",
@@ -69,7 +73,7 @@ export const enTranslations = {
   },
   defaults: {
     alert: {
-      title: "Warning",
+      title: "$t(globals.alert)",
       description: "Are you sure you want to continue?",
       confirmButton: "$t(globals.confirm)",
       cancelButton: "$t(globals.cancel)",
@@ -133,6 +137,15 @@ export const enTranslations = {
             label: "Strategy",
           },
         },
+        alerts: {
+          conflicts: {
+            title: "$t(globals.alert)",
+            description: `
+              Items with duplicate names will be automatically renamed with the ($t(configs.import.suffix)) suffix.\n
+              Conflicts with existing items, identified by their ID or key, will be handled according to the selected import strategy.`
+            ,
+          }
+        }
       },
     },
     form: {

@@ -23,22 +23,37 @@ export function createNextSequencedName<T extends object>(
   list: T[],
   key: keyof T,
   name: string,
-  options?: { spaced?: boolean },
+  options?: {
+    spaced?: boolean,
+    suffix?: string,
+  },
 ) {
-  const escapedName = name.replaceAll(/[^\w\s]/gu, "$&");
-  const nameRegex = new RegExp(`^${escapedName}\\s*(\\d+)$`, "u");
-  let maxNumber = 0;
+  const { spaced, suffix } = options ?? {};
+
+  const escapedBaseName = name.replaceAll(/[.*+?^${}()|[\]\\]/gu, String.raw`\$&`);
+
+  const sequenceRegex = suffix
+    ? new RegExp(`^${escapedBaseName}\\s*\\(${suffix}\\s*(\\d+)\\)$`, "u")
+    : new RegExp(`^${escapedBaseName}\\s*(\\d+)$`, "u");
+
+
+  let highestSequenceNumber = 0;
 
   for (const item of list) {
     const value = String(item[key] ?? "");
-    const match = value.match(nameRegex);
+    const match = value.match(sequenceRegex);
 
     if (!match) continue;
 
-    maxNumber = Math.max(maxNumber, Number(match[1]));
+    const sequenceNumber = Number(match[1]);
+    highestSequenceNumber = Math.max(highestSequenceNumber, sequenceNumber);
+  }
+  const nextNumber = highestSequenceNumber + 1;
+  const space = spaced ? " " : "";
+
+  if (suffix) {
+    return `${name}${space}(${suffix}${space}${nextNumber})`;
   }
 
-  const nextNumber = maxNumber + 1;
-  const space = options?.spaced ? " " : "";
   return `${name}${space}${nextNumber}`;
 }
