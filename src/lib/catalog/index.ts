@@ -1,9 +1,10 @@
-import { isArray, isObject, isOptionalString, isPopulatedString } from "@/lib/utils";
+import { isArray, isObject, isOptionalString, isPopulatedString, isTimestamp } from "@/lib/utils";
 import { CATALOG_CONFIG } from "@/configs";
 import type { GeneratorValue } from "@/lib/generator";
 
 export interface CatalogMethod {
   key: `${string}.${string}`;
+  createdAt?: number;
   name: string;
   docs?: string;
   code?: string;
@@ -28,6 +29,9 @@ export function createCatalogMethod(
   const uniqueKey = options?.generateUniqueId
     ? crypto.randomUUID()
     : methodKey;
+  const createdAt = uniqueKey
+    ? Date.now()
+    : undefined;
 
   return {
     name: methodKey,
@@ -35,6 +39,7 @@ export function createCatalogMethod(
     invoke: invokeFn,
     docs: options?.docsUrl,
     code: options?.code,
+    createdAt,
   };
 }
 
@@ -51,10 +56,9 @@ export function createCatalogModule(
 // TODO: Doc method with comments
 export function createCatalogCustomFunction() {
   return `\
-  (name = "John Doe") => {
-    return "Hello " + faker.person.firstName()
-  }
-`;
+(name = "John Doe") => {
+  return "Hello " + faker.person.firstName()
+}`;
 }
 
 export function isValidCustomMethod(value: unknown): value is CatalogMethod {
@@ -65,6 +69,7 @@ export function isValidCustomMethod(value: unknown): value is CatalogMethod {
     isPopulatedString(value.key) &&
     isPopulatedString(value.code) &&
     isOptionalString(value.docs) &&
+    isTimestamp(value.createdAt) &&
     value.key.startsWith(`${CATALOG_CONFIG.CUSTOM_MODULE_NAME}.`)
   );
 }
