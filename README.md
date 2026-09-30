@@ -57,14 +57,18 @@ npm run build
 - Tratar error ao gerar dados
 - Detectar formulários automaticamente
 
+- Melhorar dialog de importação
+- Drag and Drop para ordenar campos
 - Documentar possibilidade de Fetch em Custom Methods
+- Documentar instancias do faker e box4Dev emm custom method
+- Documentar ordenaçao de presets, autoFormat
+- Documentar ordenaçao de campos
+- Documentar sufixos de importaçao
+- Personalizar melhor Editor de JS
 - Criar preset inicial prontos
   - CustomMethod que retorne Imagem
   - CustomMethod que retorne Planilha
   - CustomMethod que retorne PFD
-- Tratar nomes duplicados na importação (Inserir Timestamp)
-- Personalizar melhor Editor de JS
-- Ordenaçao de presets
 
 - Corrigir erros de Lint (plugin react)
 
