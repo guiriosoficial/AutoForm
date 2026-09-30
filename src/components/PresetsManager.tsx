@@ -100,11 +100,18 @@ export function PresetsManager({
 
     if (!parseResult) return;
 
-    const shouldSkipConfirmation =
-      presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD ||
+    const hasOnlyDefaultPreset =
+      presets.length <= IMPORT_CONFIG.REPLACE_ALL_THRESHOLD &&
+      presets.every((preset) => preset.id === PRESET_CONFIG.INITIAL_PRESET_ID)
+    const shouldAskForStrategy =
       importStrategy !== ImportStrategy.ALWAYS_ASK;
 
-    if (shouldSkipConfirmation) {
+    if (!shouldAskForStrategy && hasOnlyDefaultPreset) {
+      onImportData(parseResult.parsedData, ImportStrategy.REPLACE_ALL);
+      return;
+    }
+
+    if (shouldAskForStrategy) {
       onImportData(parseResult.parsedData, importStrategy);
       return;
     }

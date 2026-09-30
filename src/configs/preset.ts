@@ -10,4 +10,5 @@ export type PresetSorting =
 
 export const PRESET_CONFIG = {
   DEFAULT_SORTING: PresetSorting.CREATED_AT_ASC,
+  INITIAL_PRESET_ID: "__initial_preset__",
 }
