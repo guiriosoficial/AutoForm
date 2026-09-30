@@ -123,10 +123,16 @@ export function usePresets({
     updatePreset(currentPreset.id, updater);
   }, [currentPreset, updatePreset]);
 
-  const updateCurrentPresetFields = useCallback((updater: (fields: FieldConfig[]) => FieldConfig[]) => {
-    updateCurrentPreset((preset) => ({
-      fields: updater(preset.fields),
-    }));
+  const updateCurrentPresetFields = useCallback((updater: FieldConfig[] | ((fields: FieldConfig[]) => FieldConfig[])) => {
+    updateCurrentPreset((preset) => {
+      const updated = isFunction(updater)
+        ? updater(preset.fields)
+        : updater;
+
+      return {
+        fields: updated,
+      }
+    });
   }, [updateCurrentPreset]);
 
   const updateCurrentPresetName = useCallback((nextName: string) => {

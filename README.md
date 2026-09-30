@@ -58,12 +58,6 @@ npm run build
 - Detectar formulários automaticamente
 
 - Melhorar dialog de importação
-- Drag and Drop para ordenar campos
-- Documentar possibilidade de Fetch em Custom Methods
-- Documentar instancias do faker e box4Dev emm custom method
-- Documentar ordenaçao de presets, autoFormat
-- Documentar ordenaçao de campos
-- Documentar sufixos de importaçao
 - Personalizar melhor Editor de JS
 - Criar preset inicial prontos
   - CustomMethod que retorne Imagem
@@ -87,3 +81,4 @@ consistencia de remove/delete
 consistencia de generator vs method
 
 remover catalog provider e usar apenas hook com prop drilling
+

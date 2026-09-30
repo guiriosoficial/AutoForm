@@ -1,6 +1,6 @@
 import { memo, useRef } from "react";
 import { useTranslation } from "react-i18next";
-import { Copy, Plus, RotateCcw, X } from "lucide-react";
+import { Copy, GripVertical, Plus, RotateCcw, X } from "lucide-react";
 import {
   Combobox,
   ComboboxCollection,
@@ -14,6 +14,7 @@ import {
   ComboboxSeparator,
 } from "@/components/ui/combobox";
 import { type FieldSetupPopoverRef, FieldSetupPopover } from "@/components/FieldSetupPopover";
+import { SortableItem, SortableItemHandle } from "@/components/ui/sortable";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { InlineButton } from "@/components/shared/InlineButton";
@@ -75,12 +76,19 @@ function FieldItemComponent({
     fieldOptionsPopoverRef.current?.startEditing(EditorTabs.METHOD);
   };
 
-  const resultClasses = "flex items-center gap-2 pl-3 border-l-2 text-xs font-mono group border-primary/30 text-primary";
+  const resultClasses = "flex items-center gap-2 ml-5 pl-2 border-l-2 text-xs font-mono group border-primary/30 text-primary";
   const resultErrorClasses = cn(resultClasses, "border-destructive/30 text-destructive");
 
   return (
-    <div className="space-y-1">
-      <div className="grid items-center grid-cols-[1fr_1fr_auto_auto] gap-3">
+    <SortableItem
+      value={field.id}
+      className="space-y-2"
+    >
+      <div className="grid items-center grid-cols-[auto_1fr_1fr_auto_auto] gap-3">
+        <SortableItemHandle className="-mx-1">
+          <GripVertical size={IconSize.MD}  />
+        </SortableItemHandle>
+
         <Input
           value={field.selector}
           placeholder={t("fieldsManager.form.selectorInput.placeholder")}
@@ -186,7 +194,7 @@ function FieldItemComponent({
           />
         </div>
       )}
-    </div>
+    </SortableItem>
   );
 }
 

@@ -69,8 +69,9 @@ export function HomeView() {
     addField,
     removeField,
     updateField,
-    generateValues,
+    updateFieldsSorting,
     regenerateFieldValue,
+    generateValues,
     copyGeneratedValue,
     copyGeneratedValuesAsJSON,
     generatedValues,
@@ -125,7 +126,7 @@ export function HomeView() {
             </CardDescription>
           </CardAction>
         </CardHeader>
-        <CardContent className="space-y-2">
+        <CardContent>
           <CatalogProvider catalogData={catalogData}>
             <FieldsManager
               generatedValues={generatedValues}
@@ -133,6 +134,7 @@ export function HomeView() {
               onUpdateField={updateField}
               onAddField={addField}
               onRemoveField={removeField}
+              onSortFields={updateFieldsSorting}
               onCopyGeneratedValue={copyGeneratedValue}
               onRegenerateFieldValue={regenerateFieldValue}
             />

@@ -16,7 +16,7 @@ import type { CatalogMethod } from "@/lib/catalog";
 interface UseFormArgs {
   presetId: string;
   fields: FieldConfig[];
-  updateFields: (updater: (prev: FieldConfig[]) => FieldConfig[]) => void;
+  updateFields: (updater: FieldConfig[] | ((prev: FieldConfig[]) => FieldConfig[])) => void;
   catalogMethodsByKey: Map<string, CatalogMethod>;
 }
 
@@ -76,6 +76,10 @@ export function useForm({
     updateFields((prev) =>
       prev.map((field) => (field.id === fieldId ? updatedField : field))
     );
+  }, [updateFields]);
+
+  const updateFieldsSorting = useCallback((newFields: FieldConfig[]) => {
+    updateFields(newFields);
   }, [updateFields]);
 
   const generateValues = useCallback(async () => {
@@ -158,8 +162,9 @@ export function useForm({
     addField,
     removeField,
     updateField,
-    generateValues,
+    updateFieldsSorting,
     regenerateFieldValue,
+    generateValues,
     copyGeneratedValue,
     copyGeneratedValuesAsJSON,
   };
