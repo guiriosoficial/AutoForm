@@ -1,11 +1,13 @@
 export const PresetSorting = {
-  DESC: "desc",
-  ASC: "asc",
-  CHRONOLOGICAL: "chronological",
+  NAME_ASC: "nameAsc",
+  NAME_DESC: "nameDesc",
+  CREATED_AT_ASC: "createdAtAsc",
+  CREATED_AT_DESC: "createdAtDesc",
 } as const;
 
-export type PresetSorting = (typeof PresetSorting)[keyof typeof PresetSorting];
+export type PresetSorting =
+  (typeof PresetSorting)[keyof typeof PresetSorting];
 
 export const PRESET_CONFIG = {
-  DEFAULT_SORTING: PresetSorting.CHRONOLOGICAL,
+  DEFAULT_SORTING: PresetSorting.CREATED_AT_ASC,
 }

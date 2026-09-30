@@ -37,9 +37,10 @@ export const ptBrTranslations = {
     preset: {
       defaultName: "Novo preset",
       sorting: {
-        asc: "Crescente",
-        desc: "Decrescente",
-        chronological: "Cronológico",
+        nameAsc: "A–Z",
+        nameDesc: "Z–A",
+        createdAtAsc: "Mais antigos primeiro",
+        createdAtDesc: "Mais recentes primeiro"
       }
     },
     theme: {
@@ -141,6 +142,9 @@ export const ptBrTranslations = {
         placeholder: "Selecione um preset",
         empty: "Nenhum preset encontrado",
       },
+      sortingDropdown: {
+        label: "Ordem dos presets",
+      }
     },
     messages: {
       importPreset: {

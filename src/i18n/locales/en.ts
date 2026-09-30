@@ -37,9 +37,10 @@ export const enTranslations = {
     preset: {
       defaultName: "New preset",
       sorting: {
-        asc: "Ascending",
-        desc: "Descending",
-        chronological: "Chronological",
+        nameAsc: "A-Z",
+        nameDesc: "Z-A",
+        createdAtAsc: "Oldest first",
+        createdAtDesc: "Newest first",
       }
     },
     theme: {
@@ -139,6 +140,9 @@ export const enTranslations = {
         placeholder: "Select a preset",
         empty: "No preset found",
       },
+      sortingDropdown: {
+        label: "Presets sorting",
+      }
     },
     messages: {
       importPreset: {

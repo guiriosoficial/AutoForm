@@ -25,18 +25,28 @@ export function usePresets({
   const [presets, setPresets, , hydratedPresets] =
     usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
-  const presetsOptions = useMemo(() => {
-    if (presetsSorting === PresetSorting.CHRONOLOGICAL) return presets
-
-    return presets.toSorted((firstPreset, secondPreset) => {
-      const comparison = firstPreset.name.localeCompare(secondPreset.name, language, {
+  const presetsOptions = useMemo(() =>
+    presets.toSorted((firstPreset, secondPreset) => {
+      const nameComparison = firstPreset.name.localeCompare(secondPreset.name, language, {
         numeric: true,
         sensitivity: "base",
       });
+      const createdAtComparison = firstPreset.createdAt - secondPreset.createdAt
 
-      return presetsSorting === PresetSorting.ASC ? comparison : -comparison;
-    });
-  }, [presets, presetsSorting]);
+      switch (presetsSorting) {
+        case PresetSorting.NAME_ASC:
+          return nameComparison
+        case PresetSorting.NAME_DESC:
+          return -nameComparison
+        case PresetSorting.CREATED_AT_ASC:
+          return createdAtComparison;
+        case PresetSorting.CREATED_AT_DESC:
+          return -createdAtComparison;
+        default:
+          return createdAtComparison;
+
+      }
+    }), [presets, presetsSorting]);
 
   const presetsById = useMemo(() =>
     new Map(presets.map((preset) => [preset.id, preset])

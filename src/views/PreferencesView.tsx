@@ -1,6 +1,7 @@
 import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { ArrowLeft } from "lucide-react";
+import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { Footer } from "@/components/layouts/Footer";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
@@ -13,17 +14,15 @@ import {
 } from "@/components/ui/combobox";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
-import { ButtonGroup } from "@/components/ui/button-group";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
-import { ImportStrategyIcons, ThemeIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
 import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { getLocaleDisplayNamesMap } from "@/lib/locale";
 import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
-import { Catalogs, ImportStrategy, Language, Locale, Page, PresetSorting, Theme } from "@/configs";
-import { PresetSortingIcons } from "@/components/icons/maps/sorting.ts";
+import { Catalogs, ImportStrategy, Language, Locale, Theme, Page } from "@/configs";
+
 
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
@@ -37,8 +36,6 @@ export function PreferencesView() {
     setImportStrategy,
     availableCatalogs,
     setAvailableCatalogs,
-    presetsSorting,
-    setPresetsSorting,
     autoFormat,
     setAutoFormat,
     locale,
@@ -67,12 +64,6 @@ export function PreferencesView() {
     if (nextStrategy.length === 0) return;
 
     setImportStrategy(nextStrategy[0] as ImportStrategy);
-  };
-
-  const handlePresetsSortingChange = (nextSorting: string[]) => {
-    if (nextSorting.length === 0) return;
-
-    setPresetsSorting(nextSorting[0] as PresetSorting);
   };
 
   const handleAvailableCatalogsChange = (nextCatalogs: string[]) => {
@@ -111,18 +102,17 @@ export function PreferencesView() {
                 value={[theme]}
                 variant="outline"
                 onValueChange={handleThemeChange}
+                spacing={0}
               >
-                <ButtonGroup>
-                  {Object.values(Theme).map((itemTheme) => (
-                    <ToggleGroupItem
-                      key={itemTheme}
-                      value={itemTheme}
-                    >
-                      <DynamicIcon icon={ThemeIcons[itemTheme]} />
-                      {t(`configs.theme.${itemTheme}`)}
-                    </ToggleGroupItem>
-                  ))}
-                </ButtonGroup>
+                {Object.values(Theme).map((itemTheme) => (
+                  <ToggleGroupItem
+                    key={itemTheme}
+                    value={itemTheme}
+                  >
+                    <DynamicIcon icon={ThemeIcons[itemTheme]} />
+                    {t(`configs.theme.${itemTheme}`)}
+                  </ToggleGroupItem>
+                ))}
               </ToggleGroup>
             </Field>
 
@@ -134,45 +124,21 @@ export function PreferencesView() {
                 value={[importStrategy]}
                 variant="outline"
                 onValueChange={handleImportStrategyChange}
+                spacing={0}
               >
-                <ButtonGroup>
-                  {Object.values(ImportStrategy).map((itemStrategy) => (
-                    <ToggleGroupItem
-                      key={itemStrategy}
-                      value={itemStrategy}
-                    >
-                      <DynamicIcon icon={ImportStrategyIcons[itemStrategy]} />
-                      {t(`configs.importStrategy.${itemStrategy}.title`)}
-                    </ToggleGroupItem>
-                  ))}
-                </ButtonGroup>
+                {Object.values(ImportStrategy).map((itemStrategy) => (
+                  <ToggleGroupItem
+                    key={itemStrategy}
+                    value={itemStrategy}
+                  >
+                    <DynamicIcon icon={ImportStrategyIcons[itemStrategy]} />
+                    {t(`configs.importStrategy.${itemStrategy}.title`)}
+                  </ToggleGroupItem>
+                ))}
               </ToggleGroup>
               <FieldDescription>
                 {t(`configs.importStrategy.${importStrategy}.description`)}
               </FieldDescription>
-            </Field>
-
-            <Field>
-              <FieldLabel>
-                {t("preferencesManager.form.presetsSortingToggle.label")}
-              </FieldLabel>
-              <ToggleGroup
-                value={[presetsSorting]}
-                variant="outline"
-                onValueChange={handlePresetsSortingChange}
-              >
-                <ButtonGroup>
-                  {Object.values(PresetSorting).map((itemSorting) => (
-                    <ToggleGroupItem
-                      key={itemSorting}
-                      value={itemSorting}
-                    >
-                      <DynamicIcon icon={PresetSortingIcons[itemSorting]} />
-                      {t(`configs.preset.sorting.${itemSorting}`)}
-                    </ToggleGroupItem>
-                  ))}
-                </ButtonGroup>
-              </ToggleGroup>
             </Field>
 
             <Field>
