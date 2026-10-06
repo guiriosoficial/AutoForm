@@ -7,6 +7,13 @@ export const ImportStrategy = {
 
 export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy];
 
+export const ImportConflictType = {
+  ID: "id" as const,
+  NAME: "name" as const,
+} as const;
+
+export type ImportConflictType = (typeof ImportConflictType)[keyof typeof ImportConflictType];
+
 export const IMPORT_CONFIG = {
   FILE_TYPE: "application/json",
   REPLACE_ALL_THRESHOLD: 1,

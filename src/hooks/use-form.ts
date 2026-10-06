@@ -20,8 +20,8 @@ interface UseFormArgs {
   catalogMethodsByKey: Map<string, CatalogMethod>;
 }
 
-export type GeneratedValuesJson = Record<string, GeneratorValue>;
 export type GeneratedValues = Record<string, FieldResult>;
+export type GeneratedValuesJson = Record<string, GeneratorValue>;
 export type ValuesByPresetId = Record<string, GeneratedValues>;
 
 export function useForm({

@@ -1,5 +1,6 @@
-import { useTranslation } from "react-i18next";
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { AlertTriangle } from "lucide-react";
 import {
   Dialog,
   DialogClose,
@@ -18,14 +19,15 @@ import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
 import { Item, ItemContent, ItemDescription, ItemTitle, ItemActions } from "@/components/ui/item";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { ButtonGroup } from "@/components/ui/button-group";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons } from "@/components/icons/maps";
-import { preventDefaultEscape } from "@/lib/utils";
+import { type PartialBy, preventDefaultEscape } from "@/lib/utils";
 import { IMPORT_CONFIG, ImportStrategy } from "@/configs";
-import type { ParseImportDataResult, ImportPayload } from "@/hooks/use-import-export";
-import { AlertTriangle } from "lucide-react";
-import { Badge } from "@/components/ui/badge.tsx";
+import type { Preset } from "@/lib/presets";
+import type { CatalogMethod } from "@/lib/catalog";
+import type { ParseImportDataResult, ImportPayload, ImportConflict } from "@/hooks/use-import-export";
 
 interface PresetsImportDialogProps {
   open: boolean;
@@ -33,6 +35,8 @@ interface PresetsImportDialogProps {
   onImportData: (importPayload: ImportPayload, importStrategy: ImportStrategy) => void;
   onOpenChange: (open: boolean) => void;
 }
+
+type MappedItemsToImport<T> = PartialBy<ImportConflict<T>, "conflictType" | "reference">[];
 
 export function PresetsImportDialog({
   open,
@@ -53,11 +57,11 @@ export function PresetsImportDialog({
     strategy !== ImportStrategy.ALWAYS_ASK
   )
 
-  const mappedPresetsToImport = parsedData.presets.map((preset) => {
+  const mappedPresetsToImport: MappedItemsToImport<Preset> = parsedData.presets.map((preset) => {
     const conflictedItem = conflicts.presets.find((conflict) => conflict.target.id === preset.id);
     return conflictedItem ?? { target: preset };
   });
-  const mappedCustomMethodsToImport = parsedData.customMethods.map((customMethod) => {
+  const mappedCustomMethodsToImport: MappedItemsToImport<CatalogMethod> = parsedData.customMethods.map((customMethod) => {
     const conflictedItem = conflicts.customMethods.find((conflict) => conflict.target.key === customMethod.key)
     return conflictedItem ?? { target: customMethod };
   });

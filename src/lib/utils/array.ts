@@ -1,14 +1,14 @@
-export interface ConflictingItem<T> {
+export interface ConflictingItemPair<T> {
   reference: T;
   target: T;
 }
 
-export function getItemsBySameAndDifferentKey<T>(
+export function findConflictingItemPairs<T>(
   referenceItems: T[],
   targetItems: T[],
   sameKey: keyof T,
   differentKey: keyof T,
-): ConflictingItem<T>[] {
+): ConflictingItemPair<T>[] {
   const referenceMap = new Map(
     referenceItems.map((item) => [item[sameKey], item]),
   );

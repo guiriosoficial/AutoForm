@@ -3,13 +3,13 @@ import { type Dispatch, type SetStateAction, useCallback } from "react";
 import { type Preset, isValidPresetArray } from "@/lib/presets";
 import { type CatalogMethod, isValidCustomMethodArray } from "@/lib/catalog";
 import {
-  type ConflictingItem,
+  type ConflictingItemPair,
   getErrorMessage,
   createNextSequencedName,
-  getItemsBySameAndDifferentKey,
+  findConflictingItemPairs,
 } from "@/lib/utils";
 import { toast } from "@/lib/toast";
-import { EXPORT_CONFIG, ImportStrategy } from "@/configs";
+import { ImportConflictType, ImportStrategy, EXPORT_CONFIG } from "@/configs";
 
 interface UseImportExportArgs {
   presets: Preset[];
@@ -18,27 +18,22 @@ interface UseImportExportArgs {
   setCustomMethods: Dispatch<SetStateAction<CatalogMethod[]>>;
 }
 
-const ConflictType = {
-  ID: "id" as const,
-  NAME: "name" as const,
-} as const;
+export type ImportConflict<T> = (ConflictingItemPair<T> & { conflictType: ImportConflictType })
 
-export type ConflictType = (typeof ConflictType)[keyof typeof ConflictType];
-
-export interface ExportPayload {
+export interface ImportPayload {
   presets: Preset[];
   customMethods: CatalogMethod[];
 }
 
-export type ImportPayload = ExportPayload;
-
 export interface ParseImportDataResult {
   parsedData: ImportPayload;
   conflicts: {
-    presets: (ConflictingItem<Preset> & { conflictType: ConflictType })[];
-    customMethods: (ConflictingItem<CatalogMethod> & { conflictType: ConflictType })[];
+    presets: ImportConflict<Preset>[];
+    customMethods: ImportConflict<CatalogMethod>[];
   };
 }
+
+export type ExportPayload = ImportPayload
 
 export function useImportExport({
   presets,
@@ -49,7 +44,7 @@ export function useImportExport({
   const { t } = useTranslation();
 
   const exportData = useCallback(() => {
-    const exportPayload = { presets, customMethods };
+    const exportPayload: ExportPayload = { presets, customMethods };
     const exportJson = JSON.stringify(exportPayload, null, EXPORT_CONFIG.INDENT_SPACES);
     const downloadBlob = new Blob([exportJson], { type: EXPORT_CONFIG.FILE_TYPE });
     const downloadUrl = URL.createObjectURL(downloadBlob);
@@ -80,26 +75,26 @@ export function useImportExport({
         return;
       }
 
-      const conflictingPresetIds = getItemsBySameAndDifferentKey(
+      const conflictingPresetIds = findConflictingItemPairs(
         presets,
         importPayload.presets,
         "id",
         "updatedAt",
       );
-      const conflictingCustomMethodKeys = getItemsBySameAndDifferentKey(
+      const conflictingCustomMethodKeys = findConflictingItemPairs(
         customMethods,
         importPayload.customMethods,
         "key",
         "updatedAt",
       );
 
-      const conflictingPresetNames = getItemsBySameAndDifferentKey(
+      const conflictingPresetNames = findConflictingItemPairs(
         presets,
         importPayload.presets,
         "name",
         "id",
       )
-      const conflictingCustomMethodNames = getItemsBySameAndDifferentKey(
+      const conflictingCustomMethodNames = findConflictingItemPairs(
         customMethods,
         importPayload.customMethods,
         "name",
@@ -135,18 +130,18 @@ export function useImportExport({
 
       const allPresetsConflicts = [
         ...conflictingPresetIds.map((conflict) =>
-          Object.assign(conflict, { conflictType: ConflictType.ID })
+          Object.assign(conflict, { conflictType: ImportConflictType.ID })
         ),
         ...conflictingPresetNames.map((conflict) =>
-          Object.assign(conflict, { conflictType: ConflictType.NAME }))
+          Object.assign(conflict, { conflictType: ImportConflictType.NAME }))
         ,
       ];
       const allCustomMethodsConflicts = [
         ...conflictingCustomMethodKeys.map((conflict) =>
-          Object.assign(conflict, { conflictType: ConflictType.ID })
+          Object.assign(conflict, { conflictType: ImportConflictType.ID })
         ),
         ...conflictingCustomMethodNames.map((conflict) =>
-          Object.assign(conflict, { conflictType: ConflictType.NAME })
+          Object.assign(conflict, { conflictType: ImportConflictType.NAME })
         ),
       ]
 
@@ -205,10 +200,9 @@ export function useImportExport({
 
       return [...customMethodsByKey.values()].toSorted(
         (firstPreset, secondPreset) => (firstPreset?.createdAt ?? 0) - (secondPreset?.createdAt ?? 0)
-      );;
+      );
     })
   }, [setPresets, setCustomMethods]);
-
 
   return {
     exportData,

@@ -62,7 +62,7 @@ npm run build
 - Criar preset inicial prontos
   - CustomMethod que retorne Imagem
   - CustomMethod que retorne Planilha
-  - CustomMethod que retorne PFD
+  - CustomMethod que faça fetch
 
 - Corrigir erros de Lint (plugin react)
 

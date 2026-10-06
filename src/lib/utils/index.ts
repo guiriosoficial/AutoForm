@@ -7,3 +7,4 @@ export * from "./json5";
 export * from "./array";
 export * from "./dom";
 export * from "./ui";
+export * from "./ts";
