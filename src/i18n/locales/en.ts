@@ -1,8 +1,9 @@
-import { APP_NAME, APP_AUTHOR_USER } from "@/configs";
+import { APP_NAME, APP_VERSION, APP_AUTHOR_USER } from "@/configs";
 
 export const enTranslations = {
   globals: {
     appTitle: APP_NAME,
+    appVersion: `v${APP_VERSION}`,
     appDescription: "Fill forms automatically with random data",
     credits: `Made with ♥ by\u00A0<author>${APP_AUTHOR_USER}</author>`,
 

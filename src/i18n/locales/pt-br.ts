@@ -1,10 +1,11 @@
-import { APP_NAME, APP_AUTHOR_USER } from "@/configs";
+import { APP_NAME, APP_VERSION, APP_AUTHOR_USER } from "@/configs";
 
 export const ptBrTranslations = {
   globals: {
     appTitle: APP_NAME,
+    appVersion: `v${APP_VERSION}`,
     appDescription: "Preencha formulários automaticamente com dados aleatórios",
-    credits: `Made with ♥ by\u00A0<author>${APP_AUTHOR_USER}</author>`,
+    credits: `Feito  com ♥ por\u00A0<author>${APP_AUTHOR_USER}</author>`,
 
     field: "Campo",
     fields: "Campos",

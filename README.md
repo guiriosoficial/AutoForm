@@ -57,14 +57,7 @@ npm run build
 - Tratar error ao gerar dados
 - Detectar formulários automaticamente
 
-- Melhorar dialog de importação
 - Personalizar melhor Editor de JS
-- Criar preset inicial prontos
-  - CustomMethod que retorne Imagem
-  - CustomMethod que retorne Planilha
-  - CustomMethod que faça fetch
-
-- Corrigir erros de Lint (plugin react)
 
 - Escrever testes
 - Criar página e links de feedback/discussions/issues/backlog/roadmap/changelog
@@ -72,6 +65,7 @@ npm run build
 - ====================== EM ANDAMENTO ==========================
 - Reorganizar pasta lib
 - Revisar nomenclaturas no código
+- Melhorar dialog de importação
 - Revisar códigos de dom (runners em lib)
 
 presetToDelete em PresetsManager
