@@ -1,5 +1,5 @@
 import i18n from "@/i18n";
-import { type ReactNode, createContext, useContext, useEffect, useMemo } from "react";
+import { type ReactNode, useEffect, useMemo } from "react";
 import { usePersistentState } from "@/hooks/use-persistent-state";
 import { updateSandboxLocale } from "@/lib/sandbox";
 import {
@@ -18,47 +18,11 @@ import {
   type Catalogs,
   type PresetSorting,
 } from "@/configs";
+import { AppSettingsProviderContext } from "@/providers/AppSettingsProvider/context.tsx";
 
 interface AppSettingsProviderProps {
   children: ReactNode;
 }
-
-interface AppSettingsProviderState {
-  theme: Theme;
-  setTheme: (theme: Theme) => void;
-  importStrategy: ImportStrategy;
-  setImportStrategy: (strategy: ImportStrategy) => void;
-  availableCatalogs: Catalogs[];
-  setAvailableCatalogs: (catalogs: Catalogs[]) => void;
-  presetsSorting: PresetSorting;
-  setPresetsSorting: (sorting: PresetSorting) => void;
-  autoFormat: boolean;
-  setAutoFormat: (autoFormat: boolean) => void;
-  locale: Locale;
-  setLocale: (locale: Locale) => void;
-  language: Language;
-  setLanguage: (language: Language) => void;
-}
-
-const initialState: AppSettingsProviderState = {
-  theme: THEME_CONFIG.DEFAULT,
-  setTheme: () => {},
-  importStrategy: IMPORT_CONFIG.STRATEGY_DEFAULT,
-  setImportStrategy: () => {},
-  availableCatalogs: CATALOG_CONFIG.DEFAULT_AVAILABLE,
-  setAvailableCatalogs: () => {},
-  presetsSorting: PRESET_CONFIG.DEFAULT_SORTING,
-  setPresetsSorting: () => {},
-  autoFormat: EDITOR_CONFIG.DEFAULT_AUTO_FORMAT,
-  setAutoFormat: () => {},
-  locale: LOCALE_CONFIG.DEFAULT,
-  setLocale: () => {},
-  language: LANGUAGE_CONFIG.DEFAULT,
-  setLanguage: () => {},
-};
-
-export const AppSettingsProviderContext =
-  createContext<AppSettingsProviderState>(initialState);
 
 export function AppSettingsProvider({
   children,
@@ -137,12 +101,19 @@ export function AppSettingsProvider({
     setLocale,
   }), [
     theme,
+    setTheme,
     importStrategy,
+    setImportStrategy,
     availableCatalogs,
+    setAvailableCatalogs,
     presetsSorting,
+    setPresetsSorting,
     autoFormat,
+    setAutoFormat,
     language,
+    setLanguage,
     locale,
+    setLocale,
   ]);
 
   return (
@@ -150,14 +121,4 @@ export function AppSettingsProvider({
       {children}
     </AppSettingsProviderContext>
   );
-}
-
-export function useAppSettings() {
-  const context = useContext(AppSettingsProviderContext);
-
-  if (context === undefined) {
-    throw new Error("useAppSettings must be used within a AppSettingsProvider");
-  }
-
-  return context;
 }

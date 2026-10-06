@@ -40,21 +40,23 @@ export function usePersistentState<T>(
   }, [storageKey, initialState, hydrated]);
 
   // Persist
-  const persistState = useRef(
+  const debouncedPersistState = useRef(
     debounce((nextState: T) => {
       browser.storage?.local.set({
         [storageKey]: nextState,
       });
     }, persistenceDelay),
-  ).current;
+  );
 
   useEffect(() => {
-    if (!hydrated) return;
+    if (!hydrated || !storageKey) return;
 
-    persistState(state);
+    const persist = debouncedPersistState.current;
 
-    return () => persistState.cancel();
-  }, [storageKey, state, hydrated, persistState]);
+    persist(state);
+
+    return () => persist.cancel();
+  }, [storageKey, state, hydrated]);
 
   // Sync
   useEffect(() => {

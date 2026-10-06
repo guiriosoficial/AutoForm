@@ -47,6 +47,8 @@ function OptionsEditorComponent (
   }: OptionsEditorProps,
   ref: ForwardedRef<OptionsEditorRef>,
 ) {
+  const isComponentMounted = useRef(false);
+
   const parse = useCallback((json: string) => {
     if (!isPopulatedJson5(json)) {
       onErrorChange(null);
@@ -78,25 +80,29 @@ function OptionsEditorComponent (
   const debouncedParse = useRef(debounce(
     (text: string) => parse(text),
     EDITOR_CONFIG.LINT_DELAY_MS,
-  )).current;
-
-  const handleEditorChange = (nextValue: string) => {
-    onOptionsChange(nextValue);
-
-    debouncedParse(nextValue);
-  };
+  ));
 
   useEffect(() => {
-    if (options) parse(options);
+    const currentDebouncedParse = debouncedParse.current;
+    return () => currentDebouncedParse.cancel();
+  }, [debouncedParse]);
 
-    return () => {
-      debouncedParse.cancel();
-    };
-  }, []);
+  useEffect(() => {
+    if (isComponentMounted || !options) return;
+
+    parse(options);
+    isComponentMounted.current = true;
+  }, [options, parse]);
 
   useImperativeHandle(ref, () => ({
     format,
   }), [format]);
+
+  const handleEditorChange = (nextValue: string) => {
+    onOptionsChange(nextValue);
+
+    debouncedParse.current(nextValue);
+  };
 
   const editorExtensions = useMemo(() => [
     json5(),

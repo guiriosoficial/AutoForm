@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { PageIcons } from "@/components/icons/maps";
 import { useNavigation } from "@/providers/NavigationProvider";
-import { Page, PAGE_CONFIG } from "@/configs";
+import { APP_VERSION, Page, PAGE_CONFIG } from "@/configs";
 
 export function Header() {
   const { activePage, setActivePage } = useNavigation();
@@ -29,6 +29,9 @@ export function Header() {
 
   return (
     <header className="flex flex-col items-center gap-1 mb-2 mt-4">
+      <span className="absolute top-3 left-3 text-xs text-muted-foreground/50">
+        {APP_VERSION}
+      </span>
       <div className="absolute top-2 right-2 text-muted-foreground">
         {navigationItems.map((page) => (
           <Button

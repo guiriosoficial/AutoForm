@@ -1,12 +1,12 @@
 import { useTranslation } from "react-i18next";
-import { type RefObject, useCallback, useEffect, useMemo, useState } from "react";
+import { type RefObject, useCallback, useEffect, useMemo } from "react";
 import { type Preset, createEmptyPreset, getAdjacentPreset } from "@/lib/presets";
 import { isFunction, createNextSequencedName } from "@/lib/utils";
 import { usePersistentState } from "@/hooks/use-persistent-state";
+import { useAppSettings } from "@/providers/AppSettingsProvider";
 import { PresetSorting, StorageKeys } from "@/configs";
 import type { InlineInputRef } from "@/components/shared/InlineInput";
 import type { FieldConfig } from "@/lib/fields";
-import { useAppSettings } from "@/providers/AppSettingsProvider.tsx";
 
 interface UsePresetsArgs {
   presetNameInputRef: RefObject<InlineInputRef | null>;
@@ -18,10 +18,8 @@ export function usePresets({
   const { t } = useTranslation();
   const { presetsSorting, language } = useAppSettings();
 
-  const [currentPresetId, setCurrentPresetId] =
-    useState<string>("");
-  const [lastPresetId, setLastPresetId, , hydratedLastPresetId] =
-    usePersistentState<string>(StorageKeys.LAST_PRESET_ID, "");
+  const [currentPresetId, setCurrentPresetId, , hydratedCurrentPresetId] =
+    usePersistentState<string>(StorageKeys.CURRENT_PRESET_ID, "");
   const [presets, setPresets, , hydratedPresets] =
     usePersistentState<Preset[]>(StorageKeys.PRESETS, []);
 
@@ -46,7 +44,7 @@ export function usePresets({
           return createdAtComparison;
 
       }
-    }), [presets, presetsSorting]);
+    }), [presets, presetsSorting, language]);
 
   const presetsById = useMemo(() =>
     new Map(presets.map((preset) => [preset.id, preset])
@@ -61,8 +59,7 @@ export function usePresets({
     if (!preset) return;
 
     setCurrentPresetId(preset.id);
-    setLastPresetId(preset.id);
-  }, [setLastPresetId]);
+  }, [setCurrentPresetId]);
 
   const createPreset = useCallback(() => {
     const defaultName = t("configs.preset.defaultName");
@@ -163,17 +160,10 @@ export function usePresets({
 
   useEffect(() => {
     if (
-      !hydratedLastPresetId ||
+      !hydratedCurrentPresetId ||
       !hydratedPresets ||
       currentPreset
     ) return;
-
-    const lastPreset = presetsById.get(lastPresetId);
-
-    if (lastPreset) {
-      setCurrentPreset(lastPreset);
-      return;
-    }
 
     if (presets.length > 0) {
       setCurrentPreset(presets[0]);
@@ -181,7 +171,7 @@ export function usePresets({
     }
 
     createPreset();
-  }, [presets, currentPreset, presetsById, lastPresetId, hydratedPresets, hydratedLastPresetId, setCurrentPreset, createPreset]);
+  }, [presets, currentPreset, hydratedPresets, hydratedCurrentPresetId, setCurrentPreset, createPreset]);
 
   const isPresetNameTaken = useCallback((name: string, excludedPresetId?: string) => (
     presets.some((preset) => preset.name === name && preset.id !== excludedPresetId)

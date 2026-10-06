@@ -59,7 +59,12 @@ function InlineInputComponent (
   const throttledErrorNotification = useRef(throttle(
     (notificationMessage: string) => toast.error(notificationMessage),
     EDITOR_CONFIG.ERROR_DELAY_MS)
-  ).current;
+  );
+
+  useEffect(() => {
+    const currentThrottledErrorNotification = throttledErrorNotification.current;
+    return () => currentThrottledErrorNotification.cancel();
+  }, [throttledErrorNotification]);
 
   useEffect(() => {
     if (!isEditing) return;
@@ -73,7 +78,6 @@ function InlineInputComponent (
 
     return () => {
       cancelAnimationFrame(frame);
-      throttledErrorNotification.cancel();
     };
   }, [isEditing]);
 
@@ -93,7 +97,7 @@ function InlineInputComponent (
     event?.preventDefault();
 
     if (hasError) {
-      throttledErrorNotification(errorMessage);
+      throttledErrorNotification.current(errorMessage);
       return;
     }
 

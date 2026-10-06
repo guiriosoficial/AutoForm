@@ -18,7 +18,7 @@ export default defineConfig({
     "unicorn",
     "oxc",
     "eslint",
-    // "react",
+    "react",
     "react-perf",
     "import",
   ],

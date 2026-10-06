@@ -42,6 +42,8 @@ function MethodEditorComponent(
 ) {
   const { t } = useTranslation();
 
+  const isComponentMounted = useRef(false);
+
   const validate = useCallback((code: string) => {
     if (!code) return;
 
@@ -110,12 +112,29 @@ function MethodEditorComponent(
   const debouncedValidate = useRef(debounce(
     (code: string) => validate(code),
     EDITOR_CONFIG.LINT_DELAY_MS,
-  )).current;
+  ));
+
+  useEffect(() => {
+    const currentDebouncedValidate = debouncedValidate.current
+    return () => currentDebouncedValidate.cancel()
+  }, []);
+
+  useEffect(() => {
+    if (isComponentMounted.current || !method.code) return;
+
+    validate(method.code);
+    isComponentMounted.current = true;
+  }, [validate, method.code]);
+
+
+  useImperativeHandle(ref, () => ({
+    format,
+  }), [format]);
 
   const handleMethodCodeChange = (nextCode: string) => {
     onMethodChange("code", nextCode);
 
-    debouncedValidate(nextCode);
+    debouncedValidate.current(nextCode);
   };
 
   const handleMethodNameChange = (nextName: string) => {
@@ -123,18 +142,6 @@ function MethodEditorComponent(
 
     onMethodChange("name", nextName);
   };
-
-  useEffect(() => {
-    if (method.code) validate(method.code);
-
-    return () => {
-      debouncedValidate.cancel();
-    };
-  }, []);
-
-  useImperativeHandle(ref, () => ({
-    format,
-  }), [format]);
 
   const editorExtensions = useMemo(() => [
     javascript(),

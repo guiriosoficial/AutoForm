@@ -57,9 +57,9 @@ export function useImportExport({
       anchor.remove();
     } catch {
       toast.error(t("presetsManager.messages.exportPreset.failed"));
-    } finally {
-      URL.revokeObjectURL(downloadUrl);
     }
+
+    URL.revokeObjectURL(downloadUrl);
   }, [presets, customMethods, t]);
 
   const parseImportData = useCallback((jsonContent: string): ParseImportDataResult | undefined => {

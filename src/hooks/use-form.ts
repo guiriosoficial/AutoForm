@@ -33,7 +33,7 @@ export function useForm({
   const { t } = useTranslation();
 
   const [generatedValuesByPresetId, setGeneratedValuesByPresetId] =
-    usePersistentState<ValuesByPresetId>(StorageKeys.LAST_GENERATED_VALUES, {});
+    usePersistentState<ValuesByPresetId>(StorageKeys.CURRENT_GENERATED_VALUES, {});
 
   const generatedValues = useMemo(
     () => generatedValuesByPresetId[presetId] ?? {},

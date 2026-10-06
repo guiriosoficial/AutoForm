@@ -8,8 +8,8 @@ export const StorageAreaNames = {
 } as const;
 
 export const StorageKeys = {
-  LAST_GENERATED_VALUES: `${APP_ID}:last-generated-values`,
-  LAST_PRESET_ID: `${APP_ID}:last-preset-id`,
+  CURRENT_GENERATED_VALUES: `${APP_ID}:last-generated-values`,
+  CURRENT_PRESET_ID: `${APP_ID}:last-preset-id`,
   PRESETS: `${APP_ID}:presets`,
   THEME: `${APP_ID}:theme`,
   LOCALE: `${APP_ID}:locale`,
