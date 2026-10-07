@@ -88,7 +88,7 @@ function OptionsEditorComponent (
   }, [debouncedParse]);
 
   useEffect(() => {
-    if (isComponentMounted || !options) return;
+    if (isComponentMounted.current || !options) return;
 
     parse(options);
     isComponentMounted.current = true;

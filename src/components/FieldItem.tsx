@@ -60,8 +60,6 @@ function FieldItemComponent({
     propertyKey: keyof FieldConfig,
     nextValue: string | undefined,
   ) => {
-    if (!nextValue) return;
-
     onUpdateField(field.id, {
       ...field,
       [propertyKey]: nextValue,
