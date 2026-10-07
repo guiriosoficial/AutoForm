@@ -181,10 +181,10 @@ export function PresetsImportDialog({
           <Alert className="border-amber-200 bg-amber-50 text-amber-900 dark:border-amber-800 dark:bg-amber-950 dark:text-amber-50">
             <AlertTriangle />
             <AlertTitle>
-              {t("presetsManager.dialogs.importPreset.alerts.title")}
+              {t("presetsManager.dialogs.importPreset.alerts.conflicts.title")}
             </AlertTitle>
             <AlertDescription>
-              {t("presetsManager.dialogs.importPreset.alerts.description")}
+              {t("presetsManager.dialogs.importPreset.alerts.conflicts.description")}
             </AlertDescription>
           </Alert>
         )}

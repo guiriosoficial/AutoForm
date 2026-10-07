@@ -166,14 +166,14 @@ function InlineInputComponent (
           size={IconSize.SM}
           persistent
           destructive={hasError}
-          onClick={confirmEditing}
+          onMouseDown={confirmEditing}
         />
         <InlineButton
           icon={X}
           size={IconSize.SM}
           persistent
           destructive
-          onClick={cancelEditing}
+          onMouseDown={cancelEditing}
         />
       </div>
     );
@@ -192,6 +192,7 @@ function InlineInputComponent (
       <span className="whitespace-nowrap">
         {lastWord}{" "}
         <InlineButton
+          onMouseDown={(event) => event.preventDefault()}
           className="inline-flex translate-y-0.5 ml-1"
           icon={PenLine}
         />

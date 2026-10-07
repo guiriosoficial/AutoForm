@@ -9,7 +9,7 @@ interface InlineButtonProps {
   persistent?: boolean;
   destructive?: boolean;
   className?: string;
-  onClick?: MouseEventHandler<HTMLButtonElement>;
+  onMouseDown?: MouseEventHandler<HTMLButtonElement>;
 }
 
 export function InlineButton({
@@ -18,7 +18,7 @@ export function InlineButton({
   persistent,
   destructive,
   className,
-  onClick,
+  onMouseDown,
 }: InlineButtonProps) {
   const buttonClasses = cn(
     "text-muted-foreground hover:text-primary opacity-0 group-hover:opacity-100 transition-all",
@@ -31,7 +31,7 @@ export function InlineButton({
     <button
       className={buttonClasses}
       type="button"
-      onClick={onClick}
+      onMouseDown={onMouseDown}
     >
       <Icon size={size} />
     </button>
