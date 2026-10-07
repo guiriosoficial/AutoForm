@@ -1,7 +1,8 @@
-import { APP_AUTHOR_USER, APP_GITHUB_URL } from "@/configs/app";
+import { APP_AUTHOR_USER, APP_GITHUB_URL, APP_URL } from "@/configs/app";
 
 export const Page = {
   SPONSOR: `${APP_GITHUB_URL}/sponsors/${APP_AUTHOR_USER}?frequency=one-time`,
+  WIKI: `${APP_URL}/wiki`,
   HOME: "home",
   PREFERENCES: "preferences",
 } as const;
