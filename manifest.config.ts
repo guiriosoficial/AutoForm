@@ -8,6 +8,15 @@ export default defineManifest(({ mode }) => {
     manifest_version: 3,
     name: env.VITE_APP_NAME,
     version: env.VITE_APP_VERSION,
+    browser_specific_settings: {
+      gecko: {
+        id: "autoform@guiriosoficial.com",
+        data_collection_permissions: {
+          required: ["none"],
+          optional: [],
+        },
+      },
+    },
     icons: {
       48: "public/logo.png",
     },
