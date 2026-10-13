@@ -8,11 +8,18 @@ export const ImportStrategy = {
 export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy];
 
 export const ImportConflictType = {
-  ID: "id" as const,
-  NAME: "name" as const,
+  ID: "id",
+  NAME: "name",
+  NONE: "none"
 } as const;
 
 export type ImportConflictType = (typeof ImportConflictType)[keyof typeof ImportConflictType];
+
+export const ImportConflictOrder: Record<ImportConflictType, number> = {
+  [ImportConflictType.ID]: 0,
+  [ImportConflictType.NAME]: 1,
+  [ImportConflictType.NONE]: 2,
+} as const;
 
 export const IMPORT_CONFIG = {
   FILE_TYPE: "application/json",

@@ -52,6 +52,10 @@ export const ptBrTranslations = {
     },
     import: {
       suffix: "Importado",
+      conflicts: {
+        id: "Conflito de ID",
+        name: "Nome duplicado",
+      }
     },
     importStrategy: {
       append: {
@@ -148,6 +152,11 @@ export const ptBrTranslations = {
               Conflitos com itens existentes, identificados pelo ID ou chave, serão tratados de acordo com a estratégia de importação selecionada.
             `,
           }
+        },
+        captions: {
+          automaticRename: "Automatically renamed",
+          newest: "Mais recente",
+          oldest: "Mais antigo",
         }
       },
     },
