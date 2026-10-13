@@ -172,7 +172,7 @@ function FieldItemComponent({
           </span>
           <InlineButton
             icon={RotateCcw}
-            onClick={() => onRegenerateFieldValue(field.id)}
+            onMouseDown={() => onRegenerateFieldValue(field.id)}
           />
         </div>
       )}
@@ -184,11 +184,11 @@ function FieldItemComponent({
           </span>
           <InlineButton
             icon={RotateCcw}
-            onClick={() => onRegenerateFieldValue(field.id)}
+            onMouseDown={() => onRegenerateFieldValue(field.id)}
           />
           <InlineButton
             icon={Copy}
-            onClick={() => onCopyGeneratedValue(String(generatedValue))}
+            onMouseDown={() => onCopyGeneratedValue(String(generatedValue))}
           />
         </div>
       )}
