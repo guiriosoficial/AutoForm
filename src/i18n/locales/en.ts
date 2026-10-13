@@ -52,6 +52,10 @@ export const enTranslations = {
     },
     import: {
       suffix: "Imported",
+      conflicts: {
+        id: "ID Conflict",
+        name: "Duplicated name",
+      }
     },
     importStrategy: {
       append: {
@@ -146,6 +150,11 @@ export const enTranslations = {
               Conflicts with existing items, identified by their ID or key, will be handled according to the selected import strategy.`
             ,
           }
+        },
+        captions: {
+          automaticRename: "Automatically renamed",
+          newest: "Most recent",
+          oldest: "Oldest",
         }
       },
     },

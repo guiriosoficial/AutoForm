@@ -60,11 +60,24 @@ export function PresetsImportDialog({
   const mappedPresetsToImport: MappedItemsToImport<Preset> = parsedData.presets.map((preset) => {
     const conflictedItem = conflicts.presets.find((conflict) => conflict.target.id === preset.id);
     return conflictedItem ?? { target: preset };
-  });
+  })
+
+  const sortedPresetsToImport = mappedPresetsToImport.toSorted(
+    (presetA, presetB) =>
+      (ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE]) -
+      (ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE]),
+  );
+
   const mappedCustomMethodsToImport: MappedItemsToImport<CatalogMethod> = parsedData.customMethods.map((customMethod) => {
     const conflictedItem = conflicts.customMethods.find((conflict) => conflict.target.key === customMethod.key)
     return conflictedItem ?? { target: customMethod };
   });
+
+  const sortedCustomMethodsToImport = mappedCustomMethodsToImport.toSorted(
+    (presetA, presetB) =>
+      (ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE]) -
+      (ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE]),
+  );
 
   const handleImportStrategyChange = (nextStrategy: string[]) => {
     if (nextStrategy.length === 0) return;
@@ -96,7 +109,7 @@ export function PresetsImportDialog({
         </DialogHeader>
 
         <div className="space-y-2 ml-4">
-          {mappedPresetsToImport.map((preset) => (
+          {sortedPresetsToImport.map((preset) => (
             <Item
               key={preset.target.id}
               size="xs"
@@ -124,7 +137,7 @@ export function PresetsImportDialog({
         </div>
 
         <div className="space-y-2 ml-4">
-          {mappedCustomMethodsToImport.map((customMethod) => (
+          {sortedCustomMethodsToImport.map((customMethod) => (
             <Item
               key={customMethod.target.key}
               size="xs"
