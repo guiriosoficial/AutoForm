@@ -108,7 +108,7 @@ export function useImportExport({
           preset.target.name,
           {
             spaced: true,
-            suffix: t("configs.preset.importSuffix"),
+            suffix: t("configs.import.suffix"),
           },
         );
 
@@ -121,7 +121,7 @@ export function useImportExport({
           customMethod.target.name,
           {
             spaced: true,
-            suffix: t("configs.preset.importSuffix"),
+            suffix: t("configs.import.suffix"),
           },
         );
 
