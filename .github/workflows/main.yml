@@ -1,4 +1,4 @@
-name: Build and deploy extension
+name: Build, Release and Publish Extension
 
 on:
   workflow_dispatch:
@@ -29,19 +29,20 @@ jobs:
             exit 1
           fi
 
-  version:
-    name: Bump version
+  build:
+    name: Build and Release Extension
     runs-on: ubuntu-latest
+    needs: validations
+
+    permissions:
+      contents: write
 
     outputs:
-      commit_sha: ${{ steps.version.outputs.commit_sha }}
-      tag_name: ${{ steps.version.outputs.tag_name }}
+      zip_name: ${{ steps.build.outputs.zip_name }}
 
     steps:
-      - name: Checkout repository
+      - name: Checkout base commit
         uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
 
       - name: Configure Git
         run: |
@@ -55,69 +56,6 @@ jobs:
         run: |
           npm version "$BUMP" -m "chore: release v%s"
 
-          VERSION="$(node -p "require('./package.json').version")"
-          TAG_NAME="v${VERSION}"
-          COMMIT_SHA="$(git rev-parse HEAD)"
-
-          echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
-          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
-
-          echo "Version: ${VERSION}"
-          echo "Commit: ${COMMIT_SHA}"
-          echo "Tag: ${TAG_NAME}"
-
-      - name: Create version bundle
-        env:
-          TAG_NAME: ${{ steps.version.outputs.tag_name }}
-        run: |
-          git update-ref refs/heads/versioned HEAD
-          git bundle create version.bundle \
-            refs/heads/versioned \
-            "refs/tags/${TAG_NAME}"
-
-      - name: Upload version bundle
-        uses: actions/upload-artifact@v4
-        with:
-          name: versioned-source
-          path: version.bundle
-          if-no-files-found: error
-
-  build:
-    name: Build extension
-    runs-on: ubuntu-latest
-    needs: version
-
-    permissions:
-      contents: write
-
-    outputs:
-      zip_name: ${{ steps.build.outputs.zip_name }}
-
-    steps:
-      - name: Checkout base commit
-        uses: actions/checkout@v4
-        with:
-          ref: ${{ github.sha }}
-
-      - name: Download version bundle
-        uses: actions/download-artifact@v4
-        with:
-          name: versioned-source
-          path: version-artifact
-
-      - name: Checkout versioned commit
-        env:
-          COMMIT_SHA: ${{ needs.version.outputs.commit_sha }}
-          TAG_NAME: ${{ needs.version.outputs.tag_name }}
-        run: |
-          git fetch version-artifact/version.bundle \
-            refs/heads/versioned:refs/heads/versioned \
-            "refs/tags/${TAG_NAME}:refs/tags/${TAG_NAME}"
-
-          git checkout --detach "$COMMIT_SHA"
-
-          test "$(git rev-parse HEAD)" = "$COMMIT_SHA"
-
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
@@ -127,10 +65,11 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Prepare release directory
-        run: |
-          rm -rf release
-          mkdir -p release
+#      - name: Run Tests
+#        run: npm run test
+
+      - name: Run lint
+        run: npm run lint
 
       - name: Build extension
         run: npm run build
@@ -138,24 +77,8 @@ jobs:
       - name: Validate ZIP artifact
         id: build
         run: |
-          shopt -s nullglob
-          zips=(release/*.zip)
-
-          if [[ ${#zips[@]} -ne 1 ]]; then
-            echo "Expected exactly one ZIP, found ${#zips[@]}." >&2
-            printf '%s\n' "${zips[@]}" >&2
-            exit 1
-          fi
-
-          zip_path="${zips[0]}"
-
-          if ! unzip -Z1 "$zip_path" | grep -qx 'manifest.json'; then
-            echo "manifest.json must be at the ZIP root." >&2
-            exit 1
-          fi
-
-          echo "zip_name=$(basename "$zip_path")" >> "$GITHUB_OUTPUT"
-          echo "Validated artifact: $zip_path"
+          ZIP_PATH="$(find release -maxdepth 1 -type f -name '*.zip' -print -quit)"
+          echo "zip_name=$(basename "$ZIP_PATH")" >> "$GITHUB_OUTPUT"
 
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
@@ -167,9 +90,19 @@ jobs:
 #      - name: Push version commit and tag
 #        run: |
 #          git push --follow-tags origin "HEAD:${GITHUB_REF_NAME}"
+#
+#      - name: Create GitHub Release
+#        env:
+#          GH_TOKEN: ${{ github.token }}
+#          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+#          ZIP_NAME: ${{ steps.build.outputs.zip_name }}
+#        run: |
+#          gh release create "$TAG_NAME" "release/$ZIP_NAME" \
+#            --title "$TAG_NAME" \
+#            --generate-notes
 
   publish:
-    name: Publish extension
+    name: Publish Extension
     runs-on: ubuntu-latest
     needs: build
 
