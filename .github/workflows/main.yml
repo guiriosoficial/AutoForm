@@ -1,24 +1,187 @@
-name: Deploy Extension
+name: Build and deploy extension
 
 on:
   workflow_dispatch:
+    inputs:
+      bump:
+        description: SemVer a aplicar nesta publicação
+        required: true
+        type: choice
+        options:
+          - patch
+          - minor
+          - major
+
+concurrency:
+  group: release-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Build
-    runs-on: ubuntu-latest
-  publish:
-    name: Publish
-    needs: build
+  validations:
+    name: Validations
     runs-on: ubuntu-latest
 
     steps:
-      - name: Download Build
-        uses: actions/download-artifact@v8.0.1
-        with:
-          name: autoform
+      - name: Require main branch
+        run: |
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "Este workflow só pode ser executado a partir da branch main." >&2
+            exit 1
+          fi
 
-      - name: Browser Platform Publish
-        uses: PlasmoHQ/bpp@v3
+  version:
+    name: Bump version
+    runs-on: ubuntu-latest
+
+    outputs:
+      commit_sha: ${{ steps.version.outputs.commit_sha }}
+      tag_name: ${{ steps.version.outputs.tag_name }}
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
         with:
-          keys: ${{ secrets.BPP_KEYS }}
+          ref: ${{ github.sha }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Bump version
+        id: version
+        env:
+          BUMP: ${{ inputs.bump }}
+        run: |
+          npm version "$BUMP" -m "chore: release v%s"
+
+          VERSION="$(node -p "require('./package.json').version")"
+          TAG_NAME="v${VERSION}"
+          COMMIT_SHA="$(git rev-parse HEAD)"
+
+          echo "commit_sha=${COMMIT_SHA}" >> "$GITHUB_OUTPUT"
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+
+          echo "Version: ${VERSION}"
+          echo "Commit: ${COMMIT_SHA}"
+          echo "Tag: ${TAG_NAME}"
+
+      - name: Create version bundle
+        env:
+          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+        run: |
+          git update-ref refs/heads/versioned HEAD
+          git bundle create version.bundle \
+            refs/heads/versioned \
+            "refs/tags/${TAG_NAME}"
+
+      - name: Upload version bundle
+        uses: actions/upload-artifact@v4
+        with:
+          name: versioned-source
+          path: version.bundle
+          if-no-files-found: error
+
+  build:
+    name: Build extension
+    runs-on: ubuntu-latest
+    needs: version
+
+    permissions:
+      contents: write
+
+    outputs:
+      zip_name: ${{ steps.build.outputs.zip_name }}
+
+    steps:
+      - name: Checkout base commit
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+
+      - name: Download version bundle
+        uses: actions/download-artifact@v4
+        with:
+          name: versioned-source
+          path: version-artifact
+
+      - name: Checkout versioned commit
+        env:
+          COMMIT_SHA: ${{ needs.version.outputs.commit_sha }}
+          TAG_NAME: ${{ needs.version.outputs.tag_name }}
+        run: |
+          git fetch version-artifact/version.bundle \
+            refs/heads/versioned:refs/heads/versioned \
+            "refs/tags/${TAG_NAME}:refs/tags/${TAG_NAME}"
+
+          git checkout --detach "$COMMIT_SHA"
+
+          test "$(git rev-parse HEAD)" = "$COMMIT_SHA"
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prepare release directory
+        run: |
+          rm -rf release
+          mkdir -p release
+
+      - name: Build extension
+        run: npm run build
+
+      - name: Validate ZIP artifact
+        id: build
+        run: |
+          shopt -s nullglob
+          zips=(release/*.zip)
+
+          if [[ ${#zips[@]} -ne 1 ]]; then
+            echo "Expected exactly one ZIP, found ${#zips[@]}." >&2
+            printf '%s\n' "${zips[@]}" >&2
+            exit 1
+          fi
+
+          zip_path="${zips[0]}"
+
+          if ! unzip -Z1 "$zip_path" | grep -qx 'manifest.json'; then
+            echo "manifest.json must be at the ZIP root." >&2
+            exit 1
+          fi
+
+          echo "zip_name=$(basename "$zip_path")" >> "$GITHUB_OUTPUT"
+          echo "Validated artifact: $zip_path"
+
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: extension-build
+          path: release/${{ steps.build.outputs.zip_name }}
+          if-no-files-found: error
+
+#      - name: Push version commit and tag
+#        run: |
+#          git push --follow-tags origin "HEAD:${GITHUB_REF_NAME}"
+
+  publish:
+    name: Publish extension
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download build artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: extension-build
+          path: release
+
+#      - name: Publish with Browser Platform Publisher
+#        uses: PlasmoHQ/bpp@v3
+#        with:
+#          keys: ${{ secrets.BPP_KEYS }}
+#          artifact: release/${{ needs.build.outputs.zip_name }}

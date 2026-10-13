@@ -1,13 +1,15 @@
 import { defineManifest } from "@crxjs/vite-plugin";
-import { loadEnv } from "vite";
+import { version, name } from "./package.json";
 
-export default defineManifest(({ mode }) => {
-  const env = loadEnv(mode, process.cwd());
+export const APP_VERSION = version;
+export const APP_ID = name;
+export const APP_NAME = APP_ID.replaceAll(/(?:^|-)\w/gu, (match) => match.slice(-1).toUpperCase());
 
-  return {
+export default defineManifest(
+  {
     manifest_version: 3,
-    name: env.VITE_APP_NAME,
-    version: env.VITE_APP_VERSION,
+    name: APP_NAME,
+    version: APP_VERSION,
     browser_specific_settings: {
       gecko: {
         id: "autoform@guiriosoficial.com",
@@ -23,7 +25,7 @@ export default defineManifest(({ mode }) => {
     action: {
       default_icon: { 48: "public/logo.png" },
       default_popup: "src/entrypoints/app/index.html",
-      default_title: env.VITE_APP_NAME,
+      default_title: APP_NAME,
     },
     side_panel: {
       default_path: "src/entrypoints/app/index.html",
@@ -43,5 +45,5 @@ export default defineManifest(({ mode }) => {
     sandbox: {
       pages: ["src/entrypoints/sandbox/index.html"],
     },
-  };
-});
+  }
+);
