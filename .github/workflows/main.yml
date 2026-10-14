@@ -49,6 +49,12 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+
       - name: Bump version
         id: version
         env:
@@ -56,17 +62,17 @@ jobs:
         run: |
           npm version "$BUMP" -m "chore: release v%s"
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 24
-          cache: npm
+          VERSION="$(node -p "require('./package.json').version")"
+          TAG_NAME="v${VERSION}"
+
+          echo "tag_name=${TAG_NAME}" >> "$GITHUB_OUTPUT"
+          echo "Versão criada: ${TAG_NAME}"
 
       - name: Install dependencies
         run: npm ci
 
-#      - name: Run Tests
-#        run: npm run test
+      #      - name: Run Tests
+      #        run: npm run test
 
       - name: Run lint
         run: npm run lint
@@ -87,19 +93,19 @@ jobs:
           path: release/${{ steps.build.outputs.zip_name }}
           if-no-files-found: error
 
-#      - name: Push version commit and tag
-#        run: |
-#          git push --follow-tags origin "HEAD:${GITHUB_REF_NAME}"
-#
-#      - name: Create GitHub Release
-#        env:
-#          GH_TOKEN: ${{ github.token }}
-#          TAG_NAME: ${{ steps.version.outputs.tag_name }}
-#          ZIP_NAME: ${{ steps.build.outputs.zip_name }}
-#        run: |
-#          gh release create "$TAG_NAME" "release/$ZIP_NAME" \
-#            --title "$TAG_NAME" \
-#            --generate-notes
+      - name: Push version commit and tag
+        run: |
+          git push --follow-tags origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+          ZIP_NAME: ${{ steps.build.outputs.zip_name }}
+        run: |
+          gh release create "$TAG_NAME" "release/$ZIP_NAME" \
+            --title "$TAG_NAME" \
+            --generate-notes
 
   publish:
     name: Publish Extension
@@ -113,8 +119,8 @@ jobs:
           name: extension-build
           path: release
 
-#      - name: Publish with Browser Platform Publisher
-#        uses: PlasmoHQ/bpp@v3
-#        with:
-#          keys: ${{ secrets.BPP_KEYS }}
-#          artifact: release/${{ needs.build.outputs.zip_name }}
+      - name: Publish with Browser Platform Publisher
+        uses: PlasmoHQ/bpp@v3
+        with:
+          keys: ${{ secrets.BPP_KEYS }}
+          artifact: release/${{ needs.build.outputs.zip_name }}
