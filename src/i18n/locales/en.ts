@@ -22,6 +22,15 @@ export const enTranslations = {
     loadedPresets_one: "{{ count }} preset loaded",
     loadedPresets_other: "{{ count }} presets loaded",
 
+    customMethod: "Custom method",
+    customMethods: "Custom methods",
+    customMethods_zero: "No custom method",
+    customMethods_one: "{{ count }} custom method",
+    customMethods_other: "{{ count }} custom methods",
+    loadedCustomMethods_zero: "No custom method loaded",
+    loadedCustomMethods_one: "{{ count }} custom method loaded",
+    loadedCustomMethods_other: "{{ count }} custom methods loaded",
+
     alert: "Warning",
     import: "Import",
     export: "Export",
@@ -29,6 +38,8 @@ export const enTranslations = {
     cancel: "Cancel",
     copiedToClipboard: "Copied to clipboard!",
     failedToCopy: "Failed to copy {{ item }}",
+
+    and: "and",
   },
   configs: {
     catalog: {
@@ -132,9 +143,12 @@ export const enTranslations = {
     dialogs: {
       importPreset: {
         title: "$t(globals.import)",
-        description_zero: "$t(globals.presets, { 'count': {{ total }} }) to import",
-        description_one: "{{ count }} conflict among $t(globals.presets, { 'count': {{ total }} })",
-        description_other: "{{ count }} conflicts among $t(globals.presets, { 'count': {{ total }} })",
+        descriptionPreset_zero: "$t(globals.loadedPresets, { 'count': {{ total }} }) to import",
+        descriptionPreset_one: "{{ count }} conflict among $t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionPreset_other: "{{ count }} conflicts among $t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionCustomMethod_zero: "$t(globals.loadedCustomMethods, { 'count': {{ total }} }) to import",
+        descriptionCustomMethod_one: "{{ count }} conflict among $t(globals.loadedCustomMethods, { 'count': {{ total }} })",
+        descriptionCustomMethod_other: "{{ count }} conflicts among $t(globals.loadedCustomMethods, { 'count': {{ total }} })",
         confirmButton: "$t(globals.import)",
         cancelButton: "$t(globals.cancel)",
         form: {
@@ -155,6 +169,8 @@ export const enTranslations = {
           automaticRename: "Automatically renamed",
           newest: "Most recent",
           oldest: "Oldest",
+          incoming: "Incoming",
+          current: "Current",
         }
       },
     },

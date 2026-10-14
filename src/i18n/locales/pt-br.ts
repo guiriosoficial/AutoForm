@@ -22,6 +22,15 @@ export const ptBrTranslations = {
     loadedPresets_one: "{{ count }} preset carregado",
     loadedPresets_other: "{{ count }} presets carregados",
 
+    customMethod: "Método customizado",
+    customMethods: "Métodos customizados",
+    customMethods_zero: "Nenhum método customizado",
+    customMethods_one: "{{ count }} método customizado",
+    customMethods_other: "{{ count }} métodos customizados",
+    loadedCustomMethods_zero: "Nenhum método customizado carregado",
+    loadedCustomMethods_one: "{{ count }} método customizado carregado",
+    loadedCustomMethods_other: "{{ count }} métodos customizados carregados",
+
     alert: "Atenção",
     import: "Importar",
     export: "Exportar",
@@ -29,6 +38,8 @@ export const ptBrTranslations = {
     cancel: "Cancelar",
     copiedToClipboard: "Copiado para a área de transferência!",
     failedToCopy: "Falha ao copiar {{ item }}",
+
+    and: "e",
   },
   configs: {
     catalog: {
@@ -132,11 +143,12 @@ export const ptBrTranslations = {
     dialogs: {
       importPreset: {
         title: "$t(globals.import)",
-        description_zero: "$t(globals.loadedPresets, { 'count': {{ total }} } )",
-        description_one:
-          "{{ count }} conflito entre $t(globals.loadedPresets, { 'count': {{ total }} })",
-        description_other:
-          "{{ count }} conflitos entre $t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionPreset_zero: "$t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionPreset_one: "{{ count }} conflito entre $t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionPreset_other: "{{ count }} conflitos entre $t(globals.loadedPresets, { 'count': {{ total }} })",
+        descriptionCustomMethod_zero: "$t(globals.loadedCustomMethods, { 'count': {{ total }} })",
+        descriptionCustomMethod_one: "{{ count }} conflito entre $t(globals.loadedCustomMethods, { 'count': {{ total }} })",
+        descriptionCustomMethod_other: "{{ count }} conflitos entre $t(globals.loadedCustomMethods, { 'count': {{ total }} })",
         confirmButton: "$t(globals.import)",
         cancelButton: "$t(globals.cancel)",
         form: {
@@ -157,6 +169,8 @@ export const ptBrTranslations = {
           automaticRename: "Automatically renamed",
           newest: "Mais recente",
           oldest: "Mais antigo",
+          incoming: "Entrada",
+          current: "Atual",
         }
       },
     },

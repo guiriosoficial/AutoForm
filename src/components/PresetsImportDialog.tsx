@@ -15,18 +15,17 @@ import {
   AlertDescription,
   AlertTitle,
 } from "@/components/ui/alert"
+import { Separator } from "@/components/ui/separator";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
-import { Item, ItemContent, ItemDescription, ItemTitle, ItemActions } from "@/components/ui/item";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import { ButtonGroup } from "@/components/ui/button-group";
+import { ImportItem } from "@/components/layouts/ImportItem";
 import { DynamicIcon } from "@/components/shared/DynamicIcon";
 import { ImportStrategyIcons } from "@/components/icons/maps";
-import { type PartialBy, cn, preventDefaultEscape } from "@/lib/utils";
+import { type PartialBy, preventDefaultEscape } from "@/lib/utils";
 import {
   IMPORT_CONFIG,
-  IconSize,
   ImportConflictType,
   ImportConflictOrder,
   ImportStrategy,
@@ -91,10 +90,19 @@ export function PresetsImportDialog({
     setImportStrategy(nextStrategy[0] as ImportStrategy);
   };
 
-  const dialogDescription = t("presetsManager.dialogs.importPreset.description", {
+  const dialogDescriptionPreset = t("presetsManager.dialogs.importPreset.descriptionPreset", {
     count: conflicts.presets.length,
     total: parsedData.presets.length,
   });
+
+  const dialogDescriptionCustomMethod = parsedData.customMethods.length > 0
+    ? `${t("globals.and")} ${t("presetsManager.dialogs.importPreset.descriptionCustomMethod", {
+      count: conflicts.customMethods.length,
+      total: parsedData.customMethods.length,
+    })}`
+    : "";
+
+  const dialogDescription = `${dialogDescriptionPreset} ${dialogDescriptionCustomMethod}`
 
   return (
     <Dialog
@@ -116,57 +124,25 @@ export function PresetsImportDialog({
 
         <div className="space-y-2 ml-4">
           {sortedPresetsToImport.map((preset) => (
-            <Item
+            <ImportItem
               key={preset.target.id}
-              size="xs"
-              className="p-0 list-item marker:text-muted-foreground"
-            >
-              <ItemContent>
-                <ItemTitle className="text-balance">
-                  {/*{preset.reference.name}*/}
-                  {preset.target.name}
-                </ItemTitle>
-                <ItemDescription>
-                  {/*{t("globals.fields", { count: preset.reference.fields.length })}*/}
-                  {t("globals.fields", { count: preset.target.fields.length })}
-                </ItemDescription>
-                {preset.conflictType && (
-                  <ItemActions>
-                    <Badge variant="destructive">
-                      {preset.conflictType}
-                    </Badge>
-                  </ItemActions>
-                )}
-              </ItemContent>
-            </Item>
+              item={preset}
+              type="preset"
+              importStrategy={importStrategy}
+            />
           ))}
         </div>
 
+        <Separator />
+
         <div className="space-y-2 ml-4">
           {sortedCustomMethodsToImport.map((customMethod) => (
-            <Item
+            <ImportItem
               key={customMethod.target.key}
-              size="xs"
-              className="p-0 list-item marker:text-muted-foreground"
-            >
-              <ItemContent>
-                <ItemTitle className="text-balance">
-                  {/*{preset.reference.name}*/}
-                  {customMethod.target.name}
-                </ItemTitle>
-                <ItemDescription>
-                  {/*{customMethod.reference.code}*/}
-                  {customMethod.target.code}
-                </ItemDescription>
-                {customMethod.conflictType && (
-                  <ItemActions>
-                    <Badge variant="destructive">
-                      {customMethod.conflictType}
-                    </Badge>
-                  </ItemActions>
-                )}
-              </ItemContent>
-            </Item>
+              item={customMethod}
+              type="customMethod"
+              importStrategy={importStrategy}
+            />
           ))}
         </div>
 
