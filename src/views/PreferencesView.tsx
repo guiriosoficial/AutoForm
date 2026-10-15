@@ -23,7 +23,6 @@ import { getLocaleDisplayNamesMap } from "@/lib/locale";
 import { toTitleCase, preventDefaultEscape } from "@/lib/utils";
 import { Catalogs, ImportStrategy, Language, Locale, Theme, Page } from "@/configs";
 
-
 export function PreferencesView() {
   const { t, i18n } = useTranslation();
 

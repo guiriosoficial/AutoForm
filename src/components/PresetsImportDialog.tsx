@@ -10,13 +10,9 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import {
-  Alert,
-  AlertDescription,
-  AlertTitle,
-} from "@/components/ui/alert"
-import { Separator } from "@/components/ui/separator";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import { Field, FieldDescription, FieldLabel } from "@/components/ui/field";
+import { Separator } from "@/components/ui/separator";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 import { Button } from "@/components/ui/button";
 import { ButtonGroup } from "@/components/ui/button-group";
@@ -32,7 +28,11 @@ import {
 } from "@/configs";
 import type { Preset } from "@/lib/presets";
 import type { CatalogMethod } from "@/lib/catalog";
-import type { ParseImportDataResult, ImportPayload, ImportConflict } from "@/hooks/use-import-export";
+import type {
+  ParseImportDataResult,
+  ImportPayload,
+  ImportConflict,
+} from "@/hooks/use-import-export";
 
 interface PresetsImportDialogProps {
   open: boolean;
@@ -60,17 +60,17 @@ export function PresetsImportDialog({
   const importStrategyOptions = Object.values(ImportStrategy).filter((strategy) =>
     (hasPresetConflicts || strategy !== ImportStrategy.OVERWRITE) &&
     strategy !== ImportStrategy.ALWAYS_ASK
-  )
+  );
 
   const mappedPresetsToImport: MappedItemsToImport<Preset> = parsedData.presets.map((preset) => {
     const conflictedItem = conflicts.presets.find((conflict) => conflict.target.id === preset.id);
     return conflictedItem ?? { target: preset };
-  })
+  });
 
   const sortedPresetsToImport = mappedPresetsToImport.toSorted(
     (presetA, presetB) =>
-      (ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE]) -
-      (ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE]),
+      ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE] -
+      ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE],
   );
 
   const mappedCustomMethodsToImport: MappedItemsToImport<CatalogMethod> = parsedData.customMethods.map((customMethod) => {
@@ -80,8 +80,8 @@ export function PresetsImportDialog({
 
   const sortedCustomMethodsToImport = mappedCustomMethodsToImport.toSorted(
     (presetA, presetB) =>
-      (ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE]) -
-      (ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE]),
+      ImportConflictOrder[presetA.conflictType ?? ImportConflictType.NONE] -
+      ImportConflictOrder[presetB.conflictType ?? ImportConflictType.NONE],
   );
 
   const handleImportStrategyChange = (nextStrategy: string[]) => {
@@ -102,7 +102,7 @@ export function PresetsImportDialog({
     })}`
     : "";
 
-  const dialogDescription = `${dialogDescriptionPreset} ${dialogDescriptionCustomMethod}`
+  const dialogDescription = `${dialogDescriptionPreset} ${dialogDescriptionCustomMethod}`;
 
   return (
     <Dialog

@@ -14,7 +14,12 @@ import { javascript } from "@codemirror/lang-javascript";
 import { InlineInput } from "@/components/shared/InlineInput";
 import ReactCodeMirror from "@uiw/react-codemirror";
 import { debounce, getErrorMessage, removeSpaces } from "@/lib/utils";
-import { EDITOR_THEME_CREATED, createEditorKeymap, createEditorLinter, javascriptLinter } from "@/lib/editor";
+import {
+  EDITOR_THEME_CREATED,
+  createEditorKeymap,
+  createEditorLinter,
+  javascriptLinter,
+} from "@/lib/editor";
 import { EDITOR_CONFIG, EDITOR_BASIC_SETUP, EDITOR_PRETTIER_OPTIONS } from "@/configs";
 import type { CatalogMethod } from "@/lib/catalog";
 
@@ -115,8 +120,8 @@ function MethodEditorComponent(
   ));
 
   useEffect(() => {
-    const currentDebouncedValidate = debouncedValidate.current
-    return () => currentDebouncedValidate.cancel()
+    const currentDebouncedValidate = debouncedValidate.current;
+    return () => currentDebouncedValidate.cancel();
   }, []);
 
   useEffect(() => {

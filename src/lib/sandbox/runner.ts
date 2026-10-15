@@ -1,7 +1,6 @@
 import { type Locale, MessageAction } from "@/configs";
 import { getCatalogInstances } from "@/lib/catalog/registry";
 
-
 export function createSandboxRunner() {
   let runtime: Record<string, object> = {};
   let runtimeKeys: string[] = [];
@@ -16,10 +15,10 @@ export function createSandboxRunner() {
 
       if (nextLocale === currentLocale) return;
 
-      currentLocale = nextLocale
-      runtime = getCatalogInstances(nextLocale)
-      runtimeKeys = Object.keys(runtime)
-      runtimeValues = Object.values(runtime)
+      currentLocale = nextLocale;
+      runtime = getCatalogInstances(nextLocale);
+      runtimeKeys = Object.keys(runtime);
+      runtimeValues = Object.values(runtime);
 
       return;
     }

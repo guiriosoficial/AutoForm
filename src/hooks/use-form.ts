@@ -4,12 +4,7 @@ import { usePersistentState } from "@/hooks/use-persistent-state";
 import { toast } from "@/lib/toast";
 import { isFunction } from "@/lib/utils";
 import { type GeneratorValue, generateValue, fillInputElement } from "@/lib/generator";
-import {
-  type FieldConfig,
-  type FieldResult,
-  createField,
-  createFieldResult,
-} from "@/lib/fields";
+import { type FieldConfig, type FieldResult, createField, createFieldResult } from "@/lib/fields";
 import { EXPORT_CONFIG, StorageKeys } from "@/configs";
 import type { CatalogMethod } from "@/lib/catalog";
 

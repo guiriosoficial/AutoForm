@@ -9,12 +9,12 @@ export function getCatalogFactories(customMethods: CatalogMethod[]): Record<Cata
     [Catalogs.FAKER]: createFakerCatalog,
     [Catalogs.BOX_4_DEV]: createBox4DevCatalog,
     [Catalogs.CUSTOM]: () => createCustomCatalog(customMethods),
-  }
+  };
 }
 
 export function getCatalogInstances(locale: Locale): Record<Exclude<Catalogs, "custom">, object> {
   return {
     [Catalogs.FAKER]: createFakerInstance(locale),
     [Catalogs.BOX_4_DEV]: getBox4DevInstance(),
-  }
+  };
 }

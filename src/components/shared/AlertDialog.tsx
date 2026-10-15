@@ -42,10 +42,10 @@ export function AlertDialog({
     ? description.filter(Boolean)
     : [description];
 
-  const translatedTitle = title ?? t("defaults.alert.title");
   const translatedDescriptionLines = description ? descriptionArray : [t("defaults.alert.description")];
   const translatedConfirmButtonText = confirmButtonText ?? t("defaults.alert.confirmButton");
   const translatedCancelButtonText = cancelButtonText ?? t("defaults.alert.cancelButton");
+  const translatedTitle = title ?? t("defaults.alert.title");
 
   const variant = destructive ? "destructive" : "default";
 

@@ -24,8 +24,8 @@ export function createNextSequencedName<T extends object>(
   key: keyof T,
   name: string,
   options?: {
-    spaced?: boolean,
-    suffix?: string,
+    spaced?: boolean;
+    suffix?: string;
   },
 ) {
   const { spaced, suffix } = options ?? {};
@@ -35,7 +35,6 @@ export function createNextSequencedName<T extends object>(
   const sequenceRegex = suffix
     ? new RegExp(`^${escapedBaseName}\\s*\\(${suffix}\\s*(\\d+)\\)$`, "u")
     : new RegExp(`^${escapedBaseName}\\s*(\\d+)$`, "u");
-
 
   let highestSequenceNumber = 0;
 

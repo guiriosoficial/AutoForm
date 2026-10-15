@@ -10,13 +10,13 @@ import type { CatalogMethod } from "@/lib/catalog";
 import type { ImportConflict } from "@/hooks/use-import-export";
 
 interface ImportItemCustomMethod {
-  item: MappedItemsToImport<CatalogMethod>
-  type: "customMethod"
+  item: MappedItemsToImport<CatalogMethod>;
+  type: "customMethod";
 }
 
 interface ImportItemPreset {
-  item: MappedItemsToImport<Preset>
-  type: "preset"
+  item: MappedItemsToImport<Preset>;
+  type: "preset";
 }
 
 type ImportItemProps = (
@@ -24,20 +24,23 @@ type ImportItemProps = (
   | ImportItemPreset
   ) & {
   importStrategy: ImportStrategy
-}
+};
 
 type MappedItemsToImport<T> = PartialBy<ImportConflict<T>, "conflictType" | "reference">;
 
 export function ImportItem({
   item,
   type,
-  importStrategy
+  importStrategy,
 }: ImportItemProps) {
   const { t } = useTranslation();
 
-  const warningClasses = "bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-600"
+  const warningClasses = "bg-amber-50 text-amber-900 dark:bg-amber-950 dark:text-amber-600";
 
-  const conflictBadgeClass = cn(item.conflictType === ImportConflictType.NAME && warningClasses, "ml-1")
+  const conflictBadgeClass = cn(
+    item.conflictType === ImportConflictType.NAME && warningClasses,
+    "ml-1",
+  );
 
   const showIncomingItem =
     item.conflictType &&
@@ -50,44 +53,44 @@ export function ImportItem({
       (!isExisting && item.conflictType === ImportConflictType.NAME) && "text-amber-600",
       importStrategy === ImportStrategy.REPLACE_ALL && "text-popover-foreground",
       isExisting && "w-auto text-right",
-      "inline-table text-balance"
+      "inline-table text-balance",
     );
 
   const getConflictTitle = (isExisting = false) => {
-    const isNameConflict = item.conflictType === ImportConflictType.NAME
-    const useTarget = isNameConflict === isExisting
+    const isNameConflict = item.conflictType === ImportConflictType.NAME;
+    const useTarget = isNameConflict === isExisting;
 
-    return useTarget ? item.target.name : item.reference?.name
-  }
+    return useTarget ? item.target.name : item.reference?.name;
+  };
 
   const getReleaseLabel = (isExisting = false) =>
-    ((item.reference?.updatedAt ?? 0) > (item.target?.updatedAt ?? 0)) === isExisting
+    (item.reference?.updatedAt ?? 0) > (item.target?.updatedAt ?? 0) === isExisting
       ? t("presetsManager.dialogs.importPreset.captions.oldest")
-      : t("presetsManager.dialogs.importPreset.captions.newest")
+      : t("presetsManager.dialogs.importPreset.captions.newest");
 
   const showReleaseLabel =
     item.reference &&
     item.conflictType === ImportConflictType.ID &&
-    importStrategy !== ImportStrategy.REPLACE_ALL
+    importStrategy !== ImportStrategy.REPLACE_ALL;
 
   const showIncomingCaption =
-    item.conflictType === ImportConflictType.ID
+    item.conflictType === ImportConflictType.ID;
 
   const arrowIcon =
     importStrategy === ImportStrategy.APPEND ||
     item.conflictType === ImportConflictType.NAME
       ? ArrowRight
-      : ArrowLeft
+      : ArrowLeft;
 
   const incomingItemCaption =
     type === "preset"
       ? t("globals.fields", { count: item.target.fields.length })
-      : item.target.code
+      : item.target.code;
 
   const currentItemCaption =
     type === "preset"
       ? t("globals.fields", { count: item.reference?.fields.length })
-      : item.reference?.code
+      : item.reference?.code;
 
   return (
     <Item
@@ -146,5 +149,5 @@ export function ImportItem({
         )}
       </ItemContent>
     </Item>
-  )
+  );
 }

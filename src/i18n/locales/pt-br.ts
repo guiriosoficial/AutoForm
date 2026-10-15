@@ -53,8 +53,8 @@ export const ptBrTranslations = {
         nameAsc: "A–Z",
         nameDesc: "Z–A",
         createdAtAsc: "Mais antigos primeiro",
-        createdAtDesc: "Mais recentes primeiro"
-      }
+        createdAtDesc: "Mais recentes primeiro",
+      },
     },
     theme: {
       dark: "Escuro",
@@ -66,7 +66,7 @@ export const ptBrTranslations = {
       conflicts: {
         id: "Conflito de ID",
         name: "Nome duplicado",
-      }
+      },
     },
     importStrategy: {
       append: {
@@ -163,7 +163,7 @@ export const ptBrTranslations = {
               Itens com nomes duplicados serão renomeados automaticamente com o sufixo ($t(configs.import.suffix)).\n
               Conflitos com itens existentes, identificados pelo ID ou chave, serão tratados de acordo com a estratégia de importação selecionada.
             `,
-          }
+          },
         },
         captions: {
           automaticRename: "Automatically renamed",
@@ -171,7 +171,7 @@ export const ptBrTranslations = {
           oldest: "Mais antigo",
           incoming: "Entrada",
           current: "Atual",
-        }
+        },
       },
     },
     form: {
@@ -181,7 +181,7 @@ export const ptBrTranslations = {
       },
       sortingDropdown: {
         label: "Ordem dos presets",
-      }
+      },
     },
     messages: {
       importPreset: {

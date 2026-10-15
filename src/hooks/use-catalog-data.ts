@@ -8,7 +8,7 @@ import {
   createCatalogCustomFunction,
   createCatalogMethod,
 } from "@/lib/catalog";
-import { getCatalogFactories } from "@/lib/catalog/registry"
+import { getCatalogFactories } from "@/lib/catalog/registry";
 import { createNextSequencedName, isFunction } from "@/lib/utils";
 import { type Catalogs, StorageKeys, APP_URL, CATALOG_CONFIG } from "@/configs";
 import type { Preset } from "@/lib/presets";
@@ -51,10 +51,10 @@ export function useCatalogData({
   const catalogFactories = useMemo(
     () => getCatalogFactories(customMethods),
     [customMethods]
-  )
+  );
 
-  const catalogOptions = useMemo(
-    () => Object.entries(catalogFactories)
+  const catalogOptions = useMemo(() =>
+    Object.entries(catalogFactories)
       .filter(([key]) => availableCatalogs.includes(key as Catalogs))
       .flatMap(([, factory]) => factory(locale)),
     [catalogFactories, availableCatalogs, locale]

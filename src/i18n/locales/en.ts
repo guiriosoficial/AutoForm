@@ -54,7 +54,7 @@ export const enTranslations = {
         nameDesc: "Z-A",
         createdAtAsc: "Oldest first",
         createdAtDesc: "Newest first",
-      }
+      },
     },
     theme: {
       dark: "Dark",
@@ -66,7 +66,7 @@ export const enTranslations = {
       conflicts: {
         id: "ID Conflict",
         name: "Duplicated name",
-      }
+      },
     },
     importStrategy: {
       append: {
@@ -161,9 +161,8 @@ export const enTranslations = {
             title: "$t(globals.alert)",
             description: `
               Items with duplicate names will be automatically renamed with the ($t(configs.import.suffix)) suffix.\n
-              Conflicts with existing items, identified by their ID or key, will be handled according to the selected import strategy.`
-            ,
-          }
+              Conflicts with existing items, identified by their ID or key, will be handled according to the selected import strategy.`,
+          },
         },
         captions: {
           automaticRename: "Automatically renamed",
@@ -171,7 +170,7 @@ export const enTranslations = {
           oldest: "Oldest",
           incoming: "Incoming",
           current: "Current",
-        }
+        },
       },
     },
     form: {
@@ -181,7 +180,7 @@ export const enTranslations = {
       },
       sortingDropdown: {
         label: "Presets sorting",
-      }
+      },
     },
     messages: {
       importPreset: {

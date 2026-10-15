@@ -41,7 +41,7 @@ export function AppSettingsProvider({
   );
   const [presetsSorting, setPresetsSorting] = usePersistentState<PresetSorting>(
     StorageKeys.PRESETS_SORTING,
-    PRESET_CONFIG.DEFAULT_SORTING
+    PRESET_CONFIG.DEFAULT_SORTING,
   );
   const [autoFormat, setAutoFormat] = usePersistentState<boolean>(
     StorageKeys.AUTO_FORMAT,
@@ -81,7 +81,7 @@ export function AppSettingsProvider({
   }, [language]);
 
   useEffect(() => {
-    updateSandboxLocale(locale)
+    updateSandboxLocale(locale);
   }, [locale]);
 
   const contextValue = useMemo(() => ({

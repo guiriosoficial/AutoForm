@@ -2,7 +2,7 @@ import browser from "webextension-polyfill";
 import { type Locale, MessageAction } from "@/configs";
 
 const SANDBOX_IFRAME_ID = "autoform-sandbox-iframe";
-const SANDBOX_EXTENSION_TARGET_ORIGIN = `chrome-extension://${browser.runtime.id}`
+const SANDBOX_EXTENSION_TARGET_ORIGIN = `chrome-extension://${browser.runtime.id}`;
 
 function getSandboxIframe() {
   return document.querySelector<HTMLIFrameElement>(`#${SANDBOX_IFRAME_ID}`);
@@ -16,7 +16,7 @@ export function sendSandboxMessage(action: MessageAction, message: object) {
   const send = () => {
     iframe.contentWindow?.postMessage(
       { action, ...message },
-      { targetOrigin: SANDBOX_EXTENSION_TARGET_ORIGIN }
+      { targetOrigin: SANDBOX_EXTENSION_TARGET_ORIGIN },
     );
   };
 
@@ -37,7 +37,6 @@ export function updateSandboxLocale(locale: Locale) {
     { locale },
   );
 }
-
 
 export function createSandboxIframe(locale: Locale) {
   let iframe = getSandboxIframe();

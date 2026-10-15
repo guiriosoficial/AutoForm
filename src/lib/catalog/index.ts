@@ -41,7 +41,7 @@ export function createCatalogMethod(
     docs: options?.docsUrl,
     code: options?.code,
     createdAt: nowTimestamp,
-    updatedAt: nowTimestamp
+    updatedAt: nowTimestamp,
   };
 }
 

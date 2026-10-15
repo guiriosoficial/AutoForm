@@ -1,2 +1,2 @@
-export { useCatalog } from "./hook"
-export { CatalogProvider } from "./provider"
+export { useCatalog } from "./hook";
+export { CatalogProvider } from "./provider";

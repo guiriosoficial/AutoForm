@@ -52,6 +52,7 @@ npm run build
 - Popup UI should be placed in `src/popup/`
 
 ## TODOs
+
 - ======================== BACKLOG ============================
 - Criar Preferência de erros (Ignorar, Preencher, Gerar...)
 - Tratar error ao gerar dados
@@ -61,6 +62,9 @@ npm run build
 
 - Escrever testes
 - Criar página e links de feedback/discussions/issues/backlog/roadmap/changelog
+- Implementar download de arquivo para custom method
+- Implementar full screen para editores
+- Corrigir bugs ao gerar datas
 
 - ====================== EM ANDAMENTO ==========================
 - Reorganizar pasta lib
@@ -75,4 +79,3 @@ consistencia de remove/delete
 consistencia de generator vs method
 
 remover catalog provider e usar apenas hook com prop drilling
-

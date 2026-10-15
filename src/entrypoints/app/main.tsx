@@ -8,14 +8,13 @@ import "@/assets/styles/globals.css";
 import "@/i18n";
 
 // oxlint-disable-next-line typescript/no-non-null-assertion
-createRoot(document.querySelector("#root")!)
-  .render(
-    <StrictMode>
-      <NavigationProvider>
-        <AppSettingsProvider>
-          <Toaster />
-          <App />
-        </AppSettingsProvider>
-      </NavigationProvider>
-    </StrictMode>,
-  );
+createRoot(document.querySelector("#root")!).render(
+  <StrictMode>
+    <NavigationProvider>
+      <AppSettingsProvider>
+        <Toaster />
+        <App />
+      </AppSettingsProvider>
+    </NavigationProvider>
+  </StrictMode>,
+);

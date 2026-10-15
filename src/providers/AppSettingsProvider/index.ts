@@ -1,2 +1,2 @@
-export { useAppSettings } from "./hook"
-export { AppSettingsProvider } from "./provider"
+export { useAppSettings } from "./hook";
+export { AppSettingsProvider } from "./provider";

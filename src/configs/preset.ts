@@ -5,10 +5,9 @@ export const PresetSorting = {
   CREATED_AT_DESC: "createdAtDesc",
 } as const;
 
-export type PresetSorting =
-  (typeof PresetSorting)[keyof typeof PresetSorting];
+export type PresetSorting = (typeof PresetSorting)[keyof typeof PresetSorting];
 
 export const PRESET_CONFIG = {
   DEFAULT_SORTING: PresetSorting.CREATED_AT_ASC,
   INITIAL_PRESET_ID: "__initial_preset__",
-}
+};

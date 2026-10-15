@@ -1,5 +1,11 @@
 import { PresetSorting } from "@/configs";
-import { type LucideIcon, ClockArrowUp, ClockArrowDown, ArrowDownAZ, ArrowUpZA } from "lucide-react";
+import {
+  type LucideIcon,
+  ClockArrowUp,
+  ClockArrowDown,
+  ArrowDownAZ,
+  ArrowUpZA,
+} from "lucide-react";
 
 export const PresetSortingIcons: Record<PresetSorting, LucideIcon> = {
   [PresetSorting.NAME_ASC]: ArrowDownAZ,

@@ -108,7 +108,7 @@ export function usePresets({
         return {
           ...preset,
           ...updated,
-          updatedAt: Date.now()
+          updatedAt: Date.now(),
         };
       }),
     );

@@ -10,7 +10,7 @@ export type ImportStrategy = (typeof ImportStrategy)[keyof typeof ImportStrategy
 export const ImportConflictType = {
   ID: "id",
   NAME: "name",
-  NONE: "none"
+  NONE: "none",
 } as const;
 
 export type ImportConflictType = (typeof ImportConflictType)[keyof typeof ImportConflictType];
